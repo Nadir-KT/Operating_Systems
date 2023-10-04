@@ -1,0 +1,55 @@
+Embedded Linux
+--------------
+https://www.youtube.com/playlist?list=PLEBQazB0HUyTpoJoZecRK6PpDG31Y7RPB
+https://www.youtube.com/playlist?list=PL1LAg1AW2qE67W7yjA8H-b_JDOMbEmgFj
+https://www.youtube.com/playlist?list=PLF4A1A7E09E5E260A
+
+Socket Programming
+https://www.youtube.com/playlist?list=PLPyaR5G9aNDvs6TtdpLcVO43_jvxp4emI
+https://en.wikipedia.org/wiki/OSI_model
+
+Kernel Driver
+https://www.youtube.com/watch?v=lWzFFusYg6g&t=370s
+https://www.youtube.com/watch?v=4tgluSJDA_E
+
+An embedded hypervisor is a software or hardware layer in an embedded system that allows more than one operating system (OS) to run on a single hardware platform.
+https://www.qt.io/embedded-development-talk/how-embedded-hypervisors-work-and-improve-embedded-products-and-systems
+
+https://source.android.com/docs/core/perf/boot-times
+https://developer.android.com/games/optimize/adpf
+https://source.android.com/docs/core/connect/wifi-hal
+https://source.android.com/docs/core/camera/camera3
+https://source.android.com/docs/core/audio/implement
+https://source.android.com/docs/core/architecture
+https://source.android.com/docs/core/architecture/hal
+
+https://www.raspberrypi.com/documentation/computers/
+
+https://lancesimms.com/RaspberryPi/HackingRaspberryPi4WithYocto_Introduction.html
+
+https://www.embitel.com/blog/embedded-blog/infotainment-vs-instrument-cluster-why-instrument-cluster-is-an-ideal-solution-for-electric-scooters
+
+Linux Kernel, Device Drivers, Embedded Linux, Firmware Development
+https://en.wikipedia.org/wiki/Category:ARM_Linux_distributions
+Design of the UNIX Operating System, Operating Systems: Design and Development
+------------------------------------------------------------------------------
+Linux, .net
+https://www.youtube.com/playlist?list=PLBlnK6fEyqRiVhbXDGLXDk_OQAeuVcp2O
+https://www.youtube.com/playlist?list=PLdo5W4Nhv31a5ucW_S1K3-x6ztBRD-PNa
+https://www.youtube.com/watch?v=otDOHt_Jges
+https://www.youtube.com/watch?v=t_McsJ1RGQg
+https://www.youtube.com/watch?v=MbjObHmDbZo
+https://en.wikipedia.org/wiki/Operating_Systems:_Design_and_Implementation
+https://en.wikipedia.org/wiki/List_of_important_publications_in_computer_science#Operating_systems
+https://www.youtube.com/watch?v=YbXHU7W7Its
+https://www.youtube.com/watch?v=YQZbIT9FcUk
+https://www.youtube.com/watch?v=DV5S_ZSdK0s
+
+Watched
+-------
+https://www.youtube.com/watch?v=6MJUGVFAXKg
+https://www.youtube.com/watch?v=26QPDBe-NB8
+https://www.youtube.com/watch?v=FkrpUaGThTQ
+https://www.youtube.com/watch?v=ROjZy1WbCIA
+https://www.youtube.com/watch?v=1rnA6wpF0o4
+https://www.youtube.com/watch?v=mXw9ruZaxzQ

@@ -1,0 +1,7 @@
+https://www.beyondlogic.org/adding-can-controller-area-network-to-the-raspberry-pi/
+https://www.pragmaticlinux.com/2021/10/can-communication-on-the-raspberry-pi-with-socketcan/
+http://domoticx.com/raspberry-pi-can-bus-communicatie-gpio/
+https://elinux.org/RPi_CANBus
+https://forums.raspberrypi.com/viewtopic.php?t=296117
+
+https://www.youtube.com/watch?v=i85jol9hrR0

@@ -1,0 +1,47 @@
+sudo nano /boot/config.txt
+
+dtparam=spi=on
+dtoverlay=mcp2515-can0,oscillator=8000000,interrupt=25
+dtoverlay=spi-bcm2835-overlay
+
+dtparam=spi=on
+dtoverlay=mcp2515-can0,oscillator=8000000,interrupt=25,spimaxfrequency=500000
+dtoverlay=spi-bcm2835-overlay
+
+dtoverlay=mcp2515-can0,oscillator=8000000,interrupt=25 
+dtoverlay=mcp2515-can0,oscillator=8000000,interrupt=25,spimaxfrequency=1000000
+
+sudo reboot
+
+sudo raspi-config
+Go to section Interface Options → SPI and select Yes to enable the SPI interface.
+
+sudo dmesg | grep mcp
+ip addr | grep "can"
+lsmod | grep "can"
+
+sudo apt install can-utils
+
+sudo apt-get install can-utils
+
+sudo ip link set can0 down
+
+sudo /sbin/ip link set can0 up type can bitrate 500000 restart-ms 100
+sudo /sbin/ip link set can0 up type can bitrate 500000 
+
+candump any = listen to any canbus device connected
+
+candump can0 = only listen on canbus device can0
+
+cansend can0 020#01
+cansend can0 456#00FFAA5501020304
+
+candump can0,0x21:7ff = only listen on canbus device can0 and canbus device id 0x20 (32)
+
+candump -tz can0
+
+candump can0,0x20:7ff
+
+cansend can0 020#01 = Send 1 byte (1st) to device ID 0x20 (32)
+
+https://en.wikipedia.org/wiki/SocketCAN

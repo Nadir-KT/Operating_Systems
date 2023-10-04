@@ -1,0 +1,25 @@
+ssid: PVG
+password: pvg@202223
+raspberrypi.local
+username: pi
+password: raspberry
+sudo raspi-config
+Interface Options -> VNC -> enable
+System Options -> Boot / Auto Login -> Desktop Autologin
+Dispaly Options -> VNC Resolution
+Finish -> reboot
+https://www.realvnc.com/en/connect/download/viewer/windows/
+https://github.com/samvidita/Connect-RaspberryPi-to-laptop-wirelessly
+https://downloads.raspberrypi.org/
+https://downloads.raspberrypi.org/raspbian_latest
+https://downloads.raspberrypi.org/NOOBS_lite_latest
+https://www.raspberrypi.com/software/operating-systems/
+https://github.com/raspberrypi/rpi-eeprom/releases
+https://github.com/raspberrypi/noobs
+https://github.com/procount/pinn
+
+https://www.youtube.com/watch?v=q-G1gW_MbCI
+https://www.youtube.com/watch?v=I-vCFP2jD1g
+https://www.youtube.com/watch?v=Z2Pjy7zpWZk
+
+https://www.raspberrypi.com/documentation/computers/raspberry-pi.html

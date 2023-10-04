@@ -1,0 +1,32 @@
+https://github.com/UvinduW/Cross-Compiling-Qt-for-Raspberry-Pi-4
+Target:
+-------
+sudo nano /etc/apt/sources.list
+sudo apt-get update
+sudo apt-get build-dep qt5-qmake
+sudo apt-get build-dep qtbase-opensource-src
+sudo apt-get install libegl1-mesa libegl1-mesa-dev libgles2-mesa libgles2-mesa-dev
+sudo apt-get install wiringpi libnfc-bin libnfc-dev fonts-texgyre libts-dev
+sudo apt-get install libbluetooth-dev bluez-tools gstreamer1.0-plugins* libgstreamer1.0-dev  libgstreamer-plugins-base1.0-dev libopenal-data libsndio7.0 libopenal1 libopenal-dev pulseaudio
+sudo gpasswd -a pi render
+sudo mkdir /usr/local/qt5pi
+sudo chown pi:pi /usr/local/qt5pi
+
+Host:
+-----
+sudo apt update
+sudo apt install build-essential
+mkdir ~/raspi
+cd ~/raspi
+sudo apt install git
+git clone https://github.com/raspberrypi/tools
+mkdir sysroot sysroot/usr
+rsync -avz pi@192.168.0.160:/lib sysroot
+rsync -avz pi@192.168.0.160:/usr/include sysroot/usr
+rsync -avz pi@192.168.0.160:/usr/lib sysroot/usr
+wget https://raw.githubusercontent.com/riscv/riscv-poky/master/scripts/sysroot-relativelinks.py
+chmod +x sysroot-relativelinks.py
+./sysroot-relativelinks.py sysroot
+git clone git://code.qt.io/qt/qtbase.git
+cd qtbase/
+./configure -release -opengl es2

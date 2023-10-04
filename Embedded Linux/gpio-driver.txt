@@ -1,0 +1,40 @@
+mkdir gpio-driver //make directory
+cd gpio-driver //open directory
+nano driver.c
+sudo apt install raspberrypi-kernel-headers
+uname -r
+ls /lib/mod
+ls /lib/modules/$(uname -r)/build
+ls
+vim Makefile
+
+obj-m += driver.o
+
+all:
+make -C /lib/modules/$(shell uname -r)/build M=$(PWD) modules
+
+clean:
+make -C /lib/modules/$(shell uname -r)/build M=$(PWD) clean
+
+(OR)
+
+obj-m += driver.o
+
+KDIR = /lib/modules/$(shell uname -r)/build
+
+all:
+make -C $(KDIR) M=$(shell pwd) modules
+
+clean:
+make -C $(KDIR) M=$(shell pwd) clean
+
+:wq
+
+make
+ls
+sudo insmod driver.ko
+lsmod //list installed drivers
+lsmod | grep driver
+dmesg | tail
+sudo rmmod driver
+dmesg | tail
