@@ -41,7 +41,11 @@
 # Uncomment some or all of these to enable the optional hardware interfaces
 #dtparam=i2c_arm=on
 #dtparam=i2s=on
-#dtparam=spi=on
+dtparam=spi=on
+
+dtparam=spi=on
+dtoverlay=mcp2515-can0,oscillator=8000000,interrupt=25,spimaxfrequency=500000
+dtoverlay=spi-bcm2835-overlay
 
 # Uncomment this to enable infrared communication.
 #dtoverlay=gpio-ir,gpio_pin=17
