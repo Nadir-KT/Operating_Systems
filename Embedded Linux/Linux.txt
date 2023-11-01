@@ -3,6 +3,10 @@ Embedded Linux
 https://www.youtube.com/playlist?list=PLEBQazB0HUyTpoJoZecRK6PpDG31Y7RPB
 https://www.youtube.com/playlist?list=PL1LAg1AW2qE67W7yjA8H-b_JDOMbEmgFj
 https://www.youtube.com/playlist?list=PLF4A1A7E09E5E260A
+https://www.youtube.com/watch?v=PPMKRoJcZw4
+https://www.youtube.com/watch?v=lyQVw1RtaH4
+https://www.youtube.com/playlist?list=PLe06NAgNxbdApNzyoLXN5J-feKNBj2OTQ
+http://derekmolloy.ie/beaglebone/qt-with-embedded-linux-on-the-beaglebone/#Introduction_to_LCD_Displays_and_GUI_Applications
 
 Socket Programming
 https://www.youtube.com/playlist?list=PLPyaR5G9aNDvs6TtdpLcVO43_jvxp4emI
