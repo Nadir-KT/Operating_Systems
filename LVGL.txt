@@ -2,3 +2,16 @@ https://www.youtube.com/watch?v=88MwR-4Dy0Q
 https://www.youtube.com/watch?v=b_4m1A3A2yw
 https://www.youtube.com/watch?v=UrSkzbuuGaw
 https://www.youtube.com/watch?v=PPMKRoJcZw4
+https://pallavaggarwal.in/2022/07/24/top-graphics-library-for-mcu/
+https://www.techyv.com/article/top-10-graphics-library-for-mcu/
+https://lvgl.io/boards
+https://squareline.io
+https://www.digikey.com/en/maker/tutorials/2023/how-to-deploy-a-squareline-studio-ui-design-on-an-arduino
+https://www.digikey.com/en/maker/blogs/2023/easily-design-beautiful-user-interfaces-for-embedded-projects-with-squareline-studio
+https://www.instructables.com/Squareline-Begin-With-Arduino/
+https://www.espressif.com/en/news/ESP32_Modules_Now_Support_LittlevGL_and_μGFX
+https://en.cppreference.com/w/cpp/links/libs
+https://www.osrtos.com/library/
+https://www.elecrow.com/wiki/index.php?title=LVGL_ESP32_Display_Tutorial-A_Step-by-Step_Guide_to_LVGL_GUI_Development
+https://www.arduino.cc/reference/en/libraries/category/display/
+https://www.embien.com/sparklet-embedded-gui-library

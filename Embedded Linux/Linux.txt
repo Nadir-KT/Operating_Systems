@@ -1,3 +1,7 @@
+https://github.com/nhivp/Awesome-Embedded
+https://wikidevi.wi-cat.ru/List_of_Single-board_computers
+https://www.digikey.in/en/products/filter/evaluation-boards/embedded-mcu-dsp-evaluation-boards/786
+
 Embedded Linux
 --------------
 https://www.youtube.com/playlist?list=PLEBQazB0HUyTpoJoZecRK6PpDG31Y7RPB
