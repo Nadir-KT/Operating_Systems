@@ -1,0 +1,66 @@
+https://en.wikipedia.org/wiki/Single-board_computer
+
+STM8
+----
+https://robokits.co.in/development-board/motor-control-boards/development-boards/stm8s-development-board-stm8s103f3p6 - 123
+https://robu.in/product/core-board-stm8s103f3p6-stm8-development-board-minimum-system-board/ - 229
+https://robokits.co.in/development-board/boards-compatible-with-aruduino/n76e003at20-microcontroller-development-board - 236
+https://www.flipkart.com/sunrobotics-stm8s103f3p6-core-stm8-development-board-minimum-system-electronic-components-hobby-kit/p/itmc164b89f46416 - 259
+https://www.amazon.in/Generic-STM8S-DEVELOPMENT-BOARD-STM8S103F3P6/dp/B08V5123PM/ - 268
+https://robocraze.com/products/stm8s103f3p6-development-board - 289
+
+RASPBERRY PI PICO - https://www.raspberrypi.com/news/approved-reseller/
+-----------------------------------------------------------------------
+https://robocraze.com/products/raspberry-pi-pico - 341
+https://robu.in/product/raspberry-pi-pico/ - 349
+https://robokits.co.in/raspberry-pi/raspberry-pi-board-and-camera/raspberry-pi-pico - 389
+https://www.flipkart.com/iduino-raspberry-pi-pico-all-new-microcontroller-board-electronic-components-hobby-kit/p/itmba7bb6a3df368 - 424
+https://www.amazon.in/REES52-Raspberry-microcontroller-Development-RP2040/dp/B08V4XBDDB/ -479
+
+ESP32
+-----
+https://robu.in/product/black-esp32-devkitc-development-board-backboard/  - 377
+https://robocraze.com/products/nodemcu-32-wifi-bluetooth-esp32-development-board30-pin - 385
+https://www.flipkart.com/easy-electronics-esp32-esp-32-esp-32-development-board-cp2102-wifi-bluetooth-micro-controller-electronic-hobby-kit/p/itma6d9568e992f4 - 525
+https://robokits.co.in/wireless-solutions/iot-esp-module/esp32-development-board-wifi-bluetooth - 536
+https://www.amazon.in/Easy-Electronics-Development-Bluetooth-Consumption/dp/B07TYCFX5C - 549
+
+STM32
+-----
+https://www.amazon.in/Generic-STM32F103C8T6-Minimum-Development-Arduino/dp/B01EM11KOC/ - 590
+https://robokits.co.in/development-board/motor-control-boards/arm-development-board/stm32f401ccu6-development-board-stm32-arm-core-board - 413
+https://robocraze.com/products/stm32f103c8t6-arm-development-board - 442
+https://robu.in/product/stm32f401ccu6-minimum-system-board-microcomputer-stm32-arm-core-board/ - 499
+https://www.flipkart.com/nihaka-stm32f103c8t6-minimum-system-development-board-stm32-arm-core-module-1pc-electronic-components-hobby-kit/p/itmc1edc31b9a926 - 585
+
+Arduino Nano - https://store.arduino.cc/pages/distributors
+------------
+https://www.amazon.in/A2Z-Quality-ATmega168-Compatible-Arduino/dp/B07L85H1ZF/ - 390
+https://www.amazon.in/A2Z-Quality-ATmega328P-Micro-controller-Arduino/dp/B07L85LNWH/ - 499
+https://www.flipkart.com/easy-electronics-arduino-nano-v3-0-micro-controller-board-electronic-hobby-kit/p/itmfabtgmtcz4hgg - 549
+
+ST Link V2 
+----------
+https://www.amazon.in/ST-Link-V2-Debug-Programming-STM32/dp/B09VW1835C/ - 530
+
+Bluetooth Transceiver
+---------------------
+https://robocraze.com/products/hc-05-bluetooth-module - 229
+https://robocraze.com/products/hm-10-bluetooth-module - 276
+https://robokits.co.in/wireless-solutions/bluetooth/jdy-31-spp-c-bluetooth-to-serial-adapter-module-breakout-board-replaces-hc-05-06-slave - 277
+https://www.amazon.in/Wireless-Bluetooth-Transceiver-Module-Serial/dp/B0BKFV4PCX - 299
+https://www.flipkart.com/auslese-robotics-hc-05-wireless-bluetooth-rf-transceiver-6-pin-serial-port-bt-module-electronic-components-hobby-kit/p/itm2cd61cacb8fb0?pid=EHKGDYF6ZRYZSDP4 - 299
+https://www.flipkart.com/techsupreme-hc-05-wireless-bluetooth-rf-transceiver-module-master-security-circuit-motion-detector-electronic-components-hobby-kit/p/itme6c44650b98ba - 299
+https://robocraze.com/products/hc-06-bluetooth-module - 305
+https://www.flipkart.com/ihc-hm-10-ble-4-0-bluetooth-module-indian-hobby-center-micro-controller-board-electronic-kit/p/itm3f882c2f57118 - 309
+https://www.amazon.in/Robo-Pixel-HC05-Bluetooth-Transceiver/dp/B0BLKK3KF4/ - 310
+https://robu.in/product/at-09-bluetooth-4-0-uart-transceiver-module-cc2541-compatible-with-hm-10/ - 319
+
+FPGA / CPLD / Altera
+--------------------
+https://robokits.co.in/programmers/fpga/altera-fpga-programmer - 646
+https://robu.in/product/usb-blaster-altera-cpld-fpga-programmer/ - 649
+https://www.amazon.in/xcluma-Blaster-Cable-Altera-Programmer/dp/B072TF2WT7/ - 702
+https://robu.in/product/altera-max-ii-epm240-cpld-development-board/ - 1099
+https://robu.in/product/sipeed-tang-primer-fpga-dev-board/ - 2349
+https://robu.in/product/altera-fpga-cyclone-ii-ep2c5t144-system-development-board/ - 3024
