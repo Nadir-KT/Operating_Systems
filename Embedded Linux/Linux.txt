@@ -1,6 +1,10 @@
 https://github.com/nhivp/Awesome-Embedded
+https://github.com/iDoka/awesome-embedded-software
 https://wikidevi.wi-cat.ru/List_of_Single-board_computers
 https://www.digikey.in/en/products/filter/evaluation-boards/embedded-mcu-dsp-evaluation-boards/786
+https://www.linux.org/threads/about-some-of-the-graphics-libraries.11125/
+https://itnext.io/top-five-libraries-for-creating-gui-on-embedded-linux-5ce03903be32
+https://www.genlogic.com/free_embedded_graphics.html
 
 Embedded Linux
 --------------
