@@ -9,8 +9,13 @@ https://www.linux.org/threads/about-some-of-the-graphics-libraries.11125/
 https://itnext.io/top-five-libraries-for-creating-gui-on-embedded-linux-5ce03903be32
 https://www.genlogic.com/free_embedded_graphics.html
 https://www.youtube.com/playlist?list=PLCGpd0Do5-I0ydSONm8q3M14ilyBea36v
+https://github.com/gregsqueeb/consultDash
 https://www.youtube.com/watch?v=KN-ileJvorg
 https://www.youtube.com/watch?v=MZNly2Z14mA
+https://www.youtube.com/watch?v=SVn9uYfEQrA
+https://www.youtube.com/watch?v=nWxHiaaI35s
+https://www.youtube.com/watch?v=RgbHXTHUnQw
+https://www.youtube.com/watch?v=odn8OfE5FdI
 
 Embedded Linux
 --------------
