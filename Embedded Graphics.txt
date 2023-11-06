@@ -33,6 +33,10 @@ https://www.youtube.com/watch?v=Ls0uLyeAgiw
 https://www.youtube.com/watch?v=TcWvxw61U_w
 https://www.youtube.com/watch?v=zYBWyQhYkjI
 https://www.youtube.com/watch?v=rOuW5nuyFyk
+https://www.amazon.in/Zhanshi-Development-Bluetooth-240X320-Display/dp/B0BRC7JYTL
+https://www.amazon.in/WT32-SC01-Display-Screen-Monitor-Development/dp/B0BL2DPB2K
+https://www.amazon.in/REES52-ESP32-Development-Board-Built/dp/B09JB8HNZD
+https://www.youtube.com/watch?v=d2OXlVcRYrU
 QT
 https://www.youtube.com/playlist?list=PLS1QulWo1RIZiBcTr5urECberTITj7gjA
 https://www.youtube.com/watch?v=Wi9nQTDFF4U
