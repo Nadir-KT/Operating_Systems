@@ -4,14 +4,17 @@ https://wokwi.com/projects/378778007841622017
 https://github.com/Bodmer/TFT_eSPI/issues/571
 https://www.elecrow.com/display/esp-hmi-display.html
 https://www.amazon.in/LILYGO-T-Display-Arduino-Development-CH9102F/dp/B099MPFJ9M
+https://www.amazon.in/Zhanshi-Development-Bluetooth-240X320-Display/dp/B0BRC7JYTL
+https://www.amazon.in/WT32-SC01-Display-Screen-Monitor-Development/dp/B0BL2DPB2K
+https://www.amazon.in/REES52-ESP32-Development-Board-Built/dp/B09JB8HNZD
+https://www.espressif.com/en/news/ESP32_Modules_Now_Support_LittlevGL_and_μGFX
+https://ugfx.io/platforms
 LVGL
 https://lvgl.io/boards
 https://squareline.io
 https://www.digikey.com/en/maker/tutorials/2023/how-to-deploy-a-squareline-studio-ui-design-on-an-arduino
 https://www.digikey.com/en/maker/blogs/2023/easily-design-beautiful-user-interfaces-for-embedded-projects-with-squareline-studio
 https://www.instructables.com/Squareline-Begin-With-Arduino/
-https://www.espressif.com/en/news/ESP32_Modules_Now_Support_LittlevGL_and_μGFX
-https://ugfx.io/platforms
 https://www.youtube.com/watch?v=88MwR-4Dy0Q
 https://www.youtube.com/playlist?list=PLaKCTGp44qf0_PaXDxMNZqnLEvRu3iM21
 https://www.youtube.com/watch?v=b_4m1A3A2yw
@@ -33,14 +36,10 @@ https://www.youtube.com/watch?v=Ls0uLyeAgiw
 https://www.youtube.com/watch?v=TcWvxw61U_w
 https://www.youtube.com/watch?v=zYBWyQhYkjI
 https://www.youtube.com/watch?v=rOuW5nuyFyk
-https://www.amazon.in/Zhanshi-Development-Bluetooth-240X320-Display/dp/B0BRC7JYTL
-https://www.amazon.in/WT32-SC01-Display-Screen-Monitor-Development/dp/B0BL2DPB2K
-https://www.amazon.in/REES52-ESP32-Development-Board-Built/dp/B09JB8HNZD
 https://www.youtube.com/watch?v=d2OXlVcRYrU
-QT
-https://www.youtube.com/playlist?list=PLS1QulWo1RIZiBcTr5urECberTITj7gjA
-https://www.youtube.com/watch?v=Wi9nQTDFF4U
 STM32
+https://www.amazon.in/STM32F429I-DISC1-Cortex-M4-STMicroelectronics-Development-board/dp/B09KTR216L
+https://www.amazon.in/STM32H7B3I-DK-ARM-Cortex-M7-Discovery-KIT/dp/B0C5JYHG86
 https://www.amazon.in/STM32F746G-DISCO-STM32F746NG-MCU-Discovery-Kit/dp/B0B888BJGR/
 https://www.youtube.com/watch?v=DBQGYgYO7yU
 https://www.youtube.com/watch?v=PL3enedXTs4
@@ -54,6 +53,9 @@ Storyboard 8.0 by Crank AMETEK
 https://www.youtube.com/watch?v=5fAndJH53WA
 https://www.youtube.com/playlist?list=PLsBstie_zZnM8VddAZDpyTnYQPBzGyz9N
 https://blog.cranksoftware.com/how-to-choose-the-best-embedded-gui-solution
+QT
+https://www.youtube.com/playlist?list=PLS1QulWo1RIZiBcTr5urECberTITj7gjA
+https://www.youtube.com/watch?v=Wi9nQTDFF4U
 Embedded Graphics
 https://pallavaggarwal.in/2022/07/24/top-graphics-library-for-mcu/
 https://www.techyv.com/article/top-10-graphics-library-for-mcu/
