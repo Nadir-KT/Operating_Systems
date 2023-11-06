@@ -4,10 +4,6 @@ https://wokwi.com/projects/378778007841622017
 https://github.com/Bodmer/TFT_eSPI/issues/571
 https://www.elecrow.com/display/esp-hmi-display.html
 https://www.amazon.in/LILYGO-T-Display-Arduino-Development-CH9102F/dp/B099MPFJ9M
-STM32
-https://www.youtube.com/watch?v=DBQGYgYO7yU
-https://www.youtube.com/watch?v=PL3enedXTs4
-https://rusefi.com/forum/viewtopic.php?t=2513
 LVGL
 https://lvgl.io/boards
 https://squareline.io
@@ -40,7 +36,13 @@ https://www.youtube.com/watch?v=rOuW5nuyFyk
 QT
 https://www.youtube.com/playlist?list=PLS1QulWo1RIZiBcTr5urECberTITj7gjA
 https://www.youtube.com/watch?v=Wi9nQTDFF4U
+STM32
+https://www.amazon.in/STM32F746G-DISCO-STM32F746NG-MCU-Discovery-Kit/dp/B0B888BJGR/
+https://www.youtube.com/watch?v=DBQGYgYO7yU
+https://www.youtube.com/watch?v=PL3enedXTs4
+https://rusefi.com/forum/viewtopic.php?t=2513
 Embedded Wizard
+https://www.amazon.in/NXP-MIMXRT1020-EVK-EVAL-32BIT-Cortex-M7/dp/B07L7ZKZ2R/
 https://www.youtube.com/watch?v=BJ6oXZlA7X8
 https://www.youtube.com/watch?v=kCzjJlLHkHo
 https://www.youtube.com/watch?v=qNlSFyvwf4M
