@@ -14,6 +14,10 @@ https://lvgl.io/boards
 https://squareline.io
 https://www.digikey.com/en/maker/tutorials/2023/how-to-deploy-a-squareline-studio-ui-design-on-an-arduino
 https://www.digikey.com/en/maker/blogs/2023/easily-design-beautiful-user-interfaces-for-embedded-projects-with-squareline-studio
+https://wiki.seeedstudio.com/reTerminal-build-UI-using-LVGL/
+https://www.ti.com/tool/SIMPLELINK-SDK-LVGL-PLUGIN
+https://community.renesas.com/rz/m/files_linux/3388
+https://lpccs-docs.renesas.com/DA1470x/UM-B-155_DA1470x-Graphics-Framework-GUI/7-Light%20and%20Versatile%20Graphics%20Library/lvgl_library.html
 https://www.instructables.com/Squareline-Begin-With-Arduino/
 https://www.youtube.com/watch?v=88MwR-4Dy0Q
 https://www.youtube.com/playlist?list=PLaKCTGp44qf0_PaXDxMNZqnLEvRu3iM21
@@ -38,6 +42,7 @@ https://www.youtube.com/watch?v=zYBWyQhYkjI
 https://www.youtube.com/watch?v=rOuW5nuyFyk
 https://www.youtube.com/watch?v=d2OXlVcRYrU
 STM32
+https://www.st.com/content/st_com/en/ecosystems/stm32-graphic-user-interface.html#stm32gui-build-own-gui
 https://www.amazon.in/STM32F429I-DISC1-Cortex-M4-STMicroelectronics-Development-board/dp/B09KTR216L
 https://www.amazon.in/STM32H7B3I-DK-ARM-Cortex-M7-Discovery-KIT/dp/B0C5JYHG86
 https://www.amazon.in/STM32F746G-DISCO-STM32F746NG-MCU-Discovery-Kit/dp/B0B888BJGR/
@@ -45,11 +50,20 @@ https://www.youtube.com/watch?v=DBQGYgYO7yU
 https://www.youtube.com/watch?v=PL3enedXTs4
 https://rusefi.com/forum/viewtopic.php?t=2513
 Embedded Wizard
+https://www.nxp.com/docs/en/training-reference-material/SIMPLIFY-YOUR-GUI-DEVELOPMENT-PRESENTATION.pdf
 https://www.amazon.in/NXP-MIMXRT1020-EVK-EVAL-32BIT-Cortex-M7/dp/B07L7ZKZ2R/
+https://www.renesas.com/us/en/products/microcontrollers-microprocessors/rx-32-bit-performance-efficiency-mcus/rx-partners/tara-systems-embedded-wizard#tools_support
+https://community.infineon.com/t5/Blogs/PSoC-62S2-Wi-Fi-BT-Pioneer-Kit-is-supported-by-Embedded-Wizard-Studio/ba-p/365527
+https://www.st.com/content/st_com/en/partner/partner-program/partnerpage/Embedded_Wizard.html
 https://www.youtube.com/watch?v=BJ6oXZlA7X8
 https://www.youtube.com/watch?v=kCzjJlLHkHo
 https://www.youtube.com/watch?v=qNlSFyvwf4M
-Storyboard 8.0 by Crank AMETEK
+Crank Storyboard
+https://www.nxp.com/webapp/connect/displayPartnerProfile.sp?partnerId=1-BFZK-3&tid=vanCRANK
+https://www.nxp.com/design/training/embedded-gui-development-with-nxp-mcus-and-storyboard-lite-from-crank-software:TIP-SUPERCHARGED-EMBEDDED-UI
+https://www.st.com/content/st_com/en/partner/partner-program/partnerpage/Crank_Software.html
+https://www.renesas.com/us/en/products/microcontrollers-microprocessors/rz-mpus/rz-partner-solutions/crank-storyboard#tools_support
+https://developer.embeddedartists.com/docs-app/guides/crank-demos/
 https://www.youtube.com/watch?v=5fAndJH53WA
 https://www.youtube.com/playlist?list=PLsBstie_zZnM8VddAZDpyTnYQPBzGyz9N
 https://blog.cranksoftware.com/how-to-choose-the-best-embedded-gui-solution
@@ -69,7 +83,11 @@ https://www.ti.com/tool/MSP-GRLIB
 https://www.embien.com/sparklet-embedded-gui-library
 emWin
 https://www.infineon.com/cms/en/design-support/software/device-driver-libraries/emwin-graphics-library-and-gui-for-psoc/
+https://www.nxp.com/design/software/embedded-software/nxp-emwin-libraries:EMWIN-GRAPHICS-LIBRARY
+https://www.st.com/en/partner-products-and-services/segger-emwin.html
+https://www.renesas.com/us/en/products/microcontrollers-microprocessors/ra-cortex-m-mcus/ra-partners/segger-emwin
 https://www.segger.com/products/user-interface/emwin/
+https://www.segger.com/downloads/emwin/
 
 https://www.youtube.com/watch?v=gWVgCgqoKWg
 https://www.youtube.com/watch?v=JChTishaqQM
