@@ -32,6 +32,8 @@ https://www.arduino.cc/reference/en/libraries/category/display/
 https://www.arduino.cc/reference/en/libraries/lvgl/
 https://github.com/lvgl/lvgl
 https://www.nxp.com/design/software/embedded-software/lvgl-open-source-graphics-library:LITTLEVGL-OPEN-SOURCE-GRAPHICS-LIBRARY
+https://www.elecrow.com/esp-terminal-with-esp32-3-5-inch-parallel-480x320-tft-capacitive-touch-display-rgb-by-chip-ili9488.html
+https://www.elecrow.com/esp-terminal-3-5-inch-320-480-spi-tft-capacitive-touch-display-with-ov2640-camera.html
 https://www.youtube.com/watch?v=ugoiicPM6U0
 https://www.youtube.com/watch?v=EARkhr3ABEY
 https://www.youtube.com/watch?v=5DAiOQrRFWM
@@ -52,7 +54,7 @@ https://rusefi.com/forum/viewtopic.php?t=2513
 Embedded Wizard
 https://www.nxp.com/docs/en/training-reference-material/SIMPLIFY-YOUR-GUI-DEVELOPMENT-PRESENTATION.pdf
 https://www.amazon.in/NXP-MIMXRT1020-EVK-EVAL-32BIT-Cortex-M7/dp/B07L7ZKZ2R/
-https://www.renesas.com/us/en/products/microcontrollers-microprocessors/rx-32-bit-performance-efficiency-mcus/rx-partners/tara-systems-embedded-wizard#tools_support
+https://www.renesas.com/us/en/products/microcontrollers-microprocessors/rx-32-bit-performance-efficiency-mcus/rx-partners/tara-systems-embedded-wizard
 https://community.infineon.com/t5/Blogs/PSoC-62S2-Wi-Fi-BT-Pioneer-Kit-is-supported-by-Embedded-Wizard-Studio/ba-p/365527
 https://www.st.com/content/st_com/en/partner/partner-program/partnerpage/Embedded_Wizard.html
 https://www.youtube.com/watch?v=BJ6oXZlA7X8
