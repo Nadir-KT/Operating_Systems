@@ -1,5 +1,5 @@
 ESP32
-https://www.youtube.com/watch?v=cBtsLxZ13hQ
+https://www.youtube.com/watch?v=cBtsLxZ13hQ - done
 https://wokwi.com/projects/378778007841622017
 https://github.com/Bodmer/TFT_eSPI/issues/571
 https://www.elecrow.com/display/esp-hmi-display.html
@@ -10,6 +10,9 @@ https://www.amazon.in/REES52-ESP32-Development-Board-Built/dp/B09JB8HNZD
 https://www.espressif.com/en/news/ESP32_Modules_Now_Support_LittlevGL_and_μGFX
 https://ugfx.io/platforms
 LVGL
+https://www.youtube.com/playlist?list=PLaKCTGp44qf0_PaXDxMNZqnLEvRu3iM21
+https://www.youtube.com/watch?v=6uKf5Bj0xcc
+https://www.youtube.com/watch?v=UrSkzbuuGaw
 https://lvgl.io/boards
 https://squareline.io
 https://www.digikey.com/en/maker/tutorials/2023/how-to-deploy-a-squareline-studio-ui-design-on-an-arduino
@@ -19,13 +22,12 @@ https://www.ti.com/tool/SIMPLELINK-SDK-LVGL-PLUGIN
 https://community.renesas.com/rz/m/files_linux/3388
 https://lpccs-docs.renesas.com/DA1470x/UM-B-155_DA1470x-Graphics-Framework-GUI/7-Light%20and%20Versatile%20Graphics%20Library/lvgl_library.html
 https://www.instructables.com/Squareline-Begin-With-Arduino/
-https://www.youtube.com/watch?v=88MwR-4Dy0Q
-https://www.youtube.com/playlist?list=PLaKCTGp44qf0_PaXDxMNZqnLEvRu3iM21
 https://www.youtube.com/watch?v=b_4m1A3A2yw
-https://www.youtube.com/watch?v=UrSkzbuuGaw
 https://www.youtube.com/watch?v=PPMKRoJcZw4
 https://www.youtube.com/watch?v=RNACmN4dKWg
 https://www.youtube.com/watch?v=ZzLdct2ymvg
+https://www.youtube.com/watch?v=88MwR-4Dy0Q
+https://www.youtube.com/watch?v=pMRXa-KXbbw
 https://www.elecrow.com/wiki/index.php?title=LVGL_ESP32_Display_Tutorial-A_Step-by-Step_Guide_to_LVGL_GUI_Development
 https://www.elecrow.com/blog/everything-you-should-know-about-lvgl.html
 https://www.arduino.cc/reference/en/libraries/category/display/
@@ -34,10 +36,10 @@ https://github.com/lvgl/lvgl
 https://www.nxp.com/design/software/embedded-software/lvgl-open-source-graphics-library:LITTLEVGL-OPEN-SOURCE-GRAPHICS-LIBRARY
 https://www.elecrow.com/esp-terminal-with-esp32-3-5-inch-parallel-480x320-tft-capacitive-touch-display-rgb-by-chip-ili9488.html
 https://www.elecrow.com/esp-terminal-3-5-inch-320-480-spi-tft-capacitive-touch-display-with-ov2640-camera.html
-https://www.youtube.com/watch?v=ugoiicPM6U0
-https://www.youtube.com/watch?v=EARkhr3ABEY
+https://www.youtube.com/watch?v=ugoiicPM6U0 - done
+https://www.youtube.com/watch?v=EARkhr3ABEY - done
 https://www.youtube.com/watch?v=5DAiOQrRFWM
-https://www.youtube.com/watch?v=iKJesBu_cg4
+https://www.youtube.com/watch?v=iKJesBu_cg4 - done
 https://www.youtube.com/watch?v=Ls0uLyeAgiw
 https://www.youtube.com/watch?v=TcWvxw61U_w
 https://www.youtube.com/watch?v=zYBWyQhYkjI
