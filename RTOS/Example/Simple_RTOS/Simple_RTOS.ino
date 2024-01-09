@@ -1,5 +1,5 @@
 #include <Arduino_FreeRTOS.h>
-// Task handles
+// Task handles: vTaskDelete, Suspend, Resume
 static TaskHandle_t task_1 = NULL;
 static TaskHandle_t task_2 = NULL;
 void setup(){
