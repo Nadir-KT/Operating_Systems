@@ -1,0 +1,15 @@
+Automotive HMI touch display specifications:
+
+1.	LCD Size: 5/7 inches
+2.	LCD Type: TN or IPS
+3.	Touch Type: Resistive (RTP) or Capacitive (CTP)
+4.	Resolution: 800*480 or 1024*600
+5.	Operating Voltage: 5.0V
+6.	Brightness: 1000 nits
+7.	Operating Current: 62mA @ 5V
+8.	Operating Temperature: -30°C to +85°C
+9.	ESD Immunity: IEC 61000-4-2 (±8kV contact, ±15kV air)
+10.	Compliance: REACH, RoHS
+11.	EMI/EMC: 20MHz to 2GHz
+12.	Signal Interface: TTL/CAN/UART
+13.	Development: Compatible GUI development software from OEM
