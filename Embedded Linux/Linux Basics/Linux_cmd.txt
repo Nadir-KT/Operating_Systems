@@ -1,0 +1,13 @@
+Linux cmds to be learned :-
+
+1. ls
+2. cd 
+3. cp
+4. mv
+5. rm
+6. pwd
+7. mkdir
+8. rmdir
+9. cat
+10. less
+11. man

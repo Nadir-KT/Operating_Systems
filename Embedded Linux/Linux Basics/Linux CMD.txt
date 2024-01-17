@@ -1,0 +1,80 @@
+man - manual
+man ls
+ls - list directory contents
+ls [OPTION].... [FILE]....
+-a - do not ignore entries starting with .
+-l - use a long listing format
+-R list subdirectories recursively
+
+ls -lR
+ls -l -R
+
+cd  - change directory
+cd . - current directory
+cd .. - previous directory
+cd ../../ - 2 previous directory
+cd directory/ - goes to directory
+cd path - goes to path
+cd / - goes to root directory
+cd ~ - goes to home directory
+cd - - goes to the previous directory
+
+pwd - print name of current/working directory
+pwd [OPTION]...
+
+mkdir - make directories
+mkdir [OPTION]... DIRECTORY...
+
+rmdir - remove directories
+rmdir [OPTION]... DIRECTORY...
+
+touch - create file
+
+
+rm - remove files or directories
+rm [OPTION]... [FILE]...
+-f - force
+-r - remove directories and their contents recursively
+-d - remove empty directories
+-v - explain what is being done
+
+cp - copy files and directories
+cp [OPTION]... SOURCE... DIRECTORY
+-f
+-r
+-v
+cp -rfv hello.c  hello1.c  -/nadir/ism/
+
+mv - move (rename) files
+mv [OPTION]... SOURCE... DIRECTORY
+-f
+-v
+mv -fv hello.c  hello1.c  ~/nadir/ism/
+mv hello.c newname.cd
+
+sudo apt-get install vim
+vim - text editor
+vim [options] [file...]
+vim hello.c
+vi hello.c
+i -insert
+d - delete
+Esc
+:w - save
+:q - quit
+:wq - save & quit
+
+cat - concatenate files and print on the standard output
+cat [OPTION]... [FILE]...
+cat hello.c
+more - percentage
+less - navigate
+
+gcc - GNU project C and C++ compiler
+a.out - allocation output
+sudo apt-get update
+sudo apt-get install libc6-dev
+gcc [FILE]...
+gcc hello.c
+ls
+./a.out
