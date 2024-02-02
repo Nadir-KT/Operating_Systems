@@ -1,6 +1,5 @@
-//http://www.lcdwiki.com/4.0inch_SPI_Module_ST7796
-//http://www.lcdwiki.com/4.0inch_SPI_Module_ILI9486
-//https://randomnerdtutorials.com/getting-started-with-esp32/
+// See SetupX_Template.h for all options available
+//#define USER_SETUP_ID 42
 
 #define ST7796_DRIVER
 #define TFT_BACKLIGHT_ON HIGH
@@ -13,6 +12,7 @@
 #define TFT_RST   4  // Reset pin (could connect to RST pin)
 #define TFT_BL 26 // LED
 
+#define TOUCH_CS 33     // Chip select pin (T_CS) of touch screen
 
 // Optional touch screen chip select
 //#define TOUCH_CS 5 // Chip select pin (T_CS) of touch screen
