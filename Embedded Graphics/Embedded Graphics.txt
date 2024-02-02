@@ -10,6 +10,7 @@ https://www.amazon.in/REES52-ESP32-Development-Board-Built/dp/B09JB8HNZD
 https://www.espressif.com/en/news/ESP32_Modules_Now_Support_LittlevGL_and_μGFX
 https://ugfx.io/platforms
 LVGL
+https://daumemo.com/how-to-use-lvgl-library-on-arduino-with-an-esp-32-and-spi-lcd/
 https://blog.lvgl.io/2019-01-31/esp32
 https://www.youtube.com/playlist?list=PLaKCTGp44qf0_PaXDxMNZqnLEvRu3iM21
 https://www.youtube.com/watch?v=6uKf5Bj0xcc
