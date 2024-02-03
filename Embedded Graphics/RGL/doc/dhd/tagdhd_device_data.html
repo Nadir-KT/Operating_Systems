@@ -1,0 +1,316 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
+<html>
+<head>
+<title>tagdhd_device_data</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="generator" content="Doc-O-Matic" />
+    <meta http-equiv="Content-Style-Type" content="text/css" />
+    <link rel="STYLESHEET" href="default.css" type="text/css" />
+
+<script type="text/javascript" src="scripts.js"></script>
+<!-- saved from url=(0013)about:internet -->
+</head>
+<body class="Element700" onload="onBodyLoadEx(&#39;index.html&#39;, &#39;topic&#39;, &#39;tagdhd_device_data.html&#39;);" onmousedown="onBodyMouseDown();">
+
+<!-- Begin Popups -->
+
+<!-- End Popups -->
+
+<!-- Begin Page Header -->
+<div class="Element710" id="areafixed">
+<div class="Element92">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="33%">
+<div class="Element1">
+D/AVE HD Driver - Internal Documentation</div>
+</td><td width="34%">
+<div class="Element2">
+<a href="contents.html" target="tocidx"><img src="btn_globals_contents_midblue.gif" border="0" alt="Contents" title="Contents" onmouseover="switchImage(this, &#39;btn_globals_contents_midblue_hover.gif&#39;);" onmouseout="switchImage(this, &#39;btn_globals_contents_midblue.gif&#39;);" /></a><a href="idx.html" target="tocidx"><img src="btn_globals_index_midblue.gif" border="0" alt="Index" title="Index" onmouseover="switchImage(this, &#39;btn_globals_index_midblue_hover.gif&#39;);" onmouseout="switchImage(this, &#39;btn_globals_index_midblue.gif&#39;);" /></a><a href="intro.html" target="topic"><img src="btn_globals_home_midblue.gif" border="0" alt="Home" title="Home" onmouseover="switchImage(this, &#39;btn_globals_home_midblue_hover.gif&#39;);" onmouseout="switchImage(this, &#39;btn_globals_home_midblue.gif&#39;);" /></a></div>
+</td><td width="33%">
+<div class="Element90">
+<a href="tagdhd_buffer_internal.html" target="topic"><img src="btn_prev_midblue.gif" border="0" alt="Previous" title="Previous" onmouseover="switchImage(this, &#39;btn_prev_midblue_hover.gif&#39;);" onmouseout="switchImage(this, &#39;btn_prev_midblue.gif&#39;);" /></a><a href="records_umd.html" target="topic"><img src="btn_up_midblue.gif" border="0" alt="Up" title="Up" onmouseover="switchImage(this, &#39;btn_up_midblue_hover.gif&#39;);" onmouseout="switchImage(this, &#39;btn_up_midblue.gif&#39;);" /></a><a href="dhd_cmdlist_serial_t.html" target="topic"><img src="btn_next_midblue.gif" border="0" alt="Next" title="Next" onmouseover="switchImage(this, &#39;btn_next_midblue_hover.gif&#39;);" onmouseout="switchImage(this, &#39;btn_next_midblue.gif&#39;);" /></a></div>
+</td></tr></table><div class="Element5">
+tagdhd_device_data</div>
+<div class="Element7">
+<a href="records_umd.html" target="topic">Structs, Records, Enums</a> | <a href="#" onclick="sendFeedback('dave_support@tes-dst.com', 'Documentation Feedback', 'Project: D/AVE HD Driver%0ATopic ID: tagdhd_device_data%0ATitle: tagdhd_device_data');">Send Feedback</a></div>
+</div>
+</div>
+
+<!-- End Page Header -->
+
+<!-- Begin Client Area -->
+<div class="Element720" id="areascroll">
+<div class="Element721">
+
+<!-- Begin Page Content -->
+<div class="Element58">
+<a name="53756D6D617279"></a><div class="Element14">
+Summary</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+Internal driver context.</p></div>
+</div>
+<a name="53796E746178"></a><div class="Element99">
+Syntax</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #00008C;">struct</span></strong> <strong><span style="color: #000000;">tagdhd_device_data</span></strong> {
+  <a href="dhd_handle_t.html" target="topic">dhd_handle_t</a> <strong><span style="color: #000000;">m_kernel_mode_handle</span></strong>;
+  <a href="dhd_handle_t.html" target="topic">dhd_handle_t</a> <strong><span style="color: #000000;">m_bridge</span></strong>;
+  <a href="dhd_uint32_t.html" target="topic">dhd_uint32_t</a> <strong><span style="color: #000000;">m_sizeof</span></strong>;
+  <a href="dhd_panic_callback_t.html" target="topic">dhd_panic_callback_t</a> <strong><span style="color: #000000;">m_panic_callback</span></strong>;
+  <strong><span style="color: #00008C;">void</span></strong> * <strong><span style="color: #000000;">m_api_data</span></strong>;
+  <a href="dhd_uint8_t.html" target="topic">dhd_uint8_t</a> * <strong><span style="color: #000000;">m_stream_shadow</span></strong>;
+  <a href="dhd_uint32_t.html" target="topic">dhd_uint32_t</a> * <strong><span style="color: #000000;">m_write_pos</span></strong>;
+  <a href="dhd_uint32_t.html" target="topic">dhd_uint32_t</a> <strong><span style="color: #000000;">m_free_words</span></strong>;
+  <a href="dhd_jobid_t.html" target="topic">dhd_jobid_t</a> <strong><span style="color: #000000;">m_last_jobid</span></strong>;
+  <a href="dhd_uint32_t.html" target="topic">dhd_uint32_t</a> <strong><span style="color: #000000;">m_last_jobgen</span></strong>;
+  <a href="dhd_device_description_t.html" target="topic">dhd_device_description_t</a> <strong><span style="color: #000000;">m_description</span></strong>;
+  dhd_reg_registerfile_t <strong><span style="color: #000000;">m_shadow_state</span></strong>;
+  dhd_reg_registerfile_mask_t <strong><span style="color: #000000;">m_pending_mask</span></strong>;
+  <strong><span style="color: #00008C;">struct</span></strong> <a href="dhd_gpu_job_t.html" target="topic">tagdhd_gpu_job</a> * <strong><span style="color: #000000;">m_job_struct_pool</span></strong>;
+  <strong><span style="color: #00008C;">struct</span></strong> <a href="dhd_gpu_job_t.html" target="topic">tagdhd_gpu_job</a> * <strong><span style="color: #000000;">m_free_job_struct</span></strong>;
+  <strong><span style="color: #00008C;">struct</span></strong> <a href="dhd_gpu_job_t.html" target="topic">tagdhd_gpu_job</a> * <strong><span style="color: #000000;">m_active_job</span></strong>;
+  <a href="dhd_uint16_t.html" target="topic">dhd_uint16_t</a> <strong><span style="color: #000000;">m_job_pool_size</span></strong>;
+  <a href="dhd_uint16_t.html" target="topic">dhd_uint16_t</a> <strong><span style="color: #000000;">m_job_words</span></strong>;
+  <a href="dhd_edge_data_t.html" target="topic">dhd_edge_data_t</a> * <strong><span style="color: #000000;">m_edge_buffer</span></strong>;
+  <a href="dhd_uv_data_t.html" target="topic">dhd_uv_data_t</a> * <strong><span style="color: #000000;">m_uv_buffer</span></strong>;
+  <a href="dhd_rhw_data_t.html" target="topic">dhd_rhw_data_t</a> * <strong><span style="color: #000000;">m_rhw_buffer</span></strong>;
+  <a href="dhd_uint32_t.html" target="topic">dhd_uint32_t</a> * <strong><span style="color: #000000;">m_col_buffer</span></strong>;
+  <a href="dhd_depth_data_t.html" target="topic">dhd_depth_data_t</a> * <strong><span style="color: #000000;">m_depth_buffer</span></strong>;
+  <a href="dhd_uint32_t.html" target="topic">dhd_uint32_t</a> <strong><span style="color: #000000;">m_edge_pitch</span></strong>;
+  <a href="dhd_uint32_t.html" target="topic">dhd_uint32_t</a> <strong><span style="color: #000000;">m_uv_pitch</span></strong>;
+  <a href="dhd_uint32_t.html" target="topic">dhd_uint32_t</a> <strong><span style="color: #000000;">m_rhw_pitch</span></strong>;
+  <a href="dhd_uint32_t.html" target="topic">dhd_uint32_t</a> <strong><span style="color: #000000;">m_depth_pitch</span></strong>;
+  <a href="dhd_uint32_t.html" target="topic">dhd_uint32_t</a> <strong><span style="color: #000000;">m_col_pitch</span></strong>;
+  <a href="dhd_uint32_t.html" target="topic">dhd_uint32_t</a> <strong><span style="color: #000000;">m_active_pfcs</span></strong>;
+  <a href="dhd_uint32_t.html" target="topic">dhd_uint32_t</a> * <strong><span style="color: #000000;">m_col_unit_base</span></strong>;
+  <a href="dhd_uint32_t.html" target="topic">dhd_uint32_t</a> * <strong><span style="color: #000000;">m_tex_unit_base</span></strong>;
+  <a href="dhd_cmdlist_t.html" target="topic">dhd_cmdlist_t</a> * <strong><span style="color: #000000;">m_cmdlist</span></strong>;
+  <a href="dhd_uint16_t.html" target="topic">dhd_uint16_t</a> <strong><span style="color: #000000;">m_edge_count</span></strong>;
+  <a href="dhd_uint16_t.html" target="topic">dhd_uint16_t</a> <strong><span style="color: #000000;">m_uv_count</span></strong>;
+  <a href="dhd_uint16_t.html" target="topic">dhd_uint16_t</a> <strong><span style="color: #000000;">m_rhw_count</span></strong>;
+  <a href="dhd_uint16_t.html" target="topic">dhd_uint16_t</a> <strong><span style="color: #000000;">m_depth_count</span></strong>;
+  <a href="dhd_uint16_t.html" target="topic">dhd_uint16_t</a> <strong><span style="color: #000000;">m_col_count</span></strong>;
+  <a href="dhd_uint16_t.html" target="topic">dhd_uint16_t</a> <strong><span style="color: #000000;">m_framebuffer_width</span></strong>;
+  <a href="dhd_uint16_t.html" target="topic">dhd_uint16_t</a> <strong><span style="color: #000000;">m_framebuffer_height</span></strong>;
+  <a href="dhd_uint16_t.html" target="topic">dhd_uint16_t</a> <strong><span style="color: #000000;">m_util_xmin</span></strong>;
+  <a href="dhd_uint16_t.html" target="topic">dhd_uint16_t</a> <strong><span style="color: #000000;">m_util_ymin</span></strong>;
+  <a href="dhd_uint16_t.html" target="topic">dhd_uint16_t</a> <strong><span style="color: #000000;">m_util_xmax</span></strong>;
+  <a href="dhd_uint16_t.html" target="topic">dhd_uint16_t</a> <strong><span style="color: #000000;">m_util_ymax</span></strong>;
+  <a href="dhd_uint8_t.html" target="topic">dhd_uint8_t</a> <strong><span style="color: #000000;">m_col_unit_index</span></strong>;
+  <a href="dhd_uint8_t.html" target="topic">dhd_uint8_t</a> <strong><span style="color: #000000;">m_col_unit_shift</span></strong>;
+  <a href="dhd_uint8_t.html" target="topic">dhd_uint8_t</a> <strong><span style="color: #000000;">m_tex_unit_index</span></strong>;
+  <a href="dhd_uint8_t.html" target="topic">dhd_uint8_t</a> <strong><span style="color: #000000;">m_tex_unit_shift</span></strong>;
+  <a href="dhd_uint8_t.html" target="topic">dhd_uint8_t</a> <strong><span style="color: #000000;">m_group_size</span></strong>[E_DHD_JOBGROUP_CNT];
+  <a href="dhd_uint32_t.html" target="topic">dhd_uint32_t</a> <strong><span style="color: #000000;">m_flag_tlist_enabled</span></strong> : 1;
+  <a href="dhd_uint32_t.html" target="topic">dhd_uint32_t</a> <strong><span style="color: #000000;">m_avoid_burstsplit</span></strong> : 1;
+};</pre></div></div>
+<a name="4465736372697074696F6E"></a><div class="Element14">
+Description</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+ Each user mode driver instance is based on this structure.</p></div>
+</div>
+<a name="4D656D62657273"></a><div class="Element14">
+Members</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element272">
+<div class="TableDiv">
+<table cellspacing="0" class="Table4">
+<tr>
+<td class="Element260" valign="top" width="28%">
+<div class="Element261">
+Members&#160;</div></td><td class="Element264" valign="top" width="72%">
+<div class="Element265">
+Description&#160;</div></td></tr><tr>
+<td class="Element262" valign="top" width="28%">
+<div class="Element263">
+m_kernel_mode_handle&#160;</div></td><td class="Element266" valign="top" width="72%">
+<div class="Element267">
+KMD connection id&#160;</div></td></tr><tr>
+<td class="Element262" valign="top" width="28%">
+<div class="Element263">
+m_bridge&#160;</div></td><td class="Element266" valign="top" width="72%">
+<div class="Element267">
+handle for callgate (platform specific)&#160;</div></td></tr><tr>
+<td class="Element262" valign="top" width="28%">
+<div class="Element263">
+m_sizeof&#160;</div></td><td class="Element266" valign="top" width="72%">
+<div class="Element267">
+structure id&#160;</div></td></tr><tr>
+<td class="Element262" valign="top" width="28%">
+<div class="Element263">
+m_panic_callback&#160;</div></td><td class="Element266" valign="top" width="72%">
+<div class="Element267">
+callback to be used in case of driver panic&#160;</div></td></tr><tr>
+<td class="Element262" valign="top" width="28%">
+<div class="Element263">
+m_api_data&#160;</div></td><td class="Element266" valign="top" width="72%">
+<div class="Element267">
+private data of the highlevel api&#160;</div></td></tr><tr>
+<td class="Element262" valign="top" width="28%">
+<div class="Element263">
+m_stream_shadow&#160;</div></td><td class="Element266" valign="top" width="72%">
+<div class="Element267">
+cpu accessable shadow mem if stream is not mapped memory&#160;</div></td></tr><tr>
+<td class="Element262" valign="top" width="28%">
+<div class="Element263">
+m_write_pos&#160;</div></td><td class="Element266" valign="top" width="72%">
+<div class="Element267">
+pointer to next free data word in current job&#160;</div></td></tr><tr>
+<td class="Element262" valign="top" width="28%">
+<div class="Element263">
+m_free_words&#160;</div></td><td class="Element266" valign="top" width="72%">
+<div class="Element267">
+number of free dwords at write pos&#160;</div></td></tr><tr>
+<td class="Element262" valign="top" width="28%">
+<div class="Element263">
+m_last_jobid&#160;</div></td><td class="Element266" valign="top" width="72%">
+<div class="Element267">
+latest job id issued so far&#160;</div></td></tr><tr>
+<td class="Element262" valign="top" width="28%">
+<div class="Element263">
+m_last_jobgen&#160;</div></td><td class="Element266" valign="top" width="72%">
+<div class="Element267">
+generation of latest job id&#160;</div></td></tr><tr>
+<td class="Element262" valign="top" width="28%">
+<div class="Element263">
+m_description&#160;</div></td><td class="Element266" valign="top" width="72%">
+<div class="Element267">
+HW device information&#160;</div></td></tr><tr>
+<td class="Element262" valign="top" width="28%">
+<div class="Element263">
+m_shadow_state&#160;</div></td><td class="Element266" valign="top" width="72%">
+<div class="Element267">
+buffered version of hw register file&#160;</div></td></tr><tr>
+<td class="Element262" valign="top" width="28%">
+<div class="Element263">
+m_pending_mask&#160;</div></td><td class="Element266" valign="top" width="72%">
+<div class="Element267">
+bitmask indicating pending registers in state&#160;</div></td></tr><tr>
+<td class="Element262" valign="top" width="28%">
+<div class="Element263">
+m_job_struct_pool&#160;</div></td><td class="Element266" valign="top" width="72%">
+<div class="Element267">
+PRQA S 3313 $Misra: No definition for this structure for a clean include structure.&#160;</div></td></tr><tr>
+<td class="Element262" valign="top" width="28%">
+<div class="Element263">
+m_free_job_struct&#160;</div></td><td class="Element266" valign="top" width="72%">
+<div class="Element267">
+next free job header&#160;</div></td></tr><tr>
+<td class="Element262" valign="top" width="28%">
+<div class="Element263">
+m_active_job&#160;</div></td><td class="Element266" valign="top" width="72%">
+<div class="Element267">
+job currently under construction or 0 if not yet allocated&#160;</div></td></tr><tr>
+<td class="Element262" valign="top" width="28%">
+<div class="Element263">
+m_job_pool_size&#160;</div></td><td class="Element266" valign="top" width="72%">
+<div class="Element267">
+maximum number of jobs in this context&#160;</div></td></tr><tr>
+<td class="Element262" valign="top" width="28%">
+<div class="Element263">
+m_job_words&#160;</div></td><td class="Element266" valign="top" width="72%">
+<div class="Element267">
+default jobsize in words&#160;</div></td></tr><tr>
+<td class="Element262" valign="top" width="28%">
+<div class="Element263">
+m_edge_buffer&#160;</div></td><td class="Element266" valign="top" width="72%">
+<div class="Element267">
+user specified geometry buffer pointers&#160;</div></td></tr><tr>
+<td class="Element262" valign="top" width="28%">
+<div class="Element263">
+m_active_pfcs&#160;</div></td><td class="Element266" valign="top" width="72%">
+<div class="Element267">
+set bit for each currently enabled performance counter&#160;</div></td></tr><tr>
+<td class="Element262" valign="top" width="28%">
+<div class="Element263">
+m_col_unit_base&#160;</div></td><td class="Element266" valign="top" width="72%">
+<div class="Element267">
+pointer to first shadow state of active color unit&#160;</div></td></tr><tr>
+<td class="Element262" valign="top" width="28%">
+<div class="Element263">
+m_tex_unit_base&#160;</div></td><td class="Element266" valign="top" width="72%">
+<div class="Element267">
+pointer to first shadow state of active texture unit&#160;</div></td></tr><tr>
+<td class="Element262" valign="top" width="28%">
+<div class="Element263">
+m_cmdlist&#160;</div></td><td class="Element266" valign="top" width="72%">
+<div class="Element267">
+pointer to command list used for recording driver commands, 0 in case of normal rendering&#160;</div></td></tr><tr>
+<td class="Element262" valign="top" width="28%">
+<div class="Element263">
+m_edge_count&#160;</div></td><td class="Element266" valign="top" width="72%">
+<div class="Element267">
+user specified geometry buffer sizes&#160;</div></td></tr><tr>
+<td class="Element262" valign="top" width="28%">
+<div class="Element263">
+m_framebuffer_width&#160;</div></td><td class="Element266" valign="top" width="72%">
+<div class="Element267">
+framebuffer dimension&#160;</div></td></tr><tr>
+<td class="Element262" valign="top" width="28%">
+<div class="Element263">
+m_util_xmin&#160;</div></td><td class="Element266" valign="top" width="72%">
+<div class="Element267">
+utilities cliprect&#160;</div></td></tr><tr>
+<td class="Element262" valign="top" width="28%">
+<div class="Element263">
+m_col_unit_index&#160;</div></td><td class="Element266" valign="top" width="72%">
+<div class="Element267">
+index of active color unit&#160;</div></td></tr><tr>
+<td class="Element262" valign="top" width="28%">
+<div class="Element263">
+m_col_unit_shift&#160;</div></td><td class="Element266" valign="top" width="72%">
+<div class="Element267">
+pending mask bit offset for active color unit&#160;</div></td></tr><tr>
+<td class="Element262" valign="top" width="28%">
+<div class="Element263">
+m_tex_unit_index&#160;</div></td><td class="Element266" valign="top" width="72%">
+<div class="Element267">
+index of active texture unit&#160;</div></td></tr><tr>
+<td class="Element262" valign="top" width="28%">
+<div class="Element263">
+m_tex_unit_shift&#160;</div></td><td class="Element266" valign="top" width="72%">
+<div class="Element267">
+pending mask bit offset for active texture unit&#160;</div></td></tr><tr>
+<td class="Element262" valign="top" width="28%">
+<div class="Element263">
+m_group_size&#160;</div></td><td class="Element266" valign="top" width="72%">
+<div class="Element267">
+hw maximum size of groups&#160;</div></td></tr><tr>
+<td class="Element262" valign="top" width="28%">
+<div class="Element263">
+m_flag_tlist_enabled&#160;</div></td><td class="Element266" valign="top" width="72%">
+<div class="Element267">
+current actions are logged for tlist dumping&#160;</div></td></tr></table></div></div>
+</div>
+</div>
+<a name="46696C65"></a><div class="Element14">
+File</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+davehd_internal.h</p></div>
+</div>
+</div>
+<!-- End Page Content -->
+
+<!-- Begin Page Footer -->
+<div class="Element93">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="100%">
+<div class="Element3">
+Copyright (c) 2013 All rights reserved for TES Electronic Solutions</div>
+</td></tr><tr><td width="100%">
+<div class="Element4">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="idx.html" target="tocidx">Index</a> | <a href="intro.html" target="topic">Home</a></div>
+</td></tr></table></div>
+
+<!-- End Page Footer -->
+</div>
+</div>
+
+<!-- End Client Area -->
+</body></html>

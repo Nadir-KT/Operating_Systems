@@ -1,0 +1,125 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
+<html>
+<head>
+<title>Driver Initialization</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="generator" content="Doc-O-Matic" />
+    <meta http-equiv="Content-Style-Type" content="text/css" />
+    <link rel="STYLESHEET" href="default.css" type="text/css" />
+
+<script type="text/javascript" src="scripts.js"></script>
+<!-- saved from url=(0013)about:internet -->
+</head>
+<body class="Element700" onload="onBodyLoadEx(&#39;index.html&#39;, &#39;topic&#39;, &#39;basic_context.html&#39;);" onmousedown="onBodyMouseDown();">
+
+<!-- Begin Popups -->
+
+<!-- End Popups -->
+
+<!-- Begin Page Header -->
+<div class="Element710" id="areafixed">
+<div class="Element92">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="33%">
+<div class="Element1">
+D/AVE HD Driver - Internal Documentation</div>
+</td><td width="34%">
+<div class="Element2">
+<a href="contents.html" target="tocidx"><img src="btn_globals_contents_midblue.gif" border="0" alt="Contents" title="Contents" onmouseover="switchImage(this, &#39;btn_globals_contents_midblue_hover.gif&#39;);" onmouseout="switchImage(this, &#39;btn_globals_contents_midblue.gif&#39;);" /></a><a href="idx.html" target="tocidx"><img src="btn_globals_index_midblue.gif" border="0" alt="Index" title="Index" onmouseover="switchImage(this, &#39;btn_globals_index_midblue_hover.gif&#39;);" onmouseout="switchImage(this, &#39;btn_globals_index_midblue.gif&#39;);" /></a><a href="intro.html" target="topic"><img src="btn_globals_home_midblue.gif" border="0" alt="Home" title="Home" onmouseover="switchImage(this, &#39;btn_globals_home_midblue_hover.gif&#39;);" onmouseout="switchImage(this, &#39;btn_globals_home_midblue.gif&#39;);" /></a></div>
+</td><td width="33%">
+<div class="Element90">
+<a href="general.html" target="topic"><img src="btn_prev_midblue.gif" border="0" alt="Previous" title="Previous" onmouseover="switchImage(this, &#39;btn_prev_midblue_hover.gif&#39;);" onmouseout="switchImage(this, &#39;btn_prev_midblue.gif&#39;);" /></a><a href="general.html" target="topic"><img src="btn_up_midblue.gif" border="0" alt="Up" title="Up" onmouseover="switchImage(this, &#39;btn_up_midblue_hover.gif&#39;);" onmouseout="switchImage(this, &#39;btn_up_midblue.gif&#39;);" /></a><a href="basics_memory.html" target="topic"><img src="btn_next_midblue.gif" border="0" alt="Next" title="Next" onmouseover="switchImage(this, &#39;btn_next_midblue_hover.gif&#39;);" onmouseout="switchImage(this, &#39;btn_next_midblue.gif&#39;);" /></a></div>
+</td></tr></table><div class="Element5">
+Driver Initialization</div>
+<div class="Element7">
+<a href="general.html" target="topic">General</a> | <a href="#" onclick="sendFeedback('dave_support@tes-dst.com', 'Documentation Feedback', 'Project: D/AVE HD Driver%0ATopic ID: !!Basic_Context%0ATitle: Driver Initialization');">Send Feedback</a></div>
+</div>
+</div>
+
+<!-- End Page Header -->
+
+<!-- Begin Client Area -->
+<div class="Element720" id="areascroll">
+<div class="Element721">
+
+<!-- Begin Page Content -->
+<div class="Element58">
+<a name="4465736372697074696F6E"></a><div class="Element11">
+<div class="Element10">
+<div class="Element15">
+Driver Initialization</div>
+<p class="Element10">
+&#160;</p>
+<p class="Element10">
+Each application that wants to interact with the DAVE HD has to create a user mode driver context. All subsequent calls to the driver will pass the context handle as first parameter. The context itself is stored inside an application defined variable of the type <a href="dhd_device_t.html" target="topic">dhd_device_t</a>. It should be either created on the heap or scoped so that it will persist as long as the driver context is needed.&#160;</p>
+<p class="Element10">
+&#160;</p>
+<p class="Element10">
+The typical initialization looks like this: </p><div class="Element170">
+<a href="#" onclick="CopyElementToClipboard(&#39;code00001&#39;);">Copy Code</a></div>
+<div class="Element13"><div class="Element12" id="code00001"><pre class="Element12"><strong><span style="color: #00008C;">static</span></strong> dhd_device_t s_device_context;
+
+<strong><span style="color: #00008C;">void</span></strong> some_function() {
+  dhd_handle_t my_handle = dhd_init(&amp;s_device_context, 0, 0);
+  <strong><span style="color: #00008C;">if</span></strong> (my_handle == DHD_INVALID_HANDLE) {
+    exit(1); <em><span style="color: #008000;">// context creation failed</span></em>
+  }
+
+  <em><span style="color: #008000;">// can use my_handle here..</span></em></pre></div></div>
+<p class="Element10">
+&#160;</p>
+<p class="Element10">
+For further details check the API reference for <a href="dhd_init.html" target="topic">dhd_init</a>.&#160;</p>
+<p class="Element10">
+&#160;</p>
+<p class="Element10">
+Each context gets a virtualized view of the hardware. Operations and states set in one context will not affect any other context. The only exception are the shared resources Video Memory and CLUT Memory.&#160;</p>
+<p class="Element10">
+&#160;</p><div class="Element15">
+Multi Threading</div>
+<p class="Element10">
+A single driver context may be used only from a single thread at any time. Different threads can use the same context if they guarantee not to do so concurrently (e.g. initialization is running in a different thread than rendering will run in later).&#160;</p>
+<p class="Element10">
+For proper multi threading each thread should use its own context. As long as all of these contexts run on the same HW instance (second parameter of <a href="dhd_init.html" target="topic">dhd_init</a>) they can also access textures and buffers of one another, even if those have been allocated using a different context.&#160;</p>
+<p class="Element10">
+&#160;</p>
+<p class="Element10">
+Of course it is also possible for a single thread to utilize multiple driver contexts. This basically moves the burden of state switching from the application to the driver, but it might also create the need to call <a href="dhd_flush.html" target="topic">dhd_flush</a> in order to ensure overall command ordering. Therefore it is more efficient to use <a href="dhd_get_state.html" target="topic">dhd_get_state</a> / <a href="dhd_set_state.html" target="topic">dhd_set_state</a> instead of multiple contexts when a single thread is dealing with many different tasks that require isolated states.&#160;</p>
+<p class="Element10">
+&#160;</p><div class="Element15">
+Proper Shutdown</div>
+<p class="Element10">
+At application shutdown (or when all rendering work is done) a driver context has to be deinitialized. This is done with a single call : </p><div class="Element170">
+<a href="#" onclick="CopyElementToClipboard(&#39;code00002&#39;);">Copy Code</a></div>
+<div class="Element13"><div class="Element12" id="code00002"><pre class="Element12">dhd_shutdown( my_handle );</pre></div></div>
+<p class="Element10">
+&#160;</p>
+<p class="Element10">
+Shutdown will wait for all running HW activity to end and it will discard pending activity. To ensure no commands are pending and thus discarded you can call <a href="dhd_flush.html" target="topic">dhd_flush</a> (or <a href="dhd_finish.html" target="topic">dhd_finish</a>) prior to the shutdown. So when the rendering output is used after <a href="dhd_shutdown.html" target="topic">dhd_shutdown</a> (e.g. because the image shall be kept on display) the following sequence is recommended :&#160;</p>
+<p class="Element10">
+&#160;</p><div class="Element170">
+<a href="#" onclick="CopyElementToClipboard(&#39;code00003&#39;);">Copy Code</a></div>
+<div class="Element13"><div class="Element12" id="code00003"><pre class="Element12">dhd_finish( my_handle );
+dhd_shutdown( my_handle );</pre></div></div>
+</div>
+</div>
+</div>
+<!-- End Page Content -->
+
+<!-- Begin Page Footer -->
+<div class="Element93">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="100%">
+<div class="Element3">
+Copyright (c) 2013 All rights reserved for TES Electronic Solutions</div>
+</td></tr><tr><td width="100%">
+<div class="Element4">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="idx.html" target="tocidx">Index</a> | <a href="intro.html" target="topic">Home</a></div>
+</td></tr></table></div>
+
+<!-- End Page Footer -->
+</div>
+</div>
+
+<!-- End Client Area -->
+</body></html>

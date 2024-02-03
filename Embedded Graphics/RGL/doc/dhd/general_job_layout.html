@@ -1,0 +1,110 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
+<html>
+<head>
+<title>Job Memory Layout</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="generator" content="Doc-O-Matic" />
+    <meta http-equiv="Content-Style-Type" content="text/css" />
+    <link rel="STYLESHEET" href="default.css" type="text/css" />
+
+<script type="text/javascript" src="scripts.js"></script>
+<!-- saved from url=(0013)about:internet -->
+</head>
+<body class="Element700" onload="onBodyLoadEx(&#39;index.html&#39;, &#39;topic&#39;, &#39;general_job_layout.html&#39;);" onmousedown="onBodyMouseDown();">
+
+<!-- Begin Popups -->
+
+<!-- End Popups -->
+
+<!-- Begin Page Header -->
+<div class="Element710" id="areafixed">
+<div class="Element92">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="33%">
+<div class="Element1">
+D/AVE HD Driver - Internal Documentation</div>
+</td><td width="34%">
+<div class="Element2">
+<a href="contents.html" target="tocidx"><img src="btn_globals_contents_midblue.gif" border="0" alt="Contents" title="Contents" onmouseover="switchImage(this, &#39;btn_globals_contents_midblue_hover.gif&#39;);" onmouseout="switchImage(this, &#39;btn_globals_contents_midblue.gif&#39;);" /></a><a href="idx.html" target="tocidx"><img src="btn_globals_index_midblue.gif" border="0" alt="Index" title="Index" onmouseover="switchImage(this, &#39;btn_globals_index_midblue_hover.gif&#39;);" onmouseout="switchImage(this, &#39;btn_globals_index_midblue.gif&#39;);" /></a><a href="intro.html" target="topic"><img src="btn_globals_home_midblue.gif" border="0" alt="Home" title="Home" onmouseover="switchImage(this, &#39;btn_globals_home_midblue_hover.gif&#39;);" onmouseout="switchImage(this, &#39;btn_globals_home_midblue.gif&#39;);" /></a></div>
+</td><td width="33%">
+<div class="Element90">
+<a href="general_job_waiting.html" target="topic"><img src="btn_prev_midblue.gif" border="0" alt="Previous" title="Previous" onmouseover="switchImage(this, &#39;btn_prev_midblue_hover.gif&#39;);" onmouseout="switchImage(this, &#39;btn_prev_midblue.gif&#39;);" /></a><a href="general_jobs.html" target="topic"><img src="btn_up_midblue.gif" border="0" alt="Up" title="Up" onmouseover="switchImage(this, &#39;btn_up_midblue_hover.gif&#39;);" onmouseout="switchImage(this, &#39;btn_up_midblue.gif&#39;);" /></a><a href="general_job_scheduler.html" target="topic"><img src="btn_next_midblue.gif" border="0" alt="Next" title="Next" onmouseover="switchImage(this, &#39;btn_next_midblue_hover.gif&#39;);" onmouseout="switchImage(this, &#39;btn_next_midblue.gif&#39;);" /></a></div>
+</td></tr></table><div class="Element5">
+Job Memory Layout</div>
+<div class="Element7">
+<a href="general_jobs.html" target="topic">Jobs</a> | <a href="#" onclick="sendFeedback('dave_support@tes-dst.com', 'Documentation Feedback', 'Project: D/AVE HD Driver%0ATopic ID: !!General_Job_Layout%0ATitle: Job Memory Layout');">Send Feedback</a></div>
+</div>
+</div>
+
+<!-- End Page Header -->
+
+<!-- Begin Client Area -->
+<div class="Element720" id="areascroll">
+<div class="Element721">
+
+<!-- Begin Page Content -->
+<div class="Element58">
+<a name="4465736372697074696F6E"></a><div class="Element11">
+<div class="Element10">
+<div class="Element15">
+Job Memory Layout</div>
+<p class="Element10">
+&#160;</p>
+<p class="Element10">
+When initializing the kernel mode driver a default memory layout is specified by defining a default jobsize and job count. Both affect the performance and memory footprint. Choosing optimal values depends on the platform and application.&#160;</p>
+<p class="Element10">
+&#160;</p>
+<p class="Element10">
+In general larger jobs will:</p>
+<ul class="Element630">
+<li class="Element600">increase latency until a issued command gets executed (unless forced by flush or finish)</li>
+<li class="Element600">decreases driver overhead (generally good)</li>
+<li class="Element600">decrease the GPU task switching granularity (bad when frequent switches are required)</li>
+<li class="Element600">decrease the number of job buffers required for optimal performance</li>
+</ul><p class="Element10">
+&#160;</p>
+<p class="Element10">
+Consequently shorter jobs will:</p>
+<ul class="Element630">
+<li class="Element600">decrease latency</li>
+<li class="Element600">increase driver overhead</li>
+<li class="Element600">increase the task switching granularity</li>
+<li class="Element600">increase the number of job buffers required for optimal performance</li>
+</ul><p class="Element10">
+&#160;</p>
+<p class="Element10">
+Job sizes should be multiples of CPU cache lines and have to be larger than 256 byte.&#160;</p>
+<p class="Element10">
+The number of job buffers should be at least two in order to support one buffer being filled while another one is executed. But it is much more efficient to provide more than two buffers to enable the driver to queue more commands and create a larger timespan of fully parallel work between GPU and CPU.&#160;</p>
+<p class="Element10">
+&#160;</p>
+<p class="Element10">
+In general more job buffers will:</p>
+<ul class="Element630">
+<li class="Element600">increase the memory footprint</li>
+<li class="Element600">increase the ability for the system to run parallel (which is essential for the optimal performance)</li>
+</ul><p class="Element10">
+&#160;</p>
+<p class="Element10">
+The creation of parallel execution is of course also limited by the workload itself. Increasing the number of buffers beyond a certain point will not increase performance but only cost more memory. To maximize an applications ability to generate parallel workloads it should avoid calling <a href="dhd_finish.html" target="topic">dhd_finish</a> as much as possible and use <a href="dhd_finish_marked.html" target="topic">dhd_finish_marked</a> with syncpoints that lie as much as possible in the past (syncpoints from the last frame or even later).</p></div>
+</div>
+</div>
+<!-- End Page Content -->
+
+<!-- Begin Page Footer -->
+<div class="Element93">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="100%">
+<div class="Element3">
+Copyright (c) 2013 All rights reserved for TES Electronic Solutions</div>
+</td></tr><tr><td width="100%">
+<div class="Element4">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="idx.html" target="tocidx">Index</a> | <a href="intro.html" target="topic">Home</a></div>
+</td></tr></table></div>
+
+<!-- End Page Footer -->
+</div>
+</div>
+
+<!-- End Client Area -->
+</body></html>

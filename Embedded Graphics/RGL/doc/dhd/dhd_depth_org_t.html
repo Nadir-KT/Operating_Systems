@@ -1,0 +1,154 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
+<html>
+<head>
+<title>dhd_depth_org_t</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="generator" content="Doc-O-Matic" />
+    <meta http-equiv="Content-Style-Type" content="text/css" />
+    <link rel="STYLESHEET" href="default.css" type="text/css" />
+
+<script type="text/javascript" src="scripts.js"></script>
+<!-- saved from url=(0013)about:internet -->
+</head>
+<body class="Element700" onload="onBodyLoadEx(&#39;index.html&#39;, &#39;topic&#39;, &#39;dhd_depth_org_t.html&#39;);" onmousedown="onBodyMouseDown();">
+
+<!-- Begin Popups -->
+
+<!-- End Popups -->
+
+<!-- Begin Page Header -->
+<div class="Element710" id="areafixed">
+<div class="Element92">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="33%">
+<div class="Element1">
+D/AVE HD Driver - Internal Documentation</div>
+</td><td width="34%">
+<div class="Element2">
+<a href="contents.html" target="tocidx"><img src="btn_globals_contents_midblue.gif" border="0" alt="Contents" title="Contents" onmouseover="switchImage(this, &#39;btn_globals_contents_midblue_hover.gif&#39;);" onmouseout="switchImage(this, &#39;btn_globals_contents_midblue.gif&#39;);" /></a><a href="idx.html" target="tocidx"><img src="btn_globals_index_midblue.gif" border="0" alt="Index" title="Index" onmouseover="switchImage(this, &#39;btn_globals_index_midblue_hover.gif&#39;);" onmouseout="switchImage(this, &#39;btn_globals_index_midblue.gif&#39;);" /></a><a href="intro.html" target="topic"><img src="btn_globals_home_midblue.gif" border="0" alt="Home" title="Home" onmouseover="switchImage(this, &#39;btn_globals_home_midblue_hover.gif&#39;);" onmouseout="switchImage(this, &#39;btn_globals_home_midblue.gif&#39;);" /></a></div>
+</td><td width="33%">
+<div class="Element90">
+<a href="dhd_depth_data_t.html" target="topic"><img src="btn_prev_midblue.gif" border="0" alt="Previous" title="Previous" onmouseover="switchImage(this, &#39;btn_prev_midblue_hover.gif&#39;);" onmouseout="switchImage(this, &#39;btn_prev_midblue.gif&#39;);" /></a><a href="records_umd.html" target="topic"><img src="btn_up_midblue.gif" border="0" alt="Up" title="Up" onmouseover="switchImage(this, &#39;btn_up_midblue_hover.gif&#39;);" onmouseout="switchImage(this, &#39;btn_up_midblue.gif&#39;);" /></a><a href="dhd_device_description_t.html" target="topic"><img src="btn_next_midblue.gif" border="0" alt="Next" title="Next" onmouseover="switchImage(this, &#39;btn_next_midblue_hover.gif&#39;);" onmouseout="switchImage(this, &#39;btn_next_midblue.gif&#39;);" /></a></div>
+</td></tr></table><div class="Element5">
+dhd_depth_org_t</div>
+<div class="Element7">
+<a href="records_umd.html" target="topic">Structs, Records, Enums</a> | <a href="#" onclick="sendFeedback('dave_support@tes-dst.com', 'Documentation Feedback', 'Project: D/AVE HD Driver%0ATopic ID: dhd_depth_org_t%0ATitle: dhd_depth_org_t');">Send Feedback</a></div>
+</div>
+</div>
+
+<!-- End Page Header -->
+
+<!-- Begin Client Area -->
+<div class="Element720" id="areascroll">
+<div class="Element721">
+
+<!-- Begin Page Content -->
+<div class="Element58">
+<a name="53756D6D617279"></a><div class="Element14">
+Summary</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+Depth/Stencil/Alpha Buffer organization.</p></div>
+</div>
+<a name="53796E746178"></a><div class="Element99">
+Syntax</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #00008C;">typedef</span></strong> <strong><span style="color: #00008C;">enum</span></strong> <strong><span style="color: #000000;">tagdhd_depth_org</span></strong> {
+  <strong><span style="color: #000000;">E_DHD_DEPTH_ORG_S8A8Z16</span></strong> = 0|DHD_DEPTH_ORG_FLAG,
+  <strong><span style="color: #000000;">E_DHD_DEPTH_ORG_S8A0Z24</span></strong> = 1|DHD_DEPTH_ORG_FLAG,
+  <strong><span style="color: #000000;">E_DHD_DEPTH_ORG_S1A5Z10</span></strong> = 2|DHD_DEPTH_ORG_FLAG,
+  <strong><span style="color: #000000;">E_DHD_DEPTH_ORG_S8A8Z0</span></strong> = 3|DHD_DEPTH_ORG_FLAG,
+  <strong><span style="color: #000000;">E_DHD_DEPTH_ORG_S1A0Z15</span></strong> = 4|DHD_DEPTH_ORG_FLAG,
+  <strong><span style="color: #000000;">E_DHD_DEPTH_ORG_S1A7Z0</span></strong> = 5|DHD_DEPTH_ORG_FLAG,
+  <strong><span style="color: #000000;">E_DHD_DEPTH_ORG_S8A0Z0</span></strong> = 6|DHD_DEPTH_ORG_FLAG,
+  <strong><span style="color: #000000;">E_DHD_DEPTH_ORG_S0A8Z0</span></strong> = 7|DHD_DEPTH_ORG_FLAG
+} dhd_depth_org_t;</pre></div></div>
+<a name="4465736372697074696F6E"></a><div class="Element14">
+Description</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+ Describes the pixel size and encoding used for the ZSA Buffer.</p></div>
+</div>
+<a name="4D656D62657273"></a><div class="Element14">
+Members</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element272">
+<div class="TableDiv">
+<table cellspacing="0" class="Table4">
+<tr>
+<td class="Element260" valign="top" width="28%">
+<div class="Element261">
+Members&#160;</div></td><td class="Element264" valign="top" width="72%">
+<div class="Element265">
+Description&#160;</div></td></tr><tr>
+<td class="Element262" valign="top" width="28%">
+<div class="Element263">
+E_DHD_DEPTH_ORG_S8A8Z16&#160;</div></td><td class="Element266" valign="top" width="72%">
+<div class="Element267">
+32 Bit pixel using S8, A8, Z16 layout&#160;</div></td></tr><tr>
+<td class="Element262" valign="top" width="28%">
+<div class="Element263">
+E_DHD_DEPTH_ORG_S8A0Z24&#160;</div></td><td class="Element266" valign="top" width="72%">
+<div class="Element267">
+32 Bit pixel using S8, Z24 layout without global alpha&#160;</div></td></tr><tr>
+<td class="Element262" valign="top" width="28%">
+<div class="Element263">
+E_DHD_DEPTH_ORG_S1A5Z10&#160;</div></td><td class="Element266" valign="top" width="72%">
+<div class="Element267">
+16 Bit pixel using S1, A5, Z10 layout&#160;</div></td></tr><tr>
+<td class="Element262" valign="top" width="28%">
+<div class="Element263">
+E_DHD_DEPTH_ORG_S8A8Z0&#160;</div></td><td class="Element266" valign="top" width="72%">
+<div class="Element267">
+16 bit pixel using S8, A8 layout&#160;</div></td></tr><tr>
+<td class="Element262" valign="top" width="28%">
+<div class="Element263">
+E_DHD_DEPTH_ORG_S1A0Z15&#160;</div></td><td class="Element266" valign="top" width="72%">
+<div class="Element267">
+16 Bit pixel using S1, Z15 layout without global alpha&#160;</div></td></tr><tr>
+<td class="Element262" valign="top" width="28%">
+<div class="Element263">
+E_DHD_DEPTH_ORG_S1A7Z0&#160;</div></td><td class="Element266" valign="top" width="72%">
+<div class="Element267">
+8 Bit pixel using S1, A7 layout without depth&#160;</div></td></tr><tr>
+<td class="Element262" valign="top" width="28%">
+<div class="Element263">
+E_DHD_DEPTH_ORG_S8A0Z0&#160;</div></td><td class="Element266" valign="top" width="72%">
+<div class="Element267">
+8 Bit pixel using only stencil&#160;</div></td></tr><tr>
+<td class="Element262" valign="top" width="28%">
+<div class="Element263">
+E_DHD_DEPTH_ORG_S0A8Z0&#160;</div></td><td class="Element266" valign="top" width="72%">
+<div class="Element267">
+8 Bit pixel using only global alpha&#160;</div></td></tr></table></div></div>
+</div>
+</div>
+<a name="46696C65"></a><div class="Element14">
+File</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+davehd_driver.h</p></div>
+</div>
+</div>
+<!-- End Page Content -->
+
+<!-- Begin Page Footer -->
+<div class="Element93">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="100%">
+<div class="Element3">
+Copyright (c) 2013 All rights reserved for TES Electronic Solutions</div>
+</td></tr><tr><td width="100%">
+<div class="Element4">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="idx.html" target="tocidx">Index</a> | <a href="intro.html" target="topic">Home</a></div>
+</td></tr></table></div>
+
+<!-- End Page Footer -->
+</div>
+</div>
+
+<!-- End Client Area -->
+</body></html>

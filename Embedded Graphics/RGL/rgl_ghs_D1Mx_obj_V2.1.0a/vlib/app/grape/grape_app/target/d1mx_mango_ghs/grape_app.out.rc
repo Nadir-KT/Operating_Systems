@@ -1,0 +1,21 @@
+// connect to e1
+if(_REMOTE_CONNECTED == 0) {
+  connect 850eserv2 -rh850 -e1lpd4=16500 -df=C:\ghs\DF-RH850D1M-EE_E100g\update\dr7f701412.dvf -noiop -id ffffffffffffffffffffffffffffffff -D -dclock=8000,0,swoff -fastflashload
+}
+// load software to target
+target rst;
+load
+
+// reset 
+target rst; e 0x0000
+
+// set a command breakpoint for printing to stdout.txt
+//b ($retadr(dtst_print)) {memdump -append raw stdout.txt &print_buf print_buf_len; resume}
+
+// set a command breakpoint for storing files
+//b ($retadr(dtst_raw_store_file)) {memdump raw (name) (handle->m_data) (handle->m_size); resume}
+
+// start, reset stdout.txt to empty content and open stdout.txt as a 'console'
+//b main {memdump raw stdout.txt main 0; shell tail -f stdout.txt}
+b main
+s

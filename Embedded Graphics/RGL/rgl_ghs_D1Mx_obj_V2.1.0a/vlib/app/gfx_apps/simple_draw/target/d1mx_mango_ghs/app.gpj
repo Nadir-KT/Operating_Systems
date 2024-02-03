@@ -1,0 +1,21 @@
+#!gbuild
+[Subproject]
+	:sourceDir=../../../..
+./gfx_apps/simple_draw/src/mem_init.c
+./gfx_apps/simple_draw/src/hypb.c
+./gfx_apps/simple_draw/src/FanWise_Warping80_240_320_RingBuffer.c
+./gfx_apps/simple_draw/src/vowe.c
+./gfx_apps/simple_draw/src/FanWise_Warping80_240_320.c
+./gfx_apps/simple_draw/src/main.c
+./gfx_apps/simple_draw/src/black_king.c
+./gfx_apps/simple_draw/src/sfma.c
+./gfx_apps/simple_draw/src/logo_r.c
+./gfx_apps/simple_draw/src/wm.c
+./gfx_apps/simple_draw/src/small_gear.c
+./gfx_apps/simple_draw/src/FanWise_Warping10_240_320_RingBuffer.c
+./gfx_apps/simple_draw/src/voca_warping80.c
+./gfx_apps/simple_draw/src/octa.c
+./gfx_apps/simple_draw/src/jcua.c
+./gfx_apps/simple_draw/src/FanWise_Warping10_240_320.c
+./gfx_apps/simple_draw/src/voca_warping10.c
+./common/dhd/r_util_dhd.c

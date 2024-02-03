@@ -1,0 +1,141 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
+<html>
+<head>
+<title>dhd_set_buffer_as_framebuffer</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="generator" content="Doc-O-Matic" />
+    <meta http-equiv="Content-Style-Type" content="text/css" />
+    <link rel="STYLESHEET" href="default.css" type="text/css" />
+
+<script type="text/javascript" src="scripts.js"></script>
+<!-- saved from url=(0013)about:internet -->
+</head>
+<body class="Element700" onload="onBodyLoadEx(&#39;index.html&#39;, &#39;topic&#39;, &#39;dhd_set_buffer_as_framebuffer.html&#39;);" onmousedown="onBodyMouseDown();">
+
+<!-- Begin Popups -->
+
+<!-- End Popups -->
+
+<!-- Begin Page Header -->
+<div class="Element710" id="areafixed">
+<div class="Element92">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="33%">
+<div class="Element1">
+D/AVE HD Driver - Internal Documentation</div>
+</td><td width="34%">
+<div class="Element2">
+<a href="contents.html" target="tocidx"><img src="btn_globals_contents_midblue.gif" border="0" alt="Contents" title="Contents" onmouseover="switchImage(this, &#39;btn_globals_contents_midblue_hover.gif&#39;);" onmouseout="switchImage(this, &#39;btn_globals_contents_midblue.gif&#39;);" /></a><a href="idx.html" target="tocidx"><img src="btn_globals_index_midblue.gif" border="0" alt="Index" title="Index" onmouseover="switchImage(this, &#39;btn_globals_index_midblue_hover.gif&#39;);" onmouseout="switchImage(this, &#39;btn_globals_index_midblue.gif&#39;);" /></a><a href="intro.html" target="topic"><img src="btn_globals_home_midblue.gif" border="0" alt="Home" title="Home" onmouseover="switchImage(this, &#39;btn_globals_home_midblue_hover.gif&#39;);" onmouseout="switchImage(this, &#39;btn_globals_home_midblue.gif&#39;);" /></a></div>
+</td><td width="33%">
+<div class="Element90">
+<a href="dhd_util_color_lerp.html" target="topic"><img src="btn_prev_midblue.gif" border="0" alt="Previous" title="Previous" onmouseover="switchImage(this, &#39;btn_prev_midblue_hover.gif&#39;);" onmouseout="switchImage(this, &#39;btn_prev_midblue.gif&#39;);" /></a><a href="umd_section_utility2.html" target="topic"><img src="btn_up_midblue.gif" border="0" alt="Up" title="Up" onmouseover="switchImage(this, &#39;btn_up_midblue_hover.gif&#39;);" onmouseout="switchImage(this, &#39;btn_up_midblue.gif&#39;);" /></a><a href="dhd_set_buffer_as_texture.html" target="topic"><img src="btn_next_midblue.gif" border="0" alt="Next" title="Next" onmouseover="switchImage(this, &#39;btn_next_midblue_hover.gif&#39;);" onmouseout="switchImage(this, &#39;btn_next_midblue.gif&#39;);" /></a></div>
+</td></tr></table><div class="Element5">
+dhd_set_buffer_as_framebuffer</div>
+<div class="Element7">
+<a href="umd_section_utility2.html" target="topic">State Utility Functions</a> | <a href="dhd_set_buffer_as_framebuffer_see_also.html" target="topic">See Also</a> | <a href="#" onclick="sendFeedback('dave_support@tes-dst.com', 'Documentation Feedback', 'Project: D/AVE HD Driver%0ATopic ID: dhd_set_buffer_as_framebuffer@dhd_handle_t@dhd_buffer_t *%0ATitle: dhd_set_buffer_as_framebuffer');">Send Feedback</a></div>
+</div>
+</div>
+
+<!-- End Page Header -->
+
+<!-- Begin Client Area -->
+<div class="Element720" id="areascroll">
+<div class="Element721">
+
+<!-- Begin Page Content -->
+<div class="Element58">
+<a name="53756D6D617279"></a><div class="Element14">
+Summary</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+Set framebuffer address, format and size from buffer.</p></div>
+</div>
+<a name="53796E746178"></a><div class="Element99">
+Syntax</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><a href="dhd_enum_t.html" target="topic">dhd_enum_t</a> <strong><span style="color: #000000;">dhd_set_buffer_as_framebuffer</span></strong>(<a href="dhd_handle_t.html" target="topic">dhd_handle_t</a> <strong><span style="color: #660000;">a_device</span></strong>, <a href="dhd_buffer_t.html" target="topic">dhd_buffer_t</a> * <strong><span style="color: #660000;">a_buffer</span></strong>);</pre></div></div>
+<a name="4465736372697074696F6E"></a><div class="Element14">
+Description</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+ Setting up a framebuffer usually requires a series of state changes (see e.g. <a href="dhd_set_framebuffer_address.html" target="topic">dhd_set_framebuffer_address</a>, <a href="dhd_set_framebuffer_format.html" target="topic">dhd_set_framebuffer_format</a>, <a href="dhd_set_framebuffer_size.html" target="topic">dhd_set_framebuffer_size</a>). With this function all relevant states can be changed at once according to the content of the given buffer. For this to work the optional m_format member of <a href="dhd_buffer_t.html" target="topic">dhd_buffer_t</a> has to be specified.&#160;</p>
+<p class="Element10">
+&#160;</p>
+<p class="Element10">
+If the buffer is describing a texture or zsa buffer (determined by it&#39;s m_format member containing a type from <a href="dhd_texel_org_t.html" target="topic">dhd_texel_org_t</a> or <a href="dhd_depth_org_t.html" target="topic">dhd_depth_org_t</a>) the function will automatically choose the framebuffer format that matches the data best. If the format can not be matched an E_DHD_ERROR_NOT_SUPPORTED will be returned and no states changed.&#160;</p>
+<p class="Element10">
+&#160;</p>
+<p class="Element10">
+Trying to map a texture with nonlinear memory layout (m_access is not linear or virtual_tiled) will also result in an E_DHD_ERROR_NOT_SUPPORTED error.&#160;</p>
+<p class="Element10">
+&#160;</p>
+<p class="Element10">
+When mapping a zsa buffer the function will try to map stencil to the alpha channel, global alpha to the red channel (when present) and depth to the remaining channels.</p></div>
+</div>
+<a name="506172616D6574657273"></a><div class="Element14">
+Parameters</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element252">
+<div class="TableDiv">
+<table cellspacing="0" class="Table3">
+<tr>
+<td class="Element240" valign="top" width="28%">
+<div class="Element241">
+Parameters&#160;</div></td><td class="Element244" valign="top" width="72%">
+<div class="Element245">
+Description&#160;</div></td></tr><tr>
+<td class="Element242" valign="top" width="28%">
+<div class="Element243">
+a_device&#160;</div></td><td class="Element246" valign="top" width="72%">
+<div class="Element247">
+Driver context handle (as returned by <a href="dhd_init.html" target="topic">dhd_init</a>).&#160;</div></td></tr><tr>
+<td class="Element242" valign="top" width="28%">
+<div class="Element243">
+a_buffer&#160;</div></td><td class="Element246" valign="top" width="72%">
+<div class="Element247">
+Pointer to an allocated <a href="dhd_buffer_t.html" target="topic">dhd_buffer_t</a> with m_format description (see <a href="dhd_alloc_buffer.html" target="topic">dhd_alloc_buffer</a>)&#160;</div></td></tr></table></div></div>
+</div>
+</div>
+<a name="52657475726E73"></a><div class="Element14">
+Returns</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+E_DHD_OK if successful E_DHD_ERROR_INVALID_ARGUMENT in case of an invalid input parameter E_DHD_ERROR_NO_BUFFER if the buffer is invalid or has not yet been allocated E_DHD_ERROR_NOT_SUPPORTED if the buffers m_format is invalid or not supported as framebuffer E_DHD_ERROR_INVALID_PTR if the buffer has an invalid alignment</p></div>
+</div>
+<a name="53656520416C736F"></a><div class="Element14">
+See Also</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+<a href="dhd_set_framebuffer_address.html" target="topic">dhd_set_framebuffer_address</a>, <a href="dhd_set_framebuffer_format.html" target="topic">dhd_set_framebuffer_format</a>, <a href="dhd_set_framebuffer_size.html" target="topic">dhd_set_framebuffer_size</a></p></div>
+</div>
+<a name="46696C65"></a><div class="Element14">
+File</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+davehd_util.h</p></div>
+</div>
+</div>
+<!-- End Page Content -->
+
+<!-- Begin Page Footer -->
+<div class="Element93">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="100%">
+<div class="Element3">
+Copyright (c) 2013 All rights reserved for TES Electronic Solutions</div>
+</td></tr><tr><td width="100%">
+<div class="Element4">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="idx.html" target="tocidx">Index</a> | <a href="intro.html" target="topic">Home</a></div>
+</td></tr></table></div>
+
+<!-- End Page Footer -->
+</div>
+</div>
+
+<!-- End Client Area -->
+</body></html>

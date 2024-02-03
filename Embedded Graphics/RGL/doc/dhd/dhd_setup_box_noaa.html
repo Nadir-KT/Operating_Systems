@@ -1,0 +1,158 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
+<html>
+<head>
+<title>dhd_setup_box_noaa</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="generator" content="Doc-O-Matic" />
+    <meta http-equiv="Content-Style-Type" content="text/css" />
+    <link rel="STYLESHEET" href="default.css" type="text/css" />
+
+<script type="text/javascript" src="scripts.js"></script>
+<!-- saved from url=(0013)about:internet -->
+</head>
+<body class="Element700" onload="onBodyLoadEx(&#39;index.html&#39;, &#39;topic&#39;, &#39;dhd_setup_box_noaa.html&#39;);" onmousedown="onBodyMouseDown();">
+
+<!-- Begin Popups -->
+
+<!-- End Popups -->
+
+<!-- Begin Page Header -->
+<div class="Element710" id="areafixed">
+<div class="Element92">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="33%">
+<div class="Element1">
+D/AVE HD Driver - Internal Documentation</div>
+</td><td width="34%">
+<div class="Element2">
+<a href="contents.html" target="tocidx"><img src="btn_globals_contents_midblue.gif" border="0" alt="Contents" title="Contents" onmouseover="switchImage(this, &#39;btn_globals_contents_midblue_hover.gif&#39;);" onmouseout="switchImage(this, &#39;btn_globals_contents_midblue.gif&#39;);" /></a><a href="idx.html" target="tocidx"><img src="btn_globals_index_midblue.gif" border="0" alt="Index" title="Index" onmouseover="switchImage(this, &#39;btn_globals_index_midblue_hover.gif&#39;);" onmouseout="switchImage(this, &#39;btn_globals_index_midblue.gif&#39;);" /></a><a href="intro.html" target="topic"><img src="btn_globals_home_midblue.gif" border="0" alt="Home" title="Home" onmouseover="switchImage(this, &#39;btn_globals_home_midblue_hover.gif&#39;);" onmouseout="switchImage(this, &#39;btn_globals_home_midblue.gif&#39;);" /></a></div>
+</td><td width="33%">
+<div class="Element90">
+<a href="dhd_setup_box_aa.html" target="topic"><img src="btn_prev_midblue.gif" border="0" alt="Previous" title="Previous" onmouseover="switchImage(this, &#39;btn_prev_midblue_hover.gif&#39;);" onmouseout="switchImage(this, &#39;btn_prev_midblue.gif&#39;);" /></a><a href="umd_section_utility.html" target="topic"><img src="btn_up_midblue.gif" border="0" alt="Up" title="Up" onmouseover="switchImage(this, &#39;btn_up_midblue_hover.gif&#39;);" onmouseout="switchImage(this, &#39;btn_up_midblue.gif&#39;);" /></a><a href="dhd_setup_edge_aa.html" target="topic"><img src="btn_next_midblue.gif" border="0" alt="Next" title="Next" onmouseover="switchImage(this, &#39;btn_next_midblue_hover.gif&#39;);" onmouseout="switchImage(this, &#39;btn_next_midblue.gif&#39;);" /></a></div>
+</td></tr></table><div class="Element5">
+dhd_setup_box_noaa</div>
+<div class="Element7">
+<a href="umd_section_utility.html" target="topic">Setup Utility Functions</a> | <a href="#" onclick="sendFeedback('dave_support@tes-dst.com', 'Documentation Feedback', 'Project: D/AVE HD Driver%0ATopic ID: dhd_setup_box_noaa@dhd_handle_t@dhd_fx28_4_t@dhd_fx28_4_t@dhd_fx28_4_t@dhd_fx28_4_t@dhd_prim_data_t *@dhd_edge_data_t *@dhd_util_clipmode_t%0ATitle: dhd_setup_box_noaa');">Send Feedback</a></div>
+</div>
+</div>
+
+<!-- End Page Header -->
+
+<!-- Begin Client Area -->
+<div class="Element720" id="areascroll">
+<div class="Element721">
+
+<!-- Begin Page Content -->
+<div class="Element58">
+<a name="53756D6D617279"></a><div class="Element14">
+Summary</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+Setup a simple box.</p></div>
+</div>
+<a name="53796E746178"></a><div class="Element99">
+Syntax</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><a href="dhd_bool_t.html" target="topic">dhd_bool_t</a> <strong><span style="color: #000000;">dhd_setup_box_noaa</span></strong>(<a href="dhd_handle_t.html" target="topic">dhd_handle_t</a> <strong><span style="color: #660000;">a_device</span></strong>, <a href="dhd_fx28_4_t.html" target="topic">dhd_fx28_4_t</a> <strong><span style="color: #660000;">a_xmin</span></strong>, <a href="dhd_fx28_4_t.html" target="topic">dhd_fx28_4_t</a> <strong><span style="color: #660000;">a_ymin</span></strong>, <a href="dhd_fx28_4_t.html" target="topic">dhd_fx28_4_t</a> <strong><span style="color: #660000;">a_xmax</span></strong>, <a href="dhd_fx28_4_t.html" target="topic">dhd_fx28_4_t</a> <strong><span style="color: #660000;">a_ymax</span></strong>, <a href="dhd_prim_data_t.html" target="topic">dhd_prim_data_t</a> * <strong><span style="color: #660000;">a_pout</span></strong>, <a href="dhd_edge_data_t.html" target="topic">dhd_edge_data_t</a> * <strong><span style="color: #660000;">a_eout</span></strong>, <a href="dhd_util_clipmode_t.html" target="topic">dhd_util_clipmode_t</a> <strong><span style="color: #660000;">a_clipmode</span></strong>);</pre></div></div>
+<a name="4465736372697074696F6E"></a><div class="Element14">
+Description</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+ A box is an axis aligned rectangle. The function will use four edges (<a href="dhd_edge0.html" target="topic">DHD_EDGE0</a> to <a href="dhd_edge3.html" target="topic">DHD_EDGE3</a>).&#160;</p>
+<p class="Element10">
+Parameters a_pout and a_eout are not optional and can not be null (as in <a href="dhd_setup_tri_attributes.html" target="topic">dhd_setup_tri_attributes</a>).&#160;</p>
+<p class="Element10">
+&#160;</p>
+<p class="Element10">
+Also note that non antialiased edges are limited to a width/height of 2048 pixels (see <a href="basics_geometry.html" target="topic">Specifying Geometry</a>).</p></div>
+</div>
+<a name="506172616D6574657273"></a><div class="Element14">
+Parameters</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element252">
+<div class="TableDiv">
+<table cellspacing="0" class="Table3">
+<tr>
+<td class="Element240" valign="top" width="28%">
+<div class="Element241">
+Parameters&#160;</div></td><td class="Element244" valign="top" width="72%">
+<div class="Element245">
+Description&#160;</div></td></tr><tr>
+<td class="Element242" valign="top" width="28%">
+<div class="Element243">
+a_device&#160;</div></td><td class="Element246" valign="top" width="72%">
+<div class="Element247">
+Driver context handle (as returned by <a href="dhd_init.html" target="topic">dhd_init</a>).&#160;</div></td></tr><tr>
+<td class="Element242" valign="top" width="28%">
+<div class="Element243">
+a_xmin&#160;</div></td><td class="Element246" valign="top" width="72%">
+<div class="Element247">
+Left border of box (4bit subpixel precision)&#160;</div></td></tr><tr>
+<td class="Element242" valign="top" width="28%">
+<div class="Element243">
+a_ymin&#160;</div></td><td class="Element246" valign="top" width="72%">
+<div class="Element247">
+Top border of box (4bit subpixel precision)&#160;</div></td></tr><tr>
+<td class="Element242" valign="top" width="28%">
+<div class="Element243">
+a_xmax&#160;</div></td><td class="Element246" valign="top" width="72%">
+<div class="Element247">
+Right border of box (4bit subpixel precision)&#160;</div></td></tr><tr>
+<td class="Element242" valign="top" width="28%">
+<div class="Element243">
+a_ymax&#160;</div></td><td class="Element246" valign="top" width="72%">
+<div class="Element247">
+Bottom border of box (4bit subpixel precision)&#160;</div></td></tr><tr>
+<td class="Element242" valign="top" width="28%">
+<div class="Element243">
+a_pout&#160;</div></td><td class="Element246" valign="top" width="72%">
+<div class="Element247">
+Pointer to <a href="dhd_prim_data_t.html" target="topic">dhd_prim_data_t</a> receiving bounding box and edge control flags&#160;</div></td></tr><tr>
+<td class="Element242" valign="top" width="28%">
+<div class="Element243">
+a_eout&#160;</div></td><td class="Element246" valign="top" width="72%">
+<div class="Element247">
+Pointer to <a href="dhd_edge_data_t.html" target="topic">dhd_edge_data_t</a>[4] receiving edge information&#160;</div></td></tr><tr>
+<td class="Element242" valign="top" width="28%">
+<div class="Element243">
+a_clipmode&#160;</div></td><td class="Element246" valign="top" width="72%">
+<div class="Element247">
+Specify to what region the geometry shall be clipped (see <a href="dhd_util_clipmode_t.html" target="topic">dhd_util_clipmode_t</a>)&#160;</div></td></tr></table></div></div>
+</div>
+</div>
+<a name="52657475726E73"></a><div class="Element14">
+Returns</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+<a href="dhd_true.html" target="topic">DHD_TRUE</a> if resulting box is visible <a href="dhd_false.html" target="topic">DHD_FALSE</a> if resulting box was entirely clipped and should not be drawn</p></div>
+</div>
+<a name="46696C65"></a><div class="Element14">
+File</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+davehd_util.h</p></div>
+</div>
+</div>
+<!-- End Page Content -->
+
+<!-- Begin Page Footer -->
+<div class="Element93">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="100%">
+<div class="Element3">
+Copyright (c) 2013 All rights reserved for TES Electronic Solutions</div>
+</td></tr><tr><td width="100%">
+<div class="Element4">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="idx.html" target="tocidx">Index</a> | <a href="intro.html" target="topic">Home</a></div>
+</td></tr></table></div>
+
+<!-- End Page Footer -->
+</div>
+</div>
+
+<!-- End Client Area -->
+</body></html>

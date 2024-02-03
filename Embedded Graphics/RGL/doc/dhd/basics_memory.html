@@ -1,0 +1,303 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
+<html>
+<head>
+<title>Video Memory</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="generator" content="Doc-O-Matic" />
+    <meta http-equiv="Content-Style-Type" content="text/css" />
+    <link rel="STYLESHEET" href="default.css" type="text/css" />
+
+<script type="text/javascript" src="scripts.js"></script>
+<!-- saved from url=(0013)about:internet -->
+</head>
+<body class="Element700" onload="onBodyLoadEx(&#39;index.html&#39;, &#39;topic&#39;, &#39;basics_memory.html&#39;);" onmousedown="onBodyMouseDown();">
+
+<!-- Begin Popups -->
+
+<!-- End Popups -->
+
+<!-- Begin Page Header -->
+<div class="Element710" id="areafixed">
+<div class="Element92">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="33%">
+<div class="Element1">
+D/AVE HD Driver - Internal Documentation</div>
+</td><td width="34%">
+<div class="Element2">
+<a href="contents.html" target="tocidx"><img src="btn_globals_contents_midblue.gif" border="0" alt="Contents" title="Contents" onmouseover="switchImage(this, &#39;btn_globals_contents_midblue_hover.gif&#39;);" onmouseout="switchImage(this, &#39;btn_globals_contents_midblue.gif&#39;);" /></a><a href="idx.html" target="tocidx"><img src="btn_globals_index_midblue.gif" border="0" alt="Index" title="Index" onmouseover="switchImage(this, &#39;btn_globals_index_midblue_hover.gif&#39;);" onmouseout="switchImage(this, &#39;btn_globals_index_midblue.gif&#39;);" /></a><a href="intro.html" target="topic"><img src="btn_globals_home_midblue.gif" border="0" alt="Home" title="Home" onmouseover="switchImage(this, &#39;btn_globals_home_midblue_hover.gif&#39;);" onmouseout="switchImage(this, &#39;btn_globals_home_midblue.gif&#39;);" /></a></div>
+</td><td width="33%">
+<div class="Element90">
+<a href="basic_context.html" target="topic"><img src="btn_prev_midblue.gif" border="0" alt="Previous" title="Previous" onmouseover="switchImage(this, &#39;btn_prev_midblue_hover.gif&#39;);" onmouseout="switchImage(this, &#39;btn_prev_midblue.gif&#39;);" /></a><a href="general.html" target="topic"><img src="btn_up_midblue.gif" border="0" alt="Up" title="Up" onmouseover="switchImage(this, &#39;btn_up_midblue_hover.gif&#39;);" onmouseout="switchImage(this, &#39;btn_up_midblue.gif&#39;);" /></a><a href="basics_geometry.html" target="topic"><img src="btn_next_midblue.gif" border="0" alt="Next" title="Next" onmouseover="switchImage(this, &#39;btn_next_midblue_hover.gif&#39;);" onmouseout="switchImage(this, &#39;btn_next_midblue.gif&#39;);" /></a></div>
+</td></tr></table><div class="Element5">
+Video Memory</div>
+<div class="Element7">
+<a href="general.html" target="topic">General</a> | <a href="#" onclick="sendFeedback('dave_support@tes-dst.com', 'Documentation Feedback', 'Project: D/AVE HD Driver%0ATopic ID: !!Basics_Memory%0ATitle: Video Memory');">Send Feedback</a></div>
+</div>
+</div>
+
+<!-- End Page Header -->
+
+<!-- Begin Client Area -->
+<div class="Element720" id="areascroll">
+<div class="Element721">
+
+<!-- Begin Page Content -->
+<div class="Element58">
+<a name="4465736372697074696F6E"></a><div class="Element11">
+<div class="Element10">
+<div class="Element15">
+Video Memory</div>
+<p class="Element10">
+&#160;</p>
+<p class="Element10">
+All data the graphics HW should access has to be stored in video memory. Depending on the system architecture this can be entirely inaccessible to the CPU, accessible only through a different address window or just a dedicated piece inside the unified memory. But even in the latter case careful management of CPU caches and internal buffers is necessary to keep the memory view of CPU and GPU consistent.&#160;</p>
+<p class="Element10">
+The driver will automatically insert the necessary memory mappings, dma transfers and cache flushes for the current platform. Therefore management of and all access to video memory has to be done using driver functions in order to guarantee portable and reliable application code.&#160;</p>
+<p class="Element10">
+&#160;</p>
+<p class="Element10">
+There are four distinct classes of data the graphics HW works with:</p>
+<ul class="Element630">
+<li class="Element600">Textures (read only image sources)</li>
+<li class="Element600">Targets (read/write image framebuffers and zsa buffers)</li>
+<li class="Element600">Streams (read only commandlists)</li>
+<li class="Element600">Special buffers (read/write storages for internal HW context, performance data,..)</li>
+</ul><p class="Element10">
+&#160;</p>
+<p class="Element10">
+From these only the first two are relevant to the typical application, as stream buffer creation and management is fully automated by the driver and special buffers are normally used only internally.&#160;</p>
+<p class="Element10">
+&#160;</p><div class="Element15">
+Typical Allocation</div>
+<p class="Element10">
+Almost every application will have to create at least one or more targets for it's framebuffer (more in case of double buffering). The easiest way to achieve this is by using <a href="dhd_alloc_buffer_simple.html" target="topic">dhd_alloc_buffer_simple</a> </p><div class="Element170">
+<a href="#" onclick="CopyElementToClipboard(&#39;code00004&#39;);">Copy Code</a></div>
+<div class="Element13"><div class="Element12" id="code00004"><pre class="Element12">dhd_buffer_t my_framebuffer;
+
+<strong><span style="color: #00008C;">if</span></strong> (dhd_alloc_buffer_simple(device, &amp;my_framebuffer, E_DHD_PIXEL_ORG_ARGB_8888, 800, 600, E_DHD_BUFFER_NOLOCK)) != E_DHD_OK) {
+  exit(1); <em><span style="color: #008000;">// failed to allocate framebuffer</span></em>
+}</pre></div></div>
+<p class="Element10">
+&#160;</p>
+<p class="Element10">
+The code above will try to allocate a 800x600 pixel buffer with each pixel being 32bit wide (ARGB_8888) in video memory. The resulting control data is stored inside the <a href="dhd_buffer_t.html" target="topic">dhd_buffer_t</a> struct my_framebuffer. The buffer is never going to be accessed by the CPU (E_DHD_BUFFER_NOLOCK) for more details check the API reference of <a href="dhd_alloc_buffer_simple.html" target="topic">dhd_alloc_buffer_simple</a>.&#160;</p>
+<p class="Element10">
+&#160;</p>
+<p class="Element10">
+Allocating memory for a texture is equally simple: </p><div class="Element170">
+<a href="#" onclick="CopyElementToClipboard(&#39;code00005&#39;);">Copy Code</a></div>
+<div class="Element13"><div class="Element12" id="code00005"><pre class="Element12">dhd_buffer_t my_texture;
+
+<strong><span style="color: #00008C;">if</span></strong> (dhd_alloc_buffer_simple(device, &amp;my_texture, E_DHD_TEXEL_ORG_RGB_565, 512, 512, 0)) != E_DHD_OK) {
+  exit(1); <em><span style="color: #008000;">// failed to allocate texture</span></em>
+}</pre></div></div>
+<p class="Element10">
+&#160;</p>
+<p class="Element10">
+The code above will try to allocate a 512x512 pixel buffer with each pixel being 16bit wide (RGB_565) for the use as texture (hence a texel_org instead of a pixel_org). This time no locking restriction is specified so the buffer can be CPU accessed in any way (see below).&#160;</p>
+<p class="Element10">
+&#160;</p><div class="Element15">
+Advanced Allocation</div>
+<p class="Element10">
+While <a href="dhd_alloc_buffer_simple.html" target="topic">dhd_alloc_buffer_simple</a> can usually determine all required information from the specified format (e.g. the buffer is assumed to contain a texture if its format is from <a href="dhd_texel_org_t.html" target="topic">dhd_texel_org_t</a> and a zsa buffer if its format is from <a href="dhd_depth_org_t.html" target="topic">dhd_depth_org_t</a>), there is also a way to manually specify all details of the buffer.&#160;</p>
+<p class="Element10">
+This is done by filling the <a href="dhd_buffer_t.html" target="topic">dhd_buffer_t</a> variable manually prior to calling <a href="dhd_alloc_buffer.html" target="topic">dhd_alloc_buffer</a> on it. Using this method it is possible to create buffers without specifying a concrete format (only bytes per pixel is needed), using the rare usage flags like special buffer and manually controlling the memory layout (pitch). </p><div class="Element170">
+<a href="#" onclick="CopyElementToClipboard(&#39;code00006&#39;);">Copy Code</a></div>
+<div class="Element13"><div class="Element12" id="code00006"><pre class="Element12">dhd_buffer_t my_framebuffer;
+
+my_framebuffer.m_width = 800;  <em><span style="color: #008000;">// width in pixels</span></em>
+my_framebuffer.m_height = 600; <em><span style="color: #008000;">// height in pixels</span></em>
+my_framebuffer.m_pitch = 800;  <em><span style="color: #008000;">// number of pixels in one line (can be &gt; width)</span></em>
+my_framebuffer.m_bpp = dhd_get_bpp( E_DHD_PIXEL_ORG_ARGB_8888 ); <em><span style="color: #008000;">// could use a constant 4 here too</span></em>
+my_framebuffer.m_usage = E_DHD_MEMORY_TARGET;        <em><span style="color: #008000;">// intended HW use (implies GPU read/write)</span></em>
+my_framebuffer.m_format = E_DHD_PIXEL_ORG_ARGB_8888; <em><span style="color: #008000;">// optional, just for utility functions</span></em>
+<strong><span style="color: #00008C;">if</span></strong> (dhd_alloc_buffer(device, &amp;my_framebuffer, E_DHD_BUFFER_NOLOCK)) != E_DHD_OK) {
+  exit(1); <em><span style="color: #008000;">// failed to allocate framebuffer</span></em>
+}</pre></div></div>
+<p class="Element10">
+&#160;</p>
+<p class="Element10">
+The above code does essentially the same as the above call to <a href="dhd_alloc_buffer_simple.html" target="topic">dhd_alloc_buffer_simple</a>. Most code in the driver test will use the advanced method because it was written before the simple interface was available.&#160;</p>
+<p class="Element10">
+&#160;</p><div class="Element15">
+GPU access to buffers</div>
+<p class="Element10">
+The GPU will need the address of a buffer to access it. This can be obtained at any point using <a href="dhd_get_buffer_gpuptr.html" target="topic">dhd_get_buffer_gpuptr</a>. Usually the result is directly passed to a state set command. Like this: </p><div class="Element170">
+<a href="#" onclick="CopyElementToClipboard(&#39;code00007&#39;);">Copy Code</a></div>
+<div class="Element13"><div class="Element12" id="code00007"><pre class="Element12">dhd_set_framebuffer_address( device, dhd_get_buffer_gpuptr( &amp;my_framebuffer ) );</pre></div></div>
+<p class="Element10">
+&#160;</p>
+<p class="Element10">
+Utility functions exist that simplify this even further (note that they require also the optional <a href="dhd_buffer_t.html" target="topic">dhd_buffer_t</a> fields like m_format to be filled out. something that <a href="dhd_alloc_buffer_simple.html" target="topic">dhd_alloc_buffer_simple</a> does automatically). They are:</p>
+<ul class="Element630">
+<li class="Element600"><a href="dhd_set_buffer_as_framebuffer.html" target="topic">dhd_set_buffer_as_framebuffer</a></li>
+<li class="Element600"><a href="dhd_set_buffer_as_texture.html" target="topic">dhd_set_buffer_as_texture</a></li>
+</ul><p class="Element10">
+See API reference for details but in a nutshell these will set address, format, size and other related states that can be directly derived from the buffer metadata in one call.&#160;</p>
+<p class="Element10">
+&#160;</p><div class="Element15">
+CPU access to buffers</div>
+<p class="Element10">
+Buffer content can be accessed by the CPU using either calls to upload and download functions or by locking, directly accessing and unlocking the buffer. Usually when the entire buffer content is to be read or replaced the upload and download functions are used. The most common case is an image being put into a texture buffer once during initialisation or a framebuffer is read back into the CPU memory for inspection.&#160;</p>
+<p class="Element10">
+The required APIs for this are low level transfer functions and a helper to get the buffer address:</p>
+<ul class="Element630">
+<li class="Element600"><a href="dhd_upload_vidmem.html" target="topic">dhd_upload_vidmem</a></li>
+<li class="Element600"><a href="dhd_download_vidmem.html" target="topic">dhd_download_vidmem</a></li>
+<li class="Element600"><a href="dhd_get_buffer_gpuptr.html" target="topic">dhd_get_buffer_gpuptr</a></li>
+</ul><p class="Element10">
+&#160;</p>
+<p class="Element10">
+Better control and full read/modify/write access can be achieved by using locking. For this to work efficiently buffer flags are specified during creation or later (using <a href="dhd_change_buffer_flags.html" target="topic">dhd_change_buffer_flags</a>). See <a href="dhd_buffer_flags_t.html" target="topic">dhd_buffer_flags_t</a> for all possible hints, which can also be combined. The most common combinations are: </p><div class="Element63">
+<div class="TableDiv">
+<table cellspacing="0" class="Table1">
+<tr>
+<td class="Element65" valign="top" width="29%">
+<div class="Element66">
+Buffer Flags&#160;</div></td><td class="Element65" valign="top" width="38%">
+<div class="Element66">
+Description&#160;</div></td><td class="Element65" valign="top" width="33%">
+<div class="Element66">
+Typical Usecase&#160;</div></td></tr><tr>
+<td class="Element67" valign="top" width="29%">
+<div class="Element68">
+E_DHD_BUFFER_NOLOCK&#160;</div></td><td class="Element67" valign="top" width="38%">
+<div class="Element68">
+Buffer will never be accessed by the CPU in any way&#160;</div></td><td class="Element67" valign="top" width="33%">
+<div class="Element68">
+A framebuffer which is never read back&#160;</div></td></tr><tr>
+<td class="Element67" valign="top" width="29%">
+<div class="Element68">
+E_DHD_BUFFER_CPUWRITE_ONLY | E_DHD_BUFFER_STATIC |<br />E_DHD_BUFFER_GPUREAD_ONLY&#160;</div></td><td class="Element67" valign="top" width="38%">
+<div class="Element68">
+Buffer will only be written by CPU and content changes infrequently&#160;</div></td><td class="Element67" valign="top" width="33%">
+<div class="Element68">
+A texture that is filled by the CPU once after creation&#160;</div></td></tr><tr>
+<td class="Element67" valign="top" width="29%">
+<div class="Element68">
+E_DHD_BUFFER_DYNAMIC | E_DHD_BUFFER_GPUREAD_ONLY&#160;</div></td><td class="Element67" valign="top" width="38%">
+<div class="Element68">
+CPU has full access and will use it frequently but GPU will only read it&#160;</div></td><td class="Element67" valign="top" width="33%">
+<div class="Element68">
+A texture that is partially (read/modify/write) updated every frame&#160;</div></td></tr></table></div></div>
+<p class="Element10">
+&#160;</p>
+<p class="Element10">
+The actual access will happen in between calls to <a href="dhd_lock_buffer.html" target="topic">dhd_lock_buffer</a> and <a href="dhd_unlock_buffer.html" target="topic">dhd_unlock_buffer</a>. The idea is that during the time between those two calls the buffer is actually owned by the CPU. During this time a CPU accessible address for the buffer content will exist. This can be queried (after a successfull <a href="dhd_lock_buffer.html" target="topic">dhd_lock_buffer</a>) by a call to <a href="dhd_get_lockedbuffer_ptr.html" target="topic">dhd_get_lockedbuffer_ptr</a>.&#160;</p>
+<p class="Element10">
+After all modifications are complete the block is unlocked and the driver will make sure all changes become visible to the GPU side.&#160;</p>
+<p class="Element10">
+After the call to unlock the buffer is again owned by the GPU and any CPU side address that was obtained earlier is no longer valid.&#160;</p>
+<p class="Element10">
+&#160;</p>
+<p class="Element10">
+A typical access could look like this: </p><div class="Element170">
+<a href="#" onclick="CopyElementToClipboard(&#39;code00008&#39;);">Copy Code</a></div>
+<div class="Element13"><div class="Element12" id="code00008"><pre class="Element12"><strong><span style="color: #00008C;">if</span></strong> (dhd_lock_buffer(device, &amp;my_texture, E_DHD_WRITE_ACCESS) == E_DHD_OK) {
+  dhd_uint32_t *dst = (dhd_uint32_t *) dhd_get_lockedbuffer_ptr( &amp;my_texture );
+  dhd_uint32_t x,y;
+
+  <strong><span style="color: #00008C;">for</span></strong> (y=0; y &lt; my_texture.m_height; y++) {
+    <strong><span style="color: #00008C;">for</span></strong> (x=0; x &lt; my_texture.m_width; x++) {
+      dhd_uint32_t *pixel = &amp;dst[ x + y * my_texture.m_pitch ];
+
+      *pixel = ..something..
+    }
+  }
+
+  dhd_unlock_buffer(device, &amp;my_texture);
+}</pre></div></div>
+<p class="Element10">
+&#160;</p>
+<p class="Element10">
+Note that locks can not be nested and that the desired access (E_DHD_READ_ACCESS, E_DHD_WRITE_ACCESS or both) must be allowed by the buffer flags (see above) specified earlier.&#160;</p>
+<p class="Element10">
+&#160;</p>
+<p class="Element10">
+The APIs for high level access to a buffer are:</p>
+<ul class="Element630">
+<li class="Element600"><a href="dhd_lock_buffer.html" target="topic">dhd_lock_buffer</a></li>
+<li class="Element600"><a href="dhd_lock_buffer_region.html" target="topic">dhd_lock_buffer_region</a></li>
+<li class="Element600"><a href="dhd_unlock_buffer.html" target="topic">dhd_unlock_buffer</a></li>
+<li class="Element600"><a href="dhd_get_lockedbuffer_ptr.html" target="topic">dhd_get_lockedbuffer_ptr</a></li>
+</ul><p class="Element10">
+&#160;</p>
+<div class="Element15">
+Raw memory instead of buffers</div>
+<p class="Element10">
+Most video ram allocations refer to rectangular regions which are best handled by buffers, as seen above. But some data does not have this two dimensional structure (e.g. an RLE compressed image). For those cases video memory can also be allocated directly using <a href="dhd_alloc_vidmem.html" target="topic">dhd_alloc_vidmem</a> and <a href="dhd_free_vidmem.html" target="topic">dhd_free_vidmem</a> APIs.&#160;</p>
+<p class="Element10">
+These functions are lower level than buffers and they don&#39;t offer the concept of locking (or mapping) for direct CPU access. The only way to transfer data into a raw video memory region is by using <a href="dhd_upload_vidmem.html" target="topic">dhd_upload_vidmem</a> and <a href="dhd_download_vidmem.html" target="topic">dhd_download_vidmem</a>.&#160;</p>
+<p class="Element10">
+They don&#39;t make any assumption about the data layout so there is no concept of a &#39;pixel format or byte per pixel&#39; inside a raw memory region.&#160;</p>
+<p class="Element10">
+But of course any video memory address can be used by the HW as read or write target address.&#160;</p>
+<p class="Element10">
+&#160;</p>
+<p class="Element10">
+Copying an RLE compressed stream into video memory for decompression using the HW: </p><div class="Element170">
+<a href="#" onclick="CopyElementToClipboard(&#39;code00009&#39;);">Copy Code</a></div>
+<div class="Element13"><div class="Element12" id="code00009"><pre class="Element12">dhd_vidmem_t packed_image;
+
+<strong><span style="color: #00008C;">if</span></strong> (dhd_alloc_vidmem( device, src_len, 0, E_DHD_MEMORY_TEXTURE, &amp;packed_image ) != E_DHD_OK) {
+  <strong><span style="color: #00008C;">return</span></strong> DHD_FALSE; <em><span style="color: #008000;">// allocation failed</span></em>
+}
+dhd_upload_vidmem(device, src_data, &amp;packed_image.m_gpu_address, src_len);</pre></div></div>
+<p class="Element10">
+&#160;</p>
+<div class="Element15">
+Releasing Memory</div>
+<p class="Element10">
+Both buffers and their low level raw memory counterparts have dedicated functions to release the video memory. It is important to clean up all video memory allocations once they are no longer used as video memory is usually a scarce resource.&#160;</p>
+<p class="Element10">
+&#160;</p>
+<p class="Element10">
+Memory may not be released while the GPU is still working with it. It might be necessary to synchronize CPU and GPU using <a href="dhd_finish.html" target="topic">dhd_finish</a> or <a href="dhd_finish_marked.html" target="topic">dhd_finish_marked</a> before releasing a buffer or video memory region to ensure this.&#160;</p>
+<p class="Element10">
+&#160;</p>
+<p class="Element10">
+The relevant APIs are:</p>
+<ul class="Element630">
+<li class="Element600"><a href="dhd_free_vidmem.html" target="topic">dhd_free_vidmem</a></li>
+<li class="Element600"><a href="dhd_free_buffer.html" target="topic">dhd_free_buffer</a></li>
+</ul><p class="Element10">
+&#160;</p>
+<div class="Element15">
+Allocations done by the driver</div>
+<p class="Element10">
+&#160;</p>
+<p class="Element10">
+Video memory is allocated by the driver on the following occasions:</p>
+<ul class="Element630">
+<li class="Element600"><a href="dhd_gpu_init.html" target="topic">dhd_gpu_init</a>: ringbuffer memory of size m_config.m_default_ringsize + 4 bytes (additional 4 bytes are for ringbuffer padding)</li>
+<li class="Element600"><a href="dhd_init.html" target="topic">dhd_init</a>: state storage per driver context of size 480 bytes (for a config with 2 tex units, 3 color unit passes and 4 const colors)</li>
+<li class="Element600">job memory: allocation on demand below <a href="dhd_draw.html" target="topic">dhd_draw</a> etc. maximum is m_default_jobcount*m_default_jobsize per client</li>
+<li class="Element600"><a href="dhd_alloc_pc.html" target="topic">dhd_alloc_pc</a>: 4 bytes for the storage of a performance counter value</li>
+<li class="Element600"><a href="dhd_cmdlist_deserialize.html" target="topic">dhd_cmdlist_deserialize</a>: may possibly allocate video memory if the cmdlist can not be mapped on the platform</li>
+<li class="Element600"><a href="dhd_alloc_vidmem.html" target="topic">dhd_alloc_vidmem</a>, <a href="dhd_alloc_buffer.html" target="topic">dhd_alloc_buffer</a>, <a href="dhd_alloc_buffer_simple.html" target="topic">dhd_alloc_buffer_simple</a>: size as requested by call parameters</li>
+</ul><p class="Element10">
+&#160;</p>
+<p class="Element10">
+Note that the video memory allocator aligns every allocation to a minimum alignment configured by <a href="dhd_vidmem_minalign_log2.html" target="topic">DHD_VIDMEM_MINALIGN_LOG2</a> in the platforms settings.h file.</p></div>
+</div>
+</div>
+<!-- End Page Content -->
+
+<!-- Begin Page Footer -->
+<div class="Element93">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="100%">
+<div class="Element3">
+Copyright (c) 2013 All rights reserved for TES Electronic Solutions</div>
+</td></tr><tr><td width="100%">
+<div class="Element4">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="idx.html" target="tocidx">Index</a> | <a href="intro.html" target="topic">Home</a></div>
+</td></tr></table></div>
+
+<!-- End Page Footer -->
+</div>
+</div>
+
+<!-- End Client Area -->
+</body></html>

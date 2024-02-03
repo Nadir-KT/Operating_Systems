@@ -1,0 +1,21 @@
+##################################
+# Serial Flash Romfs
+##################################
+
+-> In the makefile two new parameters have been added
+    ->ROMFS_SF_ADDR    : the address where the serial flash memory is mapped for CPU/GFX access (0x10000000)
+
+-> Romfile creation happens in grape_app.mk, line 578
+-> If ROMFS_SF_ADDR is not set, a standard romfile will be created
+-> If ROMFS_SF_ADDR is set, two separate srec files will be created 
+    -> data_flash.srec   : standard romfile for CPU-Flash, no changes here
+    -> data_flash_sf.rec : romfile for serial flash (renamed to .rec because eFlashloader cannot load files with .srec extension)
+
+-> New creation script was created : grape_app/romfs/create_sf.sh
+    -> this script will change the folders, call srec generation scripts and eventually copy the created files into the platform folder
+
+-> 4 New generation scripts have been created in vlib/middleware/romfs/tool/
+    -> generate_header.sh         : writes header/includes in fs_data.c
+    -> generate_cpu_flash.sh      : creates the CPU-Flash srec file, and writes data to fs_data.c
+    -> generate_serial_flash.sh   : creates the Serial-Flash .rec file and writes data to fs_data.c
+    -> generate_footer.sh         : footer for fs_data.c

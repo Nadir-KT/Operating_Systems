@@ -1,0 +1,11 @@
+#!gbuild
+[Subproject]
+	:sourceDir=../../../..
+./gfx_apps/simple_capture/src/mem_init.c
+./gfx_apps/simple_capture/src/main.c
+./gfx_apps/simple_capture/src/off_btn.c
+./gfx_apps/simple_capture/src/sel.c
+./gfx_apps/simple_capture/src/wm.c
+./gfx_apps/simple_capture/src/resume_btn.c
+./gfx_apps/simple_capture/src/on_btn.c
+./gfx_apps/simple_capture/src/pause_btn.c

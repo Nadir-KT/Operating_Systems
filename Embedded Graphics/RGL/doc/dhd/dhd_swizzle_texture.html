@@ -1,0 +1,186 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
+<html>
+<head>
+<title>dhd_swizzle_texture</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="generator" content="Doc-O-Matic" />
+    <meta http-equiv="Content-Style-Type" content="text/css" />
+    <link rel="STYLESHEET" href="default.css" type="text/css" />
+
+<script type="text/javascript" src="scripts.js"></script>
+<!-- saved from url=(0013)about:internet -->
+</head>
+<body class="Element700" onload="onBodyLoadEx(&#39;index.html&#39;, &#39;topic&#39;, &#39;dhd_swizzle_texture.html&#39;);" onmousedown="onBodyMouseDown();">
+
+<!-- Begin Popups -->
+
+<!-- End Popups -->
+
+<!-- Begin Page Header -->
+<div class="Element710" id="areafixed">
+<div class="Element92">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="33%">
+<div class="Element1">
+D/AVE HD Driver - Internal Documentation</div>
+</td><td width="34%">
+<div class="Element2">
+<a href="contents.html" target="tocidx"><img src="btn_globals_contents_midblue.gif" border="0" alt="Contents" title="Contents" onmouseover="switchImage(this, &#39;btn_globals_contents_midblue_hover.gif&#39;);" onmouseout="switchImage(this, &#39;btn_globals_contents_midblue.gif&#39;);" /></a><a href="idx.html" target="tocidx"><img src="btn_globals_index_midblue.gif" border="0" alt="Index" title="Index" onmouseover="switchImage(this, &#39;btn_globals_index_midblue_hover.gif&#39;);" onmouseout="switchImage(this, &#39;btn_globals_index_midblue.gif&#39;);" /></a><a href="intro.html" target="topic"><img src="btn_globals_home_midblue.gif" border="0" alt="Home" title="Home" onmouseover="switchImage(this, &#39;btn_globals_home_midblue_hover.gif&#39;);" onmouseout="switchImage(this, &#39;btn_globals_home_midblue.gif&#39;);" /></a></div>
+</td><td width="33%">
+<div class="Element90">
+<a href="dhd_convert_argb2texel.html" target="topic"><img src="btn_prev_midblue.gif" border="0" alt="Previous" title="Previous" onmouseover="switchImage(this, &#39;btn_prev_midblue_hover.gif&#39;);" onmouseout="switchImage(this, &#39;btn_prev_midblue.gif&#39;);" /></a><a href="umd_section_utility3.html" target="topic"><img src="btn_up_midblue.gif" border="0" alt="Up" title="Up" onmouseover="switchImage(this, &#39;btn_up_midblue_hover.gif&#39;);" onmouseout="switchImage(this, &#39;btn_up_midblue.gif&#39;);" /></a><a href="dhd_convert_buffer.html" target="topic"><img src="btn_next_midblue.gif" border="0" alt="Next" title="Next" onmouseover="switchImage(this, &#39;btn_next_midblue_hover.gif&#39;);" onmouseout="switchImage(this, &#39;btn_next_midblue.gif&#39;);" /></a></div>
+</td></tr></table><div class="Element5">
+dhd_swizzle_texture</div>
+<div class="Element7">
+<a href="umd_section_utility3.html" target="topic">Conversion Utility Functions</a> | <a href="dhd_swizzle_texture_see_also.html" target="topic">See Also</a> | <a href="#" onclick="sendFeedback('dave_support@tes-dst.com', 'Documentation Feedback', 'Project: D/AVE HD Driver%0ATopic ID: dhd_swizzle_texture@dhd_handle_t@dhd_gpu_ptr_t@dhd_uint32_t@dhd_uint32_t@dhd_uint32_t@dhd_texel_org_t@dhd_gpu_ptr_t@dhd_uint32_t@dhd_uint32_t@dhd_texel_org_t@dhd_address_mode_t%0ATitle: dhd_swizzle_texture');">Send Feedback</a></div>
+</div>
+</div>
+
+<!-- End Page Header -->
+
+<!-- Begin Client Area -->
+<div class="Element720" id="areascroll">
+<div class="Element721">
+
+<!-- Begin Page Content -->
+<div class="Element58">
+<a name="53756D6D617279"></a><div class="Element14">
+Summary</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+Swizzle texture and store into another buffer.This is an internal function.</p></div>
+</div>
+<a name="53796E746178"></a><div class="Element99">
+Syntax</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><a href="dhd_enum_t.html" target="topic">dhd_enum_t</a> <strong><span style="color: #000000;">dhd_swizzle_texture</span></strong>(<a href="dhd_handle_t.html" target="topic">dhd_handle_t</a> <strong><span style="color: #660000;">a_device</span></strong>, <a href="dhd_gpu_ptr_t.html" target="topic">dhd_gpu_ptr_t</a> <strong><span style="color: #660000;">a_src_address</span></strong>, <a href="dhd_uint32_t.html" target="topic">dhd_uint32_t</a> <strong><span style="color: #660000;">a_src_width</span></strong>, <a href="dhd_uint32_t.html" target="topic">dhd_uint32_t</a> <strong><span style="color: #660000;">a_src_height</span></strong>, <a href="dhd_uint32_t.html" target="topic">dhd_uint32_t</a> <strong><span style="color: #660000;">a_src_pitch</span></strong>, <a href="dhd_texel_org_t.html" target="topic">dhd_texel_org_t</a> <strong><span style="color: #660000;">a_src_format</span></strong>, <a href="dhd_gpu_ptr_t.html" target="topic">dhd_gpu_ptr_t</a> <strong><span style="color: #660000;">a_dst_address</span></strong>, <a href="dhd_uint32_t.html" target="topic">dhd_uint32_t</a> <strong><span style="color: #660000;">a_dst_height</span></strong>, <a href="dhd_uint32_t.html" target="topic">dhd_uint32_t</a> <strong><span style="color: #660000;">a_dst_pitch</span></strong>, <a href="dhd_texel_org_t.html" target="topic">dhd_texel_org_t</a> <strong><span style="color: #660000;">a_dst_format</span></strong>, <a href="dhd_address_mode_t.html" target="topic">dhd_address_mode_t</a> <strong><span style="color: #660000;">a_dst_address_mode</span></strong>);</pre></div></div>
+<a name="4465736372697074696F6E"></a><div class="Element14">
+Description</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+ Use <a href="dhd_convert_buffer.html" target="topic">dhd_convert_buffer</a> with a swizzled access mode to access this functionality. It will enswizzle one buffer into another one and convert pitch and format on the fly if requested. Destination buffer sizes must satisfy swizzle constraints (divisible by blocksize or square power of two in case of a full swizzle). The resulting buffer can then be used with the specified address mode (eg. E_DHD_ACCESS_SWIZZLE_16).</p></div>
+</div>
+<a name="506172616D6574657273"></a><div class="Element14">
+Parameters</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element252">
+<div class="TableDiv">
+<table cellspacing="0" class="Table3">
+<tr>
+<td class="Element240" valign="top" width="28%">
+<div class="Element241">
+Parameters&#160;</div></td><td class="Element244" valign="top" width="72%">
+<div class="Element245">
+Description&#160;</div></td></tr><tr>
+<td class="Element242" valign="top" width="28%">
+<div class="Element243">
+a_device&#160;</div></td><td class="Element246" valign="top" width="72%">
+<div class="Element247">
+Driver context handle (as returned by <a href="dhd_init.html" target="topic">dhd_init</a>).&#160;</div></td></tr><tr>
+<td class="Element242" valign="top" width="28%">
+<div class="Element243">
+a_src_address&#160;</div></td><td class="Element246" valign="top" width="72%">
+<div class="Element247">
+Gpu buffer address of the source buffer (see <a href="dhd_get_buffer_gpuptr.html" target="topic">dhd_get_buffer_gpuptr</a>).&#160;</div></td></tr><tr>
+<td class="Element242" valign="top" width="28%">
+<div class="Element243">
+a_src_width&#160;</div></td><td class="Element246" valign="top" width="72%">
+<div class="Element247">
+Source width in pixels.&#160;</div></td></tr><tr>
+<td class="Element242" valign="top" width="28%">
+<div class="Element243">
+a_src_height&#160;</div></td><td class="Element246" valign="top" width="72%">
+<div class="Element247">
+Source height in pixels.&#160;</div></td></tr><tr>
+<td class="Element242" valign="top" width="28%">
+<div class="Element243">
+a_src_pitch&#160;</div></td><td class="Element246" valign="top" width="72%">
+<div class="Element247">
+Source buffer pitch.&#160;</div></td></tr><tr>
+<td class="Element242" valign="top" width="28%">
+<div class="Element243">
+a_src_format&#160;</div></td><td class="Element246" valign="top" width="72%">
+<div class="Element247">
+Source buffer texel format (see <a href="dhd_texel_org_t.html" target="topic">dhd_texel_org_t</a>).&#160;</div></td></tr><tr>
+<td class="Element242" valign="top" width="28%">
+<div class="Element243">
+a_dst_address&#160;</div></td><td class="Element246" valign="top" width="72%">
+<div class="Element247">
+Gpu buffer address of the destination buffer (see <a href="dhd_get_buffer_gpuptr.html" target="topic">dhd_get_buffer_gpuptr</a>).&#160;</div></td></tr><tr>
+<td class="Element242" valign="top" width="28%">
+<div class="Element243">
+a_dst_height&#160;</div></td><td class="Element246" valign="top" width="72%">
+<div class="Element247">
+Destination height in pixels.&#160;</div></td></tr><tr>
+<td class="Element242" valign="top" width="28%">
+<div class="Element243">
+a_dst_pitch&#160;</div></td><td class="Element246" valign="top" width="72%">
+<div class="Element247">
+Target pitch.&#160;</div></td></tr><tr>
+<td class="Element242" valign="top" width="28%">
+<div class="Element243">
+a_dst_format&#160;</div></td><td class="Element246" valign="top" width="72%">
+<div class="Element247">
+Target texel format (see <a href="dhd_texel_org_t.html" target="topic">dhd_texel_org_t</a>).&#160;</div></td></tr><tr>
+<td class="Element242" valign="top" width="28%">
+<div class="Element243">
+a_dst_address_mode&#160;</div></td><td class="Element246" valign="top" width="72%">
+<div class="Element247">
+Desired swizzle (E_DHD_ACCESS_SWIZZLE_4, E_DHD_ACCESS_SWIZZLE_16 or E_DHD_ACCESS_SWIZZLE_FULL).&#160;</div></td></tr><tr>
+<td class="Element242" valign="top" width="28%">
+<div class="Element243">
+a_dst_width&#160;</div></td><td class="Element246" valign="top" width="72%">
+<div class="Element247">
+Destination width in pixels.&#160;</div></td></tr></table></div></div>
+</div>
+</div>
+<a name="52657475726E73"></a><div class="Element14">
+Returns</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+E_DHD_OK if successful, E_DHD_ERROR_INVALID_ARGUMENT in case of an invalid input parameters or E_DHD_ERROR_INVALID_PTR in case of a misaligned destination pointer</p></div>
+</div>
+<a name="4E6F746573"></a><div class="Element14">
+Notes</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+The framebuffer will be set the match the destination surface. Calling function has to store/restore it if required.</p></div>
+</div>
+<a name="53656520416C736F"></a><div class="Element14">
+See Also</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+<a href="dhd_convert_buffer.html" target="topic">dhd_convert_buffer</a></p></div>
+</div>
+<a name="46696C65"></a><div class="Element14">
+File</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+davehd_util.h</p></div>
+</div>
+</div>
+<!-- End Page Content -->
+
+<!-- Begin Page Footer -->
+<div class="Element93">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="100%">
+<div class="Element3">
+Copyright (c) 2013 All rights reserved for TES Electronic Solutions</div>
+</td></tr><tr><td width="100%">
+<div class="Element4">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="idx.html" target="tocidx">Index</a> | <a href="intro.html" target="topic">Home</a></div>
+</td></tr></table></div>
+
+<!-- End Page Footer -->
+</div>
+</div>
+
+<!-- End Client Area -->
+</body></html>

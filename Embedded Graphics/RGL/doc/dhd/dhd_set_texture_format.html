@@ -1,0 +1,143 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
+<html>
+<head>
+<title>dhd_set_texture_format</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="generator" content="Doc-O-Matic" />
+    <meta http-equiv="Content-Style-Type" content="text/css" />
+    <link rel="STYLESHEET" href="default.css" type="text/css" />
+
+<script type="text/javascript" src="scripts.js"></script>
+<!-- saved from url=(0013)about:internet -->
+</head>
+<body class="Element700" onload="onBodyLoadEx(&#39;index.html&#39;, &#39;topic&#39;, &#39;dhd_set_texture_format.html&#39;);" onmousedown="onBodyMouseDown();">
+
+<!-- Begin Popups -->
+
+<!-- End Popups -->
+
+<!-- Begin Page Header -->
+<div class="Element710" id="areafixed">
+<div class="Element92">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="33%">
+<div class="Element1">
+D/AVE HD Driver - Internal Documentation</div>
+</td><td width="34%">
+<div class="Element2">
+<a href="contents.html" target="tocidx"><img src="btn_globals_contents_midblue.gif" border="0" alt="Contents" title="Contents" onmouseover="switchImage(this, &#39;btn_globals_contents_midblue_hover.gif&#39;);" onmouseout="switchImage(this, &#39;btn_globals_contents_midblue.gif&#39;);" /></a><a href="idx.html" target="tocidx"><img src="btn_globals_index_midblue.gif" border="0" alt="Index" title="Index" onmouseover="switchImage(this, &#39;btn_globals_index_midblue_hover.gif&#39;);" onmouseout="switchImage(this, &#39;btn_globals_index_midblue.gif&#39;);" /></a><a href="intro.html" target="topic"><img src="btn_globals_home_midblue.gif" border="0" alt="Home" title="Home" onmouseover="switchImage(this, &#39;btn_globals_home_midblue_hover.gif&#39;);" onmouseout="switchImage(this, &#39;btn_globals_home_midblue.gif&#39;);" /></a></div>
+</td><td width="33%">
+<div class="Element90">
+<a href="dhd_set_texture_address.html" target="topic"><img src="btn_prev_midblue.gif" border="0" alt="Previous" title="Previous" onmouseover="switchImage(this, &#39;btn_prev_midblue_hover.gif&#39;);" onmouseout="switchImage(this, &#39;btn_prev_midblue.gif&#39;);" /></a><a href="umd_section_txp.html" target="topic"><img src="btn_up_midblue.gif" border="0" alt="Up" title="Up" onmouseover="switchImage(this, &#39;btn_up_midblue_hover.gif&#39;);" onmouseout="switchImage(this, &#39;btn_up_midblue.gif&#39;);" /></a><a href="dhd_set_texture_size.html" target="topic"><img src="btn_next_midblue.gif" border="0" alt="Next" title="Next" onmouseover="switchImage(this, &#39;btn_next_midblue_hover.gif&#39;);" onmouseout="switchImage(this, &#39;btn_next_midblue.gif&#39;);" /></a></div>
+</td></tr></table><div class="Element5">
+dhd_set_texture_format</div>
+<div class="Element7">
+<a href="umd_section_txp.html" target="topic">Textureunit Functions</a> | <a href="dhd_set_texture_format_see_also.html" target="topic">See Also</a> | <a href="#" onclick="sendFeedback('dave_support@tes-dst.com', 'Documentation Feedback', 'Project: D/AVE HD Driver%0ATopic ID: dhd_set_texture_format@dhd_handle_t@dhd_texel_org_t@dhd_address_mode_t@dhd_bool_t%0ATitle: dhd_set_texture_format');">Send Feedback</a></div>
+</div>
+</div>
+
+<!-- End Page Header -->
+
+<!-- Begin Client Area -->
+<div class="Element720" id="areascroll">
+<div class="Element721">
+
+<!-- Begin Page Content -->
+<div class="Element58">
+<a name="53756D6D617279"></a><div class="Element14">
+Summary</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+Specify texture format.</p></div>
+</div>
+<a name="53796E746178"></a><div class="Element99">
+Syntax</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><a href="dhd_api_inline.html" target="topic">DHD_API_INLINE</a> <strong><span style="color: #00008C;">void</span></strong> <strong><span style="color: #000000;">dhd_set_texture_format</span></strong>(<a href="dhd_handle_t.html" target="topic">dhd_handle_t</a> <strong><span style="color: #660000;">a_device</span></strong>, <a href="dhd_texel_org_t.html" target="topic">dhd_texel_org_t</a> <strong><span style="color: #660000;">a_format</span></strong>, <a href="dhd_address_mode_t.html" target="topic">dhd_address_mode_t</a> <strong><span style="color: #660000;">a_address</span></strong>, <a href="dhd_bool_t.html" target="topic">dhd_bool_t</a> <strong><span style="color: #660000;">a_discard_alpha</span></strong>);</pre></div></div>
+<a name="4465736372697074696F6E"></a><div class="Element14">
+Description</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+ The texture format describes pixel organization (bits per channel and channel order) as well as channel counts (alpha and color, color only, alpha only, luminance and alpha..) In addition to the texel organisation the memory layout can also be specified (linear, tiled, swizzled..)&#160;</p>
+<p class="Element10">
+For complex use cases the texel organisation can be combined with a CLUT mode (see <a href="dhd_clutmode_org_t.html" target="topic">dhd_clutmode_org_t</a>) e.g. &#39;E_DHD_TEXEL_ORG_RGB_565 | E_DHD_CLUT_MAP_RGB&#39; to use rgb565 input with each channel going through the LUT. Note that this does not work for the E_DHD_TEXEL_ORG_CLUT_* modes as those are already combinations of a regular texel org and E_DHD_CLUT_INDEXED_COLOR.&#160;</p>
+<p class="Element10">
+&#160;</p>
+<p class="Element10">
+The following restrictions regarding texture start address and pitch/height apply:</p>
+<ul class="Element630">
+<li class="Element600">The texture start address must only be unaligned to the bus width of the D/AVE HD HW instance when using normal linear access.</li>
+<li class="Element600">In case of block/tiled modes (swizzle 4/16 and virtual tiled), the pitch/height must be a multiple of the tile width/height.</li>
+<li class="Element600">In case of full swizzle, pitch and height must the same power-of-2 (= square).</li>
+</ul></div>
+</div>
+<a name="506172616D6574657273"></a><div class="Element14">
+Parameters</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element252">
+<div class="TableDiv">
+<table cellspacing="0" class="Table3">
+<tr>
+<td class="Element240" valign="top" width="28%">
+<div class="Element241">
+Parameters&#160;</div></td><td class="Element244" valign="top" width="72%">
+<div class="Element245">
+Description&#160;</div></td></tr><tr>
+<td class="Element242" valign="top" width="28%">
+<div class="Element243">
+a_device&#160;</div></td><td class="Element246" valign="top" width="72%">
+<div class="Element247">
+Driver context handle (as returned by <a href="dhd_init.html" target="topic">dhd_init</a>)&#160;</div></td></tr><tr>
+<td class="Element242" valign="top" width="28%">
+<div class="Element243">
+a_format&#160;</div></td><td class="Element246" valign="top" width="72%">
+<div class="Element247">
+Texture format (combination of <a href="dhd_texel_org_t.html" target="topic">dhd_texel_org_t</a> and <a href="dhd_clutmode_org_t.html" target="topic">dhd_clutmode_org_t</a>)&#160;</div></td></tr><tr>
+<td class="Element242" valign="top" width="28%">
+<div class="Element243">
+a_address&#160;</div></td><td class="Element246" valign="top" width="72%">
+<div class="Element247">
+Texture memory access (see <a href="dhd_address_mode_t.html" target="topic">dhd_address_mode_t</a>)&#160;</div></td></tr><tr>
+<td class="Element242" valign="top" width="28%">
+<div class="Element243">
+a_discard_alpha&#160;</div></td><td class="Element246" valign="top" width="72%">
+<div class="Element247">
+Boolean flag. 0 to keep the texture alpha. 1 to replace it with a constant 255 (opaque)&#160;</div></td></tr></table></div></div>
+</div>
+</div>
+<a name="53656520416C736F"></a><div class="Element14">
+See Also</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+<a href="dhd_set_texture_size.html" target="topic">dhd_set_texture_size</a>, <a href="dhd_set_texture_address.html" target="topic">dhd_set_texture_address</a></p></div>
+</div>
+<a name="46696C65"></a><div class="Element14">
+File</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+davehd_driver_txp_inl.h</p></div>
+</div>
+</div>
+<!-- End Page Content -->
+
+<!-- Begin Page Footer -->
+<div class="Element93">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="100%">
+<div class="Element3">
+Copyright (c) 2013 All rights reserved for TES Electronic Solutions</div>
+</td></tr><tr><td width="100%">
+<div class="Element4">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="idx.html" target="tocidx">Index</a> | <a href="intro.html" target="topic">Home</a></div>
+</td></tr></table></div>
+
+<!-- End Page Footer -->
+</div>
+</div>
+
+<!-- End Client Area -->
+</body></html>

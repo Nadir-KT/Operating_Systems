@@ -1,0 +1,148 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
+<html>
+<head>
+<title>Kernel Mode Driver</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="generator" content="Doc-O-Matic" />
+    <meta http-equiv="Content-Style-Type" content="text/css" />
+    <link rel="STYLESHEET" href="default.css" type="text/css" />
+
+<script type="text/javascript" src="scripts.js"></script>
+<!-- saved from url=(0013)about:internet -->
+</head>
+<body class="Element700" onload="onBodyLoadEx(&#39;index.html&#39;, &#39;topic&#39;, &#39;kmd.html&#39;);" onmousedown="onBodyMouseDown();">
+
+<!-- Begin Popups -->
+
+<!-- End Popups -->
+
+<!-- Begin Page Header -->
+<div class="Element710" id="areafixed">
+<div class="Element92">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="33%">
+<div class="Element1">
+D/AVE HD Driver - Internal Documentation</div>
+</td><td width="34%">
+<div class="Element2">
+<a href="contents.html" target="tocidx"><img src="btn_globals_contents_midblue.gif" border="0" alt="Contents" title="Contents" onmouseover="switchImage(this, &#39;btn_globals_contents_midblue_hover.gif&#39;);" onmouseout="switchImage(this, &#39;btn_globals_contents_midblue.gif&#39;);" /></a><a href="idx.html" target="tocidx"><img src="btn_globals_index_midblue.gif" border="0" alt="Index" title="Index" onmouseover="switchImage(this, &#39;btn_globals_index_midblue_hover.gif&#39;);" onmouseout="switchImage(this, &#39;btn_globals_index_midblue.gif&#39;);" /></a><a href="intro.html" target="topic"><img src="btn_globals_home_midblue.gif" border="0" alt="Home" title="Home" onmouseover="switchImage(this, &#39;btn_globals_home_midblue_hover.gif&#39;);" onmouseout="switchImage(this, &#39;btn_globals_home_midblue.gif&#39;);" /></a></div>
+</td><td width="33%">
+<div class="Element90">
+<a href="reference.html" target="topic"><img src="btn_prev_midblue.gif" border="0" alt="Previous" title="Previous" onmouseover="switchImage(this, &#39;btn_prev_midblue_hover.gif&#39;);" onmouseout="switchImage(this, &#39;btn_prev_midblue.gif&#39;);" /></a><a href="reference.html" target="topic"><img src="btn_up_midblue.gif" border="0" alt="Up" title="Up" onmouseover="switchImage(this, &#39;btn_up_midblue_hover.gif&#39;);" onmouseout="switchImage(this, &#39;btn_up_midblue.gif&#39;);" /></a><a href="bridge.html" target="topic"><img src="btn_next_midblue.gif" border="0" alt="Next" title="Next" onmouseover="switchImage(this, &#39;btn_next_midblue_hover.gif&#39;);" onmouseout="switchImage(this, &#39;btn_next_midblue.gif&#39;);" /></a></div>
+</td></tr></table><div class="Element5">
+Kernel Mode Driver</div>
+<div class="Element7">
+<a href="kmd_st_sec_functions.html" target="topic">Functions</a> | <a href="reference.html" target="topic">API Reference</a> | <a href="kmd_st_sec_structs,_records,_enums_.html" target="topic">Structs, Records, Enums</a> | <a href="kmd_st_sec_topics.html" target="topic">Topics</a> | <a href="#" onclick="sendFeedback('dave_support@tes-dst.com', 'Documentation Feedback', 'Project: D/AVE HD Driver%0ATopic ID: !!KMD%0ATitle: Kernel Mode Driver');">Send Feedback</a></div>
+<div class="Element731">
+<div class="Element730">
+<a onclick="ToggleAllElements(&#39;546F70696373,46756E6374696F6E73&#39;, &#39;linkToggleAllElements&#39;, &#39;imgToggleAllElements&#39;, &#39;Collapse All&#39;, &#39;Expand All&#39;);"><img src="btn_collapse.gif" border="0" alt="" title="" id="imgToggleAllElements" /></a><a id="linkToggleAllElements" onclick="ToggleAllElements(&#39;546F70696373,46756E6374696F6E73&#39;, &#39;linkToggleAllElements&#39;, &#39;imgToggleAllElements&#39;, &#39;Collapse All&#39;, &#39;Expand All&#39;);">Collapse All</a></div>
+</div>
+</div>
+</div>
+
+<!-- End Page Header -->
+
+<!-- Begin Client Area -->
+<div class="Element720" id="areascroll">
+<div class="Element721">
+
+<!-- Begin Page Content -->
+<div class="Element58">
+<a name="4465736372697074696F6E"></a><div class="Element11">
+<div class="Element10">
+<div class="Element15">
+Kernel Mode API</div>
+<p class="Element10">
+&#160;</p>
+<p class="Element10">
+There is only a single kernel mode driver (KMD) instance. The KMD should be initialized/closed at OS boot/shutdown time. It can serve any number of hardware instances (to the compiletime limit <a href="dhd_max_gpu_count.html" target="topic">DHD_MAX_GPU_COUNT</a>) and any number of applications. Each application has it&#39;s own user mode driver (UMD) called a &#39;client&#39; from the kernel mode&#39;s point of view.&#160;</p>
+<p class="Element10">
+&#160;</p>
+<p class="Element10">
+While the binding between application and front end as well as between front end and UMD is very tight (direct linking), the binding between kernel and user mode can be rather loose.&#160;</p>
+<p class="Element10">
+A transition from UMD to KMD will usually (this is highly OS dependent) require messages to be sent by the OS. So none of the kernel mode API functions should be called frequently.&#160;</p>
+<p class="Element10">
+&#160;</p>
+<p class="Element10">
+The following tables describe all of the kernel mode API :</p></div>
+</div>
+<a name="546F70696373"></a><div class="Element14">
+<a onclick="toggleVisibilityStored(&#39;546F70696373&#39;);" class="a_Element14"><img src="btn_collapse_large.gif" border="0" alt="" title="" id="img546F70696373" />Topics</a></div>
+<div id="div546F70696373">
+<div class="Element11">
+<div class="Element10">
+<div class="Element212">
+<div class="TableDiv">
+<table cellspacing="0" class="Table0">
+<tr>
+<td class="Element200" valign="top" width="50%">
+<div class="Element201">
+Topic&#160;</div></td><td class="Element204" valign="top" width="50%">
+<div class="Element205">
+Description&#160;</div></td></tr><tr>
+<td class="Element202" valign="top" width="50%">
+<div class="Element203">
+<a href="bridge.html" target="topic">Kernel Mode Interface</a>&#160;</div></td><td class="Element206" valign="top" width="50%">
+<div class="Element207">
+Overview of the communication interface.&#160;</div></td></tr><tr>
+<td class="Element202" valign="top" width="50%">
+<div class="Element203">
+<a href="functions_kmd.html" target="topic">Functions</a>&#160;</div></td><td class="Element206" valign="top" width="50%">
+<div class="Element207">
+The following table lists functions in this documentation.&#160;</div></td></tr><tr>
+<td class="Element202" valign="top" width="50%">
+<div class="Element203">
+<a href="records_kmd.html" target="topic">Structs, Records, Enums</a>&#160;</div></td><td class="Element206" valign="top" width="50%">
+<div class="Element207">
+The following table lists structs, records, enums in this documentation.&#160;</div></td></tr></table></div></div>
+</div>
+</div>
+</div>
+<a name="46756E6374696F6E73"></a><div class="Element14">
+<a onclick="toggleVisibilityStored(&#39;46756E6374696F6E73&#39;);" class="a_Element14"><img src="btn_collapse_large.gif" border="0" alt="" title="" id="img46756E6374696F6E73" />Functions</a></div>
+<div id="div46756E6374696F6E73">
+<div class="Element11">
+<div class="Element10">
+<div class="Element212">
+<div class="TableDiv">
+<table cellspacing="0" class="Table0">
+<tr>
+<td class="Element200" valign="top" width="50%">
+<div class="Element201">
+Function&#160;</div></td><td class="Element204" valign="top" width="50%">
+<div class="Element205">
+Description&#160;</div></td></tr><tr>
+<td class="Element202" valign="top" width="50%">
+<div class="Element203">
+<a href="kmd_section_general.html" target="topic">GPU Call Interface</a>&#160;</div></td><td class="Element206" valign="top" width="50%">
+<div class="Element207">
+Interface to the user mode driver (callable using <a href="dhd_gpu_call.html" target="topic">dhd_gpu_call</a>)&#160;</div></td></tr><tr>
+<td class="Element202" valign="top" width="50%">
+<div class="Element203">
+<a href="kmd_section_platform.html" target="topic">Hardware and OS Abstraction</a>&#160;</div></td><td class="Element206" valign="top" width="50%">
+<div class="Element207">
+Hardware and OS Abstraction Layer.&#160;</div></td></tr></table></div></div>
+</div>
+</div>
+</div>
+</div>
+<!-- End Page Content -->
+
+<!-- Begin Page Footer -->
+<div class="Element93">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="100%">
+<div class="Element3">
+Copyright (c) 2013 All rights reserved for TES Electronic Solutions</div>
+</td></tr><tr><td width="100%">
+<div class="Element4">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="idx.html" target="tocidx">Index</a> | <a href="intro.html" target="topic">Home</a></div>
+</td></tr></table></div>
+
+<!-- End Page Footer -->
+</div>
+</div>
+
+<!-- End Client Area -->
+</body></html>

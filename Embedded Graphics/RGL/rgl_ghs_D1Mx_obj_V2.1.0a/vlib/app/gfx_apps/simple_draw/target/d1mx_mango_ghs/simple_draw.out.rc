@@ -1,0 +1,23 @@
+/* ---------------------------------------------------------------------------------------------------------------------------------------------*/
+//remote Sim850 -rom									      /* Simulator */
+/* ---------------------------------------------------------------------------------------------------------------------------------------------*/
+
+// Load registers button 
+
+// Reset button 
+debugbutton Reset c="target rst; e 0x0" i="reset" h="Target reset and restart"
+
+// connect to minicube 
+if(_REMOTE_CONNECTED == 0) {
+      connect 850eserv2 -rh850 -e1lpd4=16500 -df=dr7f701412.dvf -noiop -id ffffffffffffffffffffffffffffffff -D -dclock=8000,0,swoff -fastflashload
+      //target syscalls off
+}
+// load software to target
+target rst; load
+// reset 
+target rst; e 0x0000
+// start 
+b main
+s
+
+

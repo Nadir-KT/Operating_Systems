@@ -1,0 +1,244 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
+<html>
+<head>
+<title>dhd_gpu_call_data_t</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="generator" content="Doc-O-Matic" />
+    <meta http-equiv="Content-Style-Type" content="text/css" />
+    <link rel="STYLESHEET" href="default.css" type="text/css" />
+
+<script type="text/javascript" src="scripts.js"></script>
+<!-- saved from url=(0013)about:internet -->
+</head>
+<body class="Element700" onload="onBodyLoadEx(&#39;index.html&#39;, &#39;topic&#39;, &#39;dhd_gpu_call_data_t.html&#39;);" onmousedown="onBodyMouseDown();">
+
+<!-- Begin Popups -->
+
+<!-- End Popups -->
+
+<!-- Begin Page Header -->
+<div class="Element710" id="areafixed">
+<div class="Element92">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="33%">
+<div class="Element1">
+D/AVE HD Driver - Internal Documentation</div>
+</td><td width="34%">
+<div class="Element2">
+<a href="contents.html" target="tocidx"><img src="btn_globals_contents_midblue.gif" border="0" alt="Contents" title="Contents" onmouseover="switchImage(this, &#39;btn_globals_contents_midblue_hover.gif&#39;);" onmouseout="switchImage(this, &#39;btn_globals_contents_midblue.gif&#39;);" /></a><a href="idx.html" target="tocidx"><img src="btn_globals_index_midblue.gif" border="0" alt="Index" title="Index" onmouseover="switchImage(this, &#39;btn_globals_index_midblue_hover.gif&#39;);" onmouseout="switchImage(this, &#39;btn_globals_index_midblue.gif&#39;);" /></a><a href="intro.html" target="topic"><img src="btn_globals_home_midblue.gif" border="0" alt="Home" title="Home" onmouseover="switchImage(this, &#39;btn_globals_home_midblue_hover.gif&#39;);" onmouseout="switchImage(this, &#39;btn_globals_home_midblue.gif&#39;);" /></a></div>
+</td><td width="33%">
+<div class="Element90">
+<a href="records_kmd.html" target="topic"><img src="btn_prev_midblue.gif" border="0" alt="Previous" title="Previous" onmouseover="switchImage(this, &#39;btn_prev_midblue_hover.gif&#39;);" onmouseout="switchImage(this, &#39;btn_prev_midblue.gif&#39;);" /></a><a href="records_kmd.html" target="topic"><img src="btn_up_midblue.gif" border="0" alt="Up" title="Up" onmouseover="switchImage(this, &#39;btn_up_midblue_hover.gif&#39;);" onmouseout="switchImage(this, &#39;btn_up_midblue.gif&#39;);" /></a><a href="dhd_gpu_call_entry_t.html" target="topic"><img src="btn_next_midblue.gif" border="0" alt="Next" title="Next" onmouseover="switchImage(this, &#39;btn_next_midblue_hover.gif&#39;);" onmouseout="switchImage(this, &#39;btn_next_midblue.gif&#39;);" /></a></div>
+</td></tr></table><div class="Element5">
+dhd_gpu_call_data_t</div>
+<div class="Element7">
+<a href="records_kmd.html" target="topic">Structs, Records, Enums</a> | <a href="#" onclick="sendFeedback('dave_support@tes-dst.com', 'Documentation Feedback', 'Project: D/AVE HD Driver%0ATopic ID: dhd_gpu_call_data_t%0ATitle: dhd_gpu_call_data_t');">Send Feedback</a></div>
+</div>
+</div>
+
+<!-- End Page Header -->
+
+<!-- Begin Client Area -->
+<div class="Element720" id="areascroll">
+<div class="Element721">
+
+<!-- Begin Page Content -->
+<div class="Element58">
+<a name="53756D6D617279"></a><div class="Element14">
+Summary</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+Generic structure for parameter passing.</p></div>
+</div>
+<a name="53796E746178"></a><div class="Element99">
+Syntax</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #00008C;">typedef</span></strong> <strong><span style="color: #00008C;">union</span></strong> <strong><span style="color: #000000;">tagdhd_gpu_call_data</span></strong> {
+  <a href="dhd_uint32_t.html" target="topic">dhd_uint32_t</a> <strong><span style="color: #000000;">m_response</span></strong>;
+  <strong><span style="color: #00008C;">struct</span></strong> <strong><span style="color: #000000;">tagget_instance_count</span></strong> {
+    <a href="dhd_uint32_t.html" target="topic">dhd_uint32_t</a> * <strong><span style="color: #000000;">m_out</span></strong>;
+  } m_get_instance_count;
+  <strong><span style="color: #00008C;">struct</span></strong> <strong><span style="color: #000000;">tagquery_instance</span></strong> {
+    <a href="dhd_uint32_t.html" target="topic">dhd_uint32_t</a> <strong><span style="color: #000000;">m_instance</span></strong>;
+    <a href="dhd_device_description_t.html" target="topic">dhd_device_description_t</a> * <strong><span style="color: #000000;">m_out</span></strong>;
+  } m_query_instance;
+  <strong><span style="color: #00008C;">struct</span></strong> <strong><span style="color: #000000;">taginit</span></strong> {
+    <a href="dhd_uint32_t.html" target="topic">dhd_uint32_t</a> <strong><span style="color: #000000;">m_instance</span></strong>;
+    <strong><span style="color: #00008C;">const</span></strong> <a href="dhd_gpu_config_t.html" target="topic">dhd_gpu_config_t</a> * <strong><span style="color: #000000;">m_config</span></strong>;
+    <a href="dhd_uint8_t.html" target="topic">dhd_uint8_t</a> <strong><span style="color: #000000;">m_version_major_out</span></strong>;
+    <a href="dhd_uint8_t.html" target="topic">dhd_uint8_t</a> <strong><span style="color: #000000;">m_version_minor_out</span></strong>;
+    <a href="dhd_uint8_t.html" target="topic">dhd_uint8_t</a> <strong><span style="color: #000000;">m_revision_out</span></strong>;
+  } m_init;
+  <strong><span style="color: #00008C;">struct</span></strong> <strong><span style="color: #000000;">tagshutdown</span></strong> {
+    <a href="dhd_uint32_t.html" target="topic">dhd_uint32_t</a> <strong><span style="color: #000000;">m_instance</span></strong>;
+  } m_shutdown;
+  <strong><span style="color: #00008C;">struct</span></strong> <strong><span style="color: #000000;">tagconnect</span></strong> {
+    <a href="dhd_uint32_t.html" target="topic">dhd_uint32_t</a> <strong><span style="color: #000000;">m_instance</span></strong>;
+    <a href="dhd_handle_t.html" target="topic">dhd_handle_t</a> * <strong><span style="color: #000000;">m_out</span></strong>;
+  } m_connect;
+  <strong><span style="color: #00008C;">struct</span></strong> <strong><span style="color: #000000;">tagdisconnect</span></strong> {
+    <a href="dhd_handle_t.html" target="topic">dhd_handle_t</a> <strong><span style="color: #000000;">m_client</span></strong>;
+  } m_disconnect;
+  <strong><span style="color: #00008C;">struct</span></strong> <strong><span style="color: #000000;">tagalloc_mem</span></strong> {
+    <a href="dhd_handle_t.html" target="topic">dhd_handle_t</a> <strong><span style="color: #000000;">m_client</span></strong>;
+    <a href="dhd_uint32_t.html" target="topic">dhd_uint32_t</a> <strong><span style="color: #000000;">m_size</span></strong>;
+    <a href="dhd_uint32_t.html" target="topic">dhd_uint32_t</a> <strong><span style="color: #000000;">m_alignment</span></strong>;
+    <a href="dhd_uint32_t.html" target="topic">dhd_uint32_t</a> <strong><span style="color: #000000;">m_tag</span></strong>;
+    <a href="dhd_memory_usage_t.html" target="topic">dhd_memory_usage_t</a> <strong><span style="color: #000000;">m_usage</span></strong>;
+    <a href="dhd_vidmem_t.html" target="topic">dhd_vidmem_t</a> * <strong><span style="color: #000000;">m_result</span></strong>;
+  } m_alloc_mem;
+  <strong><span style="color: #00008C;">struct</span></strong> <strong><span style="color: #000000;">tagfree_mem</span></strong> {
+    <a href="dhd_handle_t.html" target="topic">dhd_handle_t</a> <strong><span style="color: #000000;">m_client</span></strong>;
+    <a href="dhd_vidmem_t.html" target="topic">dhd_vidmem_t</a> * <strong><span style="color: #000000;">m_memory</span></strong>;
+  } m_free_mem;
+  <strong><span style="color: #00008C;">struct</span></strong> <strong><span style="color: #000000;">tagcan_map_mem</span></strong> {
+    <a href="dhd_handle_t.html" target="topic">dhd_handle_t</a> <strong><span style="color: #000000;">m_client</span></strong>;
+    <a href="dhd_vidmem_t.html" target="topic">dhd_vidmem_t</a> * <strong><span style="color: #000000;">m_memory</span></strong>;
+    <a href="dhd_enum_t.html" target="topic">dhd_enum_t</a> <strong><span style="color: #000000;">m_access</span></strong>;
+  } m_can_map_mem;
+  <strong><span style="color: #00008C;">struct</span></strong> <strong><span style="color: #000000;">tagmap_mem</span></strong> {
+    <a href="dhd_handle_t.html" target="topic">dhd_handle_t</a> <strong><span style="color: #000000;">m_client</span></strong>;
+    <a href="dhd_vidmem_t.html" target="topic">dhd_vidmem_t</a> * <strong><span style="color: #000000;">m_memory</span></strong>;
+    <a href="dhd_enum_t.html" target="topic">dhd_enum_t</a> <strong><span style="color: #000000;">m_access</span></strong>;
+  } m_map_mem;
+  <strong><span style="color: #00008C;">struct</span></strong> <strong><span style="color: #000000;">tagunmap_mem</span></strong> {
+    <a href="dhd_handle_t.html" target="topic">dhd_handle_t</a> <strong><span style="color: #000000;">m_client</span></strong>;
+    <a href="dhd_vidmem_t.html" target="topic">dhd_vidmem_t</a> * <strong><span style="color: #000000;">m_memory</span></strong>;
+    <a href="dhd_enum_t.html" target="topic">dhd_enum_t</a> <strong><span style="color: #000000;">m_access</span></strong>;
+  } m_unmap_mem;
+  <strong><span style="color: #00008C;">struct</span></strong> <strong><span style="color: #000000;">tagupload</span></strong> {
+    <a href="dhd_handle_t.html" target="topic">dhd_handle_t</a> <strong><span style="color: #000000;">m_client</span></strong>;
+    <strong><span style="color: #00008C;">const</span></strong> <a href="dhd_uint8_t.html" target="topic">dhd_uint8_t</a> * <strong><span style="color: #000000;">m_src</span></strong>;
+    <a href="dhd_gpu_ptr_t.html" target="topic">dhd_gpu_ptr_t</a> <strong><span style="color: #000000;">m_dest</span></strong>;
+    <a href="dhd_uint32_t.html" target="topic">dhd_uint32_t</a> <strong><span style="color: #000000;">m_size</span></strong>;
+    <a href="dhd_bool_t.html" target="topic">dhd_bool_t</a> <strong><span style="color: #000000;">m_tlistonly</span></strong>;
+  } m_upload;
+  <strong><span style="color: #00008C;">struct</span></strong> <strong><span style="color: #000000;">tagdownload</span></strong> {
+    <a href="dhd_handle_t.html" target="topic">dhd_handle_t</a> <strong><span style="color: #000000;">m_client</span></strong>;
+    <a href="dhd_gpu_ptr_t.html" target="topic">dhd_gpu_ptr_t</a> <strong><span style="color: #000000;">m_src</span></strong>;
+    <a href="dhd_uint8_t.html" target="topic">dhd_uint8_t</a> * <strong><span style="color: #000000;">m_dest</span></strong>;
+    <a href="dhd_uint32_t.html" target="topic">dhd_uint32_t</a> <strong><span style="color: #000000;">m_size</span></strong>;
+  } m_download;
+  <strong><span style="color: #00008C;">struct</span></strong> <strong><span style="color: #000000;">tagcommit</span></strong> {
+    <a href="dhd_handle_t.html" target="topic">dhd_handle_t</a> <strong><span style="color: #000000;">m_client</span></strong>;
+    <strong><span style="color: #00008C;">struct</span></strong> <a href="dhd_gpu_job_t.html" target="topic">tagdhd_gpu_job</a> * <strong><span style="color: #000000;">m_job</span></strong>;
+    <strong><span style="color: #00008C;">struct</span></strong> <a href="dhd_gpu_job_t.html" target="topic">tagdhd_gpu_job</a> ** <strong><span style="color: #000000;">m_reclaimed_jobs</span></strong>;
+  } m_commit;
+  <strong><span style="color: #00008C;">struct</span></strong> <strong><span style="color: #000000;">tagget_sync</span></strong> {
+    <a href="dhd_handle_t.html" target="topic">dhd_handle_t</a> <strong><span style="color: #000000;">m_client</span></strong>;
+    <a href="dhd_uint32_t.html" target="topic">dhd_uint32_t</a> * <strong><span style="color: #000000;">m_jobid</span></strong>;
+    <a href="dhd_uint32_t.html" target="topic">dhd_uint32_t</a> * <strong><span style="color: #000000;">m_clid</span></strong>;
+  } m_get_sync;
+  <strong><span style="color: #00008C;">struct</span></strong> <strong><span style="color: #000000;">tagwait_for_job</span></strong> {
+    <a href="dhd_uint32_t.html" target="topic">dhd_uint32_t</a> <strong><span style="color: #000000;">m_unused</span></strong>;
+    <a href="dhd_handle_t.html" target="topic">dhd_handle_t</a> <strong><span style="color: #000000;">m_client</span></strong>;
+    <a href="dhd_jobid_t.html" target="topic">dhd_jobid_t</a> <strong><span style="color: #000000;">m_id</span></strong>;
+  } m_wait_for_job;
+  <strong><span style="color: #00008C;">struct</span></strong> <strong><span style="color: #000000;">tagget_reclaimed_jobs</span></strong> {
+    <a href="dhd_handle_t.html" target="topic">dhd_handle_t</a> <strong><span style="color: #000000;">m_client</span></strong>;
+    <strong><span style="color: #00008C;">struct</span></strong> <a href="dhd_gpu_job_t.html" target="topic">tagdhd_gpu_job</a> ** <strong><span style="color: #000000;">m_out</span></strong>;
+  } m_get_reclaimed_jobs;
+  <strong><span style="color: #00008C;">struct</span></strong> <strong><span style="color: #000000;">tagforce_yield</span></strong> {
+    <a href="dhd_handle_t.html" target="topic">dhd_handle_t</a> <strong><span style="color: #000000;">m_client</span></strong>;
+  } m_force_yield;
+  <strong><span style="color: #00008C;">struct</span></strong> <strong><span style="color: #000000;">tagdownload_state</span></strong> {
+    <a href="dhd_handle_t.html" target="topic">dhd_handle_t</a> <strong><span style="color: #000000;">m_client</span></strong>;
+    <a href="dhd_uint32_t.html" target="topic">dhd_uint32_t</a> * <strong><span style="color: #000000;">m_destination</span></strong>;
+    <a href="dhd_uint32_t.html" target="topic">dhd_uint32_t</a> <strong><span style="color: #000000;">m_count</span></strong>;
+    <a href="dhd_gpu_state_flags_t.html" target="topic">dhd_gpu_state_flags_t</a> <strong><span style="color: #000000;">m_flags</span></strong>;
+  } m_download_state;
+  <strong><span style="color: #00008C;">struct</span></strong> <strong><span style="color: #000000;">tagtlist_enable</span></strong> {
+    <a href="dhd_handle_t.html" target="topic">dhd_handle_t</a> <strong><span style="color: #000000;">m_client</span></strong>;
+    <strong><span style="color: #00008C;">const</span></strong> <a href="dhd_char_t.html" target="topic">dhd_char_t</a> * <strong><span style="color: #000000;">m_file</span></strong>;
+  } m_tlist_enable;
+  <strong><span style="color: #00008C;">struct</span></strong> <strong><span style="color: #000000;">tagtlist_write</span></strong> {
+    <a href="dhd_handle_t.html" target="topic">dhd_handle_t</a> <strong><span style="color: #000000;">m_client</span></strong>;
+    <strong><span style="color: #00008C;">const</span></strong> <a href="dhd_char_t.html" target="topic">dhd_char_t</a> * <strong><span style="color: #000000;">m_string</span></strong>;
+    <a href="dhd_bool_t.html" target="topic">dhd_bool_t</a> <strong><span style="color: #000000;">m_to_kernel_tlist</span></strong>;
+  } m_tlist_write;
+  <strong><span style="color: #00008C;">struct</span></strong> <strong><span style="color: #000000;">tagalloc_pc</span></strong> {
+    <a href="dhd_handle_t.html" target="topic">dhd_handle_t</a> <strong><span style="color: #000000;">m_client</span></strong>;
+    <a href="dhd_uint8_t.html" target="topic">dhd_uint8_t</a> * <strong><span style="color: #000000;">m_pcid</span></strong>;
+  } m_alloc_pc;
+  <strong><span style="color: #00008C;">struct</span></strong> <strong><span style="color: #000000;">tagfree_pc</span></strong> {
+    <a href="dhd_handle_t.html" target="topic">dhd_handle_t</a> <strong><span style="color: #000000;">m_client</span></strong>;
+    <a href="dhd_uint8_t.html" target="topic">dhd_uint8_t</a> <strong><span style="color: #000000;">m_pcid</span></strong>;
+  } m_free_pc;
+  <strong><span style="color: #00008C;">struct</span></strong> <strong><span style="color: #000000;">tagalloc_clut</span></strong> {
+    <a href="dhd_handle_t.html" target="topic">dhd_handle_t</a> <strong><span style="color: #000000;">m_client</span></strong>;
+    <a href="dhd_uint32_t.html" target="topic">dhd_uint32_t</a> <strong><span style="color: #000000;">m_size</span></strong>;
+    <a href="dhd_uint32_t.html" target="topic">dhd_uint32_t</a> * <strong><span style="color: #000000;">m_clutindex</span></strong>;
+  } m_alloc_clut;
+  <strong><span style="color: #00008C;">struct</span></strong> <strong><span style="color: #000000;">tagfree_clut</span></strong> {
+    <a href="dhd_handle_t.html" target="topic">dhd_handle_t</a> <strong><span style="color: #000000;">m_client</span></strong>;
+    <a href="dhd_uint32_t.html" target="topic">dhd_uint32_t</a> <strong><span style="color: #000000;">m_size</span></strong>;
+    <a href="dhd_uint32_t.html" target="topic">dhd_uint32_t</a> <strong><span style="color: #000000;">m_clutindex</span></strong>;
+  } m_free_clut;
+  <strong><span style="color: #00008C;">struct</span></strong> <strong><span style="color: #000000;">tagresume</span></strong> {
+    <a href="dhd_uint32_t.html" target="topic">dhd_uint32_t</a> <strong><span style="color: #000000;">m_instance</span></strong>;
+  } m_resume;
+  <strong><span style="color: #00008C;">struct</span></strong> <strong><span style="color: #000000;">tagcan_access_mem</span></strong> {
+    <a href="dhd_handle_t.html" target="topic">dhd_handle_t</a> <strong><span style="color: #000000;">m_client</span></strong>;
+    <a href="dhd_uint32_t.html" target="topic">dhd_uint32_t</a> <strong><span style="color: #000000;">m_size</span></strong>;
+    <a href="dhd_uint8_t.html" target="topic">dhd_uint8_t</a> * <strong><span style="color: #000000;">m_cpu_address</span></strong>;
+  } m_can_access_mem;
+} dhd_gpu_call_data_t;</pre></div></div>
+<a name="4465736372697074696F6E"></a><div class="Element14">
+Description</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+ All kernel functions have the same signature: <a href="dhd_uint32_t.html" target="topic">dhd_uint32_t</a> function(dhd_gpu_call_data_t *a_parameters)</p></div>
+</div>
+<a name="4D656D62657273"></a><div class="Element14">
+Members</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element272">
+<div class="TableDiv">
+<table cellspacing="0" class="Table4">
+<tr>
+<td class="Element260" valign="top" width="28%">
+<div class="Element261">
+Members&#160;</div></td><td class="Element264" valign="top" width="72%">
+<div class="Element265">
+Description&#160;</div></td></tr><tr>
+<td class="Element262" valign="top" width="28%">
+<div class="Element263">
+m_response&#160;</div></td><td class="Element266" valign="top" width="72%">
+<div class="Element267">
+used internally only&#160;</div></td></tr><tr>
+<td class="Element262" valign="top" width="28%">
+<div class="Element263">
+m_unused&#160;</div></td><td class="Element266" valign="top" width="72%">
+<div class="Element267">
+unused to enable setting response before processing&#160;</div></td></tr></table></div></div>
+</div>
+</div>
+<a name="46696C65"></a><div class="Element14">
+File</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+davehd_kernel_driver.h</p></div>
+</div>
+</div>
+<!-- End Page Content -->
+
+<!-- Begin Page Footer -->
+<div class="Element93">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="100%">
+<div class="Element3">
+Copyright (c) 2013 All rights reserved for TES Electronic Solutions</div>
+</td></tr><tr><td width="100%">
+<div class="Element4">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="idx.html" target="tocidx">Index</a> | <a href="intro.html" target="topic">Home</a></div>
+</td></tr></table></div>
+
+<!-- End Page Footer -->
+</div>
+</div>
+
+<!-- End Client Area -->
+</body></html>

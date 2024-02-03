@@ -1,0 +1,341 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
+<html>
+<head>
+<title>dhd_drawattribute_flag_t</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="generator" content="Doc-O-Matic" />
+    <meta http-equiv="Content-Style-Type" content="text/css" />
+    <link rel="STYLESHEET" href="default.css" type="text/css" />
+
+<script type="text/javascript" src="scripts.js"></script>
+<!-- saved from url=(0013)about:internet -->
+</head>
+<body class="Element700" onload="onBodyLoadEx(&#39;index.html&#39;, &#39;topic&#39;, &#39;dhd_drawattribute_flag_t.html&#39;);" onmousedown="onBodyMouseDown();">
+
+<!-- Begin Popups -->
+
+<!-- End Popups -->
+
+<!-- Begin Page Header -->
+<div class="Element710" id="areafixed">
+<div class="Element92">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="33%">
+<div class="Element1">
+D/AVE HD Driver - Internal Documentation</div>
+</td><td width="34%">
+<div class="Element2">
+<a href="contents.html" target="tocidx"><img src="btn_globals_contents_midblue.gif" border="0" alt="Contents" title="Contents" onmouseover="switchImage(this, &#39;btn_globals_contents_midblue_hover.gif&#39;);" onmouseout="switchImage(this, &#39;btn_globals_contents_midblue.gif&#39;);" /></a><a href="idx.html" target="tocidx"><img src="btn_globals_index_midblue.gif" border="0" alt="Index" title="Index" onmouseover="switchImage(this, &#39;btn_globals_index_midblue_hover.gif&#39;);" onmouseout="switchImage(this, &#39;btn_globals_index_midblue.gif&#39;);" /></a><a href="intro.html" target="topic"><img src="btn_globals_home_midblue.gif" border="0" alt="Home" title="Home" onmouseover="switchImage(this, &#39;btn_globals_home_midblue_hover.gif&#39;);" onmouseout="switchImage(this, &#39;btn_globals_home_midblue.gif&#39;);" /></a></div>
+</td><td width="33%">
+<div class="Element90">
+<a href="dhd_device_t.html" target="topic"><img src="btn_prev_midblue.gif" border="0" alt="Previous" title="Previous" onmouseover="switchImage(this, &#39;btn_prev_midblue_hover.gif&#39;);" onmouseout="switchImage(this, &#39;btn_prev_midblue.gif&#39;);" /></a><a href="records_umd.html" target="topic"><img src="btn_up_midblue.gif" border="0" alt="Up" title="Up" onmouseover="switchImage(this, &#39;btn_up_midblue_hover.gif&#39;);" onmouseout="switchImage(this, &#39;btn_up_midblue.gif&#39;);" /></a><a href="dhd_edge_data_t.html" target="topic"><img src="btn_next_midblue.gif" border="0" alt="Next" title="Next" onmouseover="switchImage(this, &#39;btn_next_midblue_hover.gif&#39;);" onmouseout="switchImage(this, &#39;btn_next_midblue.gif&#39;);" /></a></div>
+</td></tr></table><div class="Element5">
+dhd_drawattribute_flag_t</div>
+<div class="Element7">
+<a href="records_umd.html" target="topic">Structs, Records, Enums</a> | <a href="dhd_drawattribute_flag_t_st_sec_see_also.html" target="topic">See Also</a> | <a href="#" onclick="sendFeedback('dave_support@tes-dst.com', 'Documentation Feedback', 'Project: D/AVE HD Driver%0ATopic ID: dhd_drawattribute_flag_t%0ATitle: dhd_drawattribute_flag_t');">Send Feedback</a></div>
+</div>
+</div>
+
+<!-- End Page Header -->
+
+<!-- Begin Client Area -->
+<div class="Element720" id="areascroll">
+<div class="Element721">
+
+<!-- Begin Page Content -->
+<div class="Element58">
+<a name="53756D6D617279"></a><div class="Element14">
+Summary</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+Flags for draw command attribute control.</p></div>
+</div>
+<a name="53796E746178"></a><div class="Element99">
+Syntax</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #00008C;">typedef</span></strong> <strong><span style="color: #00008C;">enum</span></strong> <strong><span style="color: #000000;">tagdhd_drawattribute_flag</span></strong> {
+  <strong><span style="color: #000000;">E_DHD_DRAW_FLAT</span></strong> = 0,
+  <strong><span style="color: #000000;">E_DHD_DRAW_UV</span></strong> = <a href="dhd_draw_uv.html" target="topic">DHD_DRAW_UV</a>(1),
+  <strong><span style="color: #000000;">E_DHD_DRAW_1UVS</span></strong> = <a href="dhd_draw_uv.html" target="topic">DHD_DRAW_UV</a>(1),
+  <strong><span style="color: #000000;">E_DHD_DRAW_2UVS</span></strong> = <a href="dhd_draw_uv.html" target="topic">DHD_DRAW_UV</a>(2),
+  <strong><span style="color: #000000;">E_DHD_DRAW_3UVS</span></strong> = <a href="dhd_draw_uv.html" target="topic">DHD_DRAW_UV</a>(3),
+  <strong><span style="color: #000000;">E_DHD_DRAW_4UVS</span></strong> = <a href="dhd_draw_uv.html" target="topic">DHD_DRAW_UV</a>(4),
+  <strong><span style="color: #000000;">E_DHD_DRAW_5UVS</span></strong> = <a href="dhd_draw_uv.html" target="topic">DHD_DRAW_UV</a>(5),
+  <strong><span style="color: #000000;">E_DHD_DRAW_6UVS</span></strong> = <a href="dhd_draw_uv.html" target="topic">DHD_DRAW_UV</a>(6),
+  <strong><span style="color: #000000;">E_DHD_DRAW_7UVS</span></strong> = <a href="dhd_draw_uv.html" target="topic">DHD_DRAW_UV</a>(7),
+  <strong><span style="color: #000000;">E_DHD_DRAW_8UVS</span></strong> = <a href="dhd_draw_uv.html" target="topic">DHD_DRAW_UV</a>(8),
+  <strong><span style="color: #000000;">E_DHD_DRAW_RHW</span></strong> = <a href="dhd_draw_rhw.html" target="topic">DHD_DRAW_RHW</a>(1),
+  <strong><span style="color: #000000;">E_DHD_DRAW_1RHWS</span></strong> = <a href="dhd_draw_rhw.html" target="topic">DHD_DRAW_RHW</a>(1),
+  <strong><span style="color: #000000;">E_DHD_DRAW_2RHWS</span></strong> = <a href="dhd_draw_rhw.html" target="topic">DHD_DRAW_RHW</a>(2),
+  <strong><span style="color: #000000;">E_DHD_DRAW_3RHWS</span></strong> = <a href="dhd_draw_rhw.html" target="topic">DHD_DRAW_RHW</a>(3),
+  <strong><span style="color: #000000;">E_DHD_DRAW_4RHWS</span></strong> = <a href="dhd_draw_rhw.html" target="topic">DHD_DRAW_RHW</a>(4),
+  <strong><span style="color: #000000;">E_DHD_DRAW_5RHWS</span></strong> = <a href="dhd_draw_rhw.html" target="topic">DHD_DRAW_RHW</a>(5),
+  <strong><span style="color: #000000;">E_DHD_DRAW_6RHWS</span></strong> = <a href="dhd_draw_rhw.html" target="topic">DHD_DRAW_RHW</a>(6),
+  <strong><span style="color: #000000;">E_DHD_DRAW_7RHWS</span></strong> = <a href="dhd_draw_rhw.html" target="topic">DHD_DRAW_RHW</a>(7),
+  <strong><span style="color: #000000;">E_DHD_DRAW_8RHWS</span></strong> = <a href="dhd_draw_rhw.html" target="topic">DHD_DRAW_RHW</a>(8),
+  <strong><span style="color: #000000;">E_DHD_DRAW_COL</span></strong> = <a href="dhd_draw_col.html" target="topic">DHD_DRAW_COL</a>(1),
+  <strong><span style="color: #000000;">E_DHD_DRAW_1COLS</span></strong> = <a href="dhd_draw_col.html" target="topic">DHD_DRAW_COL</a>(1),
+  <strong><span style="color: #000000;">E_DHD_DRAW_2COLS</span></strong> = <a href="dhd_draw_col.html" target="topic">DHD_DRAW_COL</a>(2),
+  <strong><span style="color: #000000;">E_DHD_DRAW_3COLS</span></strong> = <a href="dhd_draw_col.html" target="topic">DHD_DRAW_COL</a>(3),
+  <strong><span style="color: #000000;">E_DHD_DRAW_4COLS</span></strong> = <a href="dhd_draw_col.html" target="topic">DHD_DRAW_COL</a>(4),
+  <strong><span style="color: #000000;">E_DHD_DRAW_5COLS</span></strong> = <a href="dhd_draw_col.html" target="topic">DHD_DRAW_COL</a>(5),
+  <strong><span style="color: #000000;">E_DHD_DRAW_6COLS</span></strong> = <a href="dhd_draw_col.html" target="topic">DHD_DRAW_COL</a>(6),
+  <strong><span style="color: #000000;">E_DHD_DRAW_7COLS</span></strong> = <a href="dhd_draw_col.html" target="topic">DHD_DRAW_COL</a>(7),
+  <strong><span style="color: #000000;">E_DHD_DRAW_8COLS</span></strong> = <a href="dhd_draw_col.html" target="topic">DHD_DRAW_COL</a>(8),
+  <strong><span style="color: #000000;">E_DHD_DRAW_9COLS</span></strong> = <a href="dhd_draw_col.html" target="topic">DHD_DRAW_COL</a>(9),
+  <strong><span style="color: #000000;">E_DHD_DRAW_10COLS</span></strong> = <a href="dhd_draw_col.html" target="topic">DHD_DRAW_COL</a>(10),
+  <strong><span style="color: #000000;">E_DHD_DRAW_11COLS</span></strong> = <a href="dhd_draw_col.html" target="topic">DHD_DRAW_COL</a>(11),
+  <strong><span style="color: #000000;">E_DHD_DRAW_12COLS</span></strong> = <a href="dhd_draw_col.html" target="topic">DHD_DRAW_COL</a>(12),
+  <strong><span style="color: #000000;">E_DHD_DRAW_13COLS</span></strong> = <a href="dhd_draw_col.html" target="topic">DHD_DRAW_COL</a>(13),
+  <strong><span style="color: #000000;">E_DHD_DRAW_14COLS</span></strong> = <a href="dhd_draw_col.html" target="topic">DHD_DRAW_COL</a>(14),
+  <strong><span style="color: #000000;">E_DHD_DRAW_15COLS</span></strong> = <a href="dhd_draw_col.html" target="topic">DHD_DRAW_COL</a>(15),
+  <strong><span style="color: #000000;">E_DHD_DRAW_DEPTH</span></strong> = 0x1000,
+  <strong><span style="color: #000000;">E_DHD_DRAW_STRIPE</span></strong> = 0x2000,
+  <strong><span style="color: #000000;">E_DHD_DRAW_COMMONBOX</span></strong> = 0x4000
+} dhd_drawattribute_flag_t;</pre></div></div>
+<a name="4465736372697074696F6E"></a><div class="Element14">
+Description</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+ Flags can also be built using the <a href="dhd_draw_uv.html" target="topic">DHD_DRAW_UV</a>, <a href="dhd_draw_rhw.html" target="topic">DHD_DRAW_RHW</a> and <a href="dhd_draw_col.html" target="topic">DHD_DRAW_COL</a> macros.</p></div>
+</div>
+<a name="4D656D62657273"></a><div class="Element14">
+Members</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element272">
+<div class="TableDiv">
+<table cellspacing="0" class="Table4">
+<tr>
+<td class="Element260" valign="top" width="28%">
+<div class="Element261">
+Members&#160;</div></td><td class="Element264" valign="top" width="72%">
+<div class="Element265">
+Description&#160;</div></td></tr><tr>
+<td class="Element262" valign="top" width="28%">
+<div class="Element263">
+E_DHD_DRAW_FLAT&#160;</div></td><td class="Element266" valign="top" width="72%">
+<div class="Element267">
+drawing should use NO attributes (can not be combined with other E_DHD_DRAW_* elements)&#160;</div></td></tr><tr>
+<td class="Element262" valign="top" width="28%">
+<div class="Element263">
+E_DHD_DRAW_UV&#160;</div></td><td class="Element266" valign="top" width="72%">
+<div class="Element267">
+drawing should use one set of UV corrdinates per primitive&#160;</div></td></tr><tr>
+<td class="Element262" valign="top" width="28%">
+<div class="Element263">
+E_DHD_DRAW_1UVS&#160;</div></td><td class="Element266" valign="top" width="72%">
+<div class="Element267">
+drawing should use one set of UV corrdinates per primitive&#160;</div></td></tr><tr>
+<td class="Element262" valign="top" width="28%">
+<div class="Element263">
+E_DHD_DRAW_2UVS&#160;</div></td><td class="Element266" valign="top" width="72%">
+<div class="Element267">
+drawing should use two sets of UV corrdinates per primitive (texture units 0..1)&#160;</div></td></tr><tr>
+<td class="Element262" valign="top" width="28%">
+<div class="Element263">
+E_DHD_DRAW_3UVS&#160;</div></td><td class="Element266" valign="top" width="72%">
+<div class="Element267">
+drawing should use three sets of UV corrdinates per primitive (texture units 0..2)&#160;</div></td></tr><tr>
+<td class="Element262" valign="top" width="28%">
+<div class="Element263">
+E_DHD_DRAW_4UVS&#160;</div></td><td class="Element266" valign="top" width="72%">
+<div class="Element267">
+drawing should use four sets of UV corrdinates per primitive (texture units 0..3)&#160;</div></td></tr><tr>
+<td class="Element262" valign="top" width="28%">
+<div class="Element263">
+E_DHD_DRAW_5UVS&#160;</div></td><td class="Element266" valign="top" width="72%">
+<div class="Element267">
+drawing should use fife sets of UV corrdinates per primitive (texture units 0..4)&#160;</div></td></tr><tr>
+<td class="Element262" valign="top" width="28%">
+<div class="Element263">
+E_DHD_DRAW_6UVS&#160;</div></td><td class="Element266" valign="top" width="72%">
+<div class="Element267">
+drawing should use six sets of UV corrdinates per primitive (texture units 0..5)&#160;</div></td></tr><tr>
+<td class="Element262" valign="top" width="28%">
+<div class="Element263">
+E_DHD_DRAW_7UVS&#160;</div></td><td class="Element266" valign="top" width="72%">
+<div class="Element267">
+drawing should use seven sets of UV corrdinates per primitive (texture units 0..6)&#160;</div></td></tr><tr>
+<td class="Element262" valign="top" width="28%">
+<div class="Element263">
+E_DHD_DRAW_8UVS&#160;</div></td><td class="Element266" valign="top" width="72%">
+<div class="Element267">
+drawing should use eight sets of UV corrdinates per primitive (texture units 0..7)&#160;</div></td></tr><tr>
+<td class="Element262" valign="top" width="28%">
+<div class="Element263">
+E_DHD_DRAW_RHW&#160;</div></td><td class="Element266" valign="top" width="72%">
+<div class="Element267">
+drawing should use one set of RHW corrdinates per primitive&#160;</div></td></tr><tr>
+<td class="Element262" valign="top" width="28%">
+<div class="Element263">
+E_DHD_DRAW_1RHWS&#160;</div></td><td class="Element266" valign="top" width="72%">
+<div class="Element267">
+drawing should use one set of RHW corrdinates per primitive&#160;</div></td></tr><tr>
+<td class="Element262" valign="top" width="28%">
+<div class="Element263">
+E_DHD_DRAW_2RHWS&#160;</div></td><td class="Element266" valign="top" width="72%">
+<div class="Element267">
+drawing should use two sets of RHW corrdinates per primitive (texture units 0..1)&#160;</div></td></tr><tr>
+<td class="Element262" valign="top" width="28%">
+<div class="Element263">
+E_DHD_DRAW_3RHWS&#160;</div></td><td class="Element266" valign="top" width="72%">
+<div class="Element267">
+drawing should use three sets of RHW corrdinates per primitive (texture units 0..2)&#160;</div></td></tr><tr>
+<td class="Element262" valign="top" width="28%">
+<div class="Element263">
+E_DHD_DRAW_4RHWS&#160;</div></td><td class="Element266" valign="top" width="72%">
+<div class="Element267">
+drawing should use four sets of RHW corrdinates per primitive (texture units 0..3)&#160;</div></td></tr><tr>
+<td class="Element262" valign="top" width="28%">
+<div class="Element263">
+E_DHD_DRAW_5RHWS&#160;</div></td><td class="Element266" valign="top" width="72%">
+<div class="Element267">
+drawing should use fife sets of RHW corrdinates per primitive (texture units 0..4)&#160;</div></td></tr><tr>
+<td class="Element262" valign="top" width="28%">
+<div class="Element263">
+E_DHD_DRAW_6RHWS&#160;</div></td><td class="Element266" valign="top" width="72%">
+<div class="Element267">
+drawing should use six sets of RHW corrdinates per primitive (texture units 0..5)&#160;</div></td></tr><tr>
+<td class="Element262" valign="top" width="28%">
+<div class="Element263">
+E_DHD_DRAW_7RHWS&#160;</div></td><td class="Element266" valign="top" width="72%">
+<div class="Element267">
+drawing should use seven sets of RHW corrdinates per primitive (texture units 0..6)&#160;</div></td></tr><tr>
+<td class="Element262" valign="top" width="28%">
+<div class="Element263">
+E_DHD_DRAW_8RHWS&#160;</div></td><td class="Element266" valign="top" width="72%">
+<div class="Element267">
+drawing should use eight sets of RHW corrdinates per primitive (texture units 0..7)&#160;</div></td></tr><tr>
+<td class="Element262" valign="top" width="28%">
+<div class="Element263">
+E_DHD_DRAW_COL&#160;</div></td><td class="Element266" valign="top" width="72%">
+<div class="Element267">
+drawing should use one constant color per primitive&#160;</div></td></tr><tr>
+<td class="Element262" valign="top" width="28%">
+<div class="Element263">
+E_DHD_DRAW_1COLS&#160;</div></td><td class="Element266" valign="top" width="72%">
+<div class="Element267">
+drawing should use one constant color per primitive&#160;</div></td></tr><tr>
+<td class="Element262" valign="top" width="28%">
+<div class="Element263">
+E_DHD_DRAW_2COLS&#160;</div></td><td class="Element266" valign="top" width="72%">
+<div class="Element267">
+drawing should use two constant colors per primitive (colors 0..1)&#160;</div></td></tr><tr>
+<td class="Element262" valign="top" width="28%">
+<div class="Element263">
+E_DHD_DRAW_3COLS&#160;</div></td><td class="Element266" valign="top" width="72%">
+<div class="Element267">
+drawing should use three constant colors per primitive (colors 0..2)&#160;</div></td></tr><tr>
+<td class="Element262" valign="top" width="28%">
+<div class="Element263">
+E_DHD_DRAW_4COLS&#160;</div></td><td class="Element266" valign="top" width="72%">
+<div class="Element267">
+drawing should use four constant colors per primitive (colors 0..3)&#160;</div></td></tr><tr>
+<td class="Element262" valign="top" width="28%">
+<div class="Element263">
+E_DHD_DRAW_5COLS&#160;</div></td><td class="Element266" valign="top" width="72%">
+<div class="Element267">
+drawing should use fife constant colors per primitive (colors 0..4)&#160;</div></td></tr><tr>
+<td class="Element262" valign="top" width="28%">
+<div class="Element263">
+E_DHD_DRAW_6COLS&#160;</div></td><td class="Element266" valign="top" width="72%">
+<div class="Element267">
+drawing should use six constant colors per primitive (colors 0..5)&#160;</div></td></tr><tr>
+<td class="Element262" valign="top" width="28%">
+<div class="Element263">
+E_DHD_DRAW_7COLS&#160;</div></td><td class="Element266" valign="top" width="72%">
+<div class="Element267">
+drawing should use seven constant colors per primitive (colors 0..6)&#160;</div></td></tr><tr>
+<td class="Element262" valign="top" width="28%">
+<div class="Element263">
+E_DHD_DRAW_8COLS&#160;</div></td><td class="Element266" valign="top" width="72%">
+<div class="Element267">
+drawing should use eight constant colors per primitive (colors 0..7)&#160;</div></td></tr><tr>
+<td class="Element262" valign="top" width="28%">
+<div class="Element263">
+E_DHD_DRAW_9COLS&#160;</div></td><td class="Element266" valign="top" width="72%">
+<div class="Element267">
+drawing should use two constant colors per primitive (colors 0..8)&#160;</div></td></tr><tr>
+<td class="Element262" valign="top" width="28%">
+<div class="Element263">
+E_DHD_DRAW_10COLS&#160;</div></td><td class="Element266" valign="top" width="72%">
+<div class="Element267">
+drawing should use two constant colors per primitive (colors 0..9)&#160;</div></td></tr><tr>
+<td class="Element262" valign="top" width="28%">
+<div class="Element263">
+E_DHD_DRAW_11COLS&#160;</div></td><td class="Element266" valign="top" width="72%">
+<div class="Element267">
+drawing should use three constant colors per primitive (colors 0..10)&#160;</div></td></tr><tr>
+<td class="Element262" valign="top" width="28%">
+<div class="Element263">
+E_DHD_DRAW_12COLS&#160;</div></td><td class="Element266" valign="top" width="72%">
+<div class="Element267">
+drawing should use four constant colors per primitive (colors 0..11)&#160;</div></td></tr><tr>
+<td class="Element262" valign="top" width="28%">
+<div class="Element263">
+E_DHD_DRAW_13COLS&#160;</div></td><td class="Element266" valign="top" width="72%">
+<div class="Element267">
+drawing should use fife constant colors per primitive (colors 0..12)&#160;</div></td></tr><tr>
+<td class="Element262" valign="top" width="28%">
+<div class="Element263">
+E_DHD_DRAW_14COLS&#160;</div></td><td class="Element266" valign="top" width="72%">
+<div class="Element267">
+drawing should use six constant colors per primitive (colors 0..13)&#160;</div></td></tr><tr>
+<td class="Element262" valign="top" width="28%">
+<div class="Element263">
+E_DHD_DRAW_15COLS&#160;</div></td><td class="Element266" valign="top" width="72%">
+<div class="Element267">
+drawing should use seven constant colors per primitive (colors 0..14)&#160;</div></td></tr><tr>
+<td class="Element262" valign="top" width="28%">
+<div class="Element263">
+E_DHD_DRAW_DEPTH&#160;</div></td><td class="Element266" valign="top" width="72%">
+<div class="Element267">
+drawing should use a depth gradient per primitive&#160;</div></td></tr><tr>
+<td class="Element262" valign="top" width="28%">
+<div class="Element263">
+E_DHD_DRAW_STRIPE&#160;</div></td><td class="Element266" valign="top" width="72%">
+<div class="Element267">
+drawing should use psu stripe width and offset from <a href="dhd_prim_data_t.html" target="topic">dhd_prim_data_t</a> (only array draw commands)&#160;</div></td></tr><tr>
+<td class="Element262" valign="top" width="28%">
+<div class="Element263">
+E_DHD_DRAW_COMMONBOX&#160;</div></td><td class="Element266" valign="top" width="72%">
+<div class="Element267">
+drawing should not update the bounding box as all primitives will share a common bounding box&#160;</div></td></tr></table></div></div>
+</div>
+</div>
+<a name="53656520416C736F"></a><div class="Element14">
+See Also</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+<a href="dhd_draw.html" target="topic">dhd_draw</a></p></div>
+</div>
+<a name="46696C65"></a><div class="Element14">
+File</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+davehd_driver.h</p></div>
+</div>
+</div>
+<!-- End Page Content -->
+
+<!-- Begin Page Footer -->
+<div class="Element93">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="100%">
+<div class="Element3">
+Copyright (c) 2013 All rights reserved for TES Electronic Solutions</div>
+</td></tr><tr><td width="100%">
+<div class="Element4">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="idx.html" target="tocidx">Index</a> | <a href="intro.html" target="topic">Home</a></div>
+</td></tr></table></div>
+
+<!-- End Page Footer -->
+</div>
+</div>
+
+<!-- End Client Area -->
+</body></html>

@@ -1,0 +1,238 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
+<html>
+<head>
+<title>dhd_pixel_org_t</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="generator" content="Doc-O-Matic" />
+    <meta http-equiv="Content-Style-Type" content="text/css" />
+    <link rel="STYLESHEET" href="default.css" type="text/css" />
+
+<script type="text/javascript" src="scripts.js"></script>
+<!-- saved from url=(0013)about:internet -->
+</head>
+<body class="Element700" onload="onBodyLoadEx(&#39;index.html&#39;, &#39;topic&#39;, &#39;dhd_pixel_org_t.html&#39;);" onmousedown="onBodyMouseDown();">
+
+<!-- Begin Popups -->
+
+<!-- End Popups -->
+
+<!-- Begin Page Header -->
+<div class="Element710" id="areafixed">
+<div class="Element92">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="33%">
+<div class="Element1">
+D/AVE HD Driver - Internal Documentation</div>
+</td><td width="34%">
+<div class="Element2">
+<a href="contents.html" target="tocidx"><img src="btn_globals_contents_midblue.gif" border="0" alt="Contents" title="Contents" onmouseover="switchImage(this, &#39;btn_globals_contents_midblue_hover.gif&#39;);" onmouseout="switchImage(this, &#39;btn_globals_contents_midblue.gif&#39;);" /></a><a href="idx.html" target="tocidx"><img src="btn_globals_index_midblue.gif" border="0" alt="Index" title="Index" onmouseover="switchImage(this, &#39;btn_globals_index_midblue_hover.gif&#39;);" onmouseout="switchImage(this, &#39;btn_globals_index_midblue.gif&#39;);" /></a><a href="intro.html" target="topic"><img src="btn_globals_home_midblue.gif" border="0" alt="Home" title="Home" onmouseover="switchImage(this, &#39;btn_globals_home_midblue_hover.gif&#39;);" onmouseout="switchImage(this, &#39;btn_globals_home_midblue.gif&#39;);" /></a></div>
+</td><td width="33%">
+<div class="Element90">
+<a href="dhd_performance_counter_t.html" target="topic"><img src="btn_prev_midblue.gif" border="0" alt="Previous" title="Previous" onmouseover="switchImage(this, &#39;btn_prev_midblue_hover.gif&#39;);" onmouseout="switchImage(this, &#39;btn_prev_midblue.gif&#39;);" /></a><a href="records_umd.html" target="topic"><img src="btn_up_midblue.gif" border="0" alt="Up" title="Up" onmouseover="switchImage(this, &#39;btn_up_midblue_hover.gif&#39;);" onmouseout="switchImage(this, &#39;btn_up_midblue.gif&#39;);" /></a><a href="dhd_pool_freeblock_t.html" target="topic"><img src="btn_next_midblue.gif" border="0" alt="Next" title="Next" onmouseover="switchImage(this, &#39;btn_next_midblue_hover.gif&#39;);" onmouseout="switchImage(this, &#39;btn_next_midblue.gif&#39;);" /></a></div>
+</td></tr></table><div class="Element5">
+dhd_pixel_org_t</div>
+<div class="Element7">
+<a href="records_umd.html" target="topic">Structs, Records, Enums</a> | <a href="#" onclick="sendFeedback('dave_support@tes-dst.com', 'Documentation Feedback', 'Project: D/AVE HD Driver%0ATopic ID: dhd_pixel_org_t%0ATitle: dhd_pixel_org_t');">Send Feedback</a></div>
+</div>
+</div>
+
+<!-- End Page Header -->
+
+<!-- Begin Client Area -->
+<div class="Element720" id="areascroll">
+<div class="Element721">
+
+<!-- Begin Page Content -->
+<div class="Element58">
+<a name="53756D6D617279"></a><div class="Element14">
+Summary</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+Framebuffer pixel organization.</p></div>
+</div>
+<a name="53796E746178"></a><div class="Element99">
+Syntax</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #00008C;">typedef</span></strong> <strong><span style="color: #00008C;">enum</span></strong> <strong><span style="color: #000000;">tagdhd_pixel_org</span></strong> {
+  <strong><span style="color: #000000;">E_DHD_PIXEL_ORG_ARGB_8888</span></strong> = 0|DHD_PIXEL_ORG_FLAG,
+  <strong><span style="color: #000000;">E_DHD_PIXEL_ORG_RGBA_8888</span></strong> = 1|DHD_PIXEL_ORG_FLAG,
+  <strong><span style="color: #000000;">E_DHD_PIXEL_ORG_ARGB_4444</span></strong> = 2|DHD_PIXEL_ORG_FLAG,
+  <strong><span style="color: #000000;">E_DHD_PIXEL_ORG_RGBA_4444</span></strong> = 3|DHD_PIXEL_ORG_FLAG,
+  <strong><span style="color: #000000;">E_DHD_PIXEL_ORG_ARGB_1555</span></strong> = 4|DHD_PIXEL_ORG_FLAG,
+  <strong><span style="color: #000000;">E_DHD_PIXEL_ORG_RGBA_5551</span></strong> = 5|DHD_PIXEL_ORG_FLAG,
+  <strong><span style="color: #000000;">E_DHD_PIXEL_ORG_RGB_565</span></strong> = 6|DHD_PIXEL_ORG_FLAG,
+  <strong><span style="color: #000000;">E_DHD_PIXEL_ORG_AL_88</span></strong> = 7|DHD_PIXEL_ORG_FLAG,
+  <strong><span style="color: #000000;">E_DHD_PIXEL_ORG_AL_44</span></strong> = 8|DHD_PIXEL_ORG_FLAG,
+  <strong><span style="color: #000000;">E_DHD_PIXEL_ORG_A_8</span></strong> = 9|DHD_PIXEL_ORG_FLAG,
+  <strong><span style="color: #000000;">E_DHD_PIXEL_ORG_L_8</span></strong> = 10|DHD_PIXEL_ORG_FLAG,
+  <strong><span style="color: #000000;">E_DHD_PIXEL_ORG_AL_17</span></strong> = 11|DHD_PIXEL_ORG_FLAG,
+  <strong><span style="color: #000000;">E_DHD_PIXEL_ORG_ARGB_8888_PRE</span></strong> = E_DHD_PIXEL_ORG_ARGB_8888|DHD_PREMULTIPLY_LIMIT_RGB,
+  <strong><span style="color: #000000;">E_DHD_PIXEL_ORG_RGBA_8888_PRE</span></strong> = E_DHD_PIXEL_ORG_RGBA_8888|DHD_PREMULTIPLY_LIMIT_RGB,
+  <strong><span style="color: #000000;">E_DHD_PIXEL_ORG_ARGB_4444_PRE</span></strong> = E_DHD_PIXEL_ORG_ARGB_4444|DHD_PREMULTIPLY_LIMIT_RGB,
+  <strong><span style="color: #000000;">E_DHD_PIXEL_ORG_RGBA_4444_PRE</span></strong> = E_DHD_PIXEL_ORG_RGBA_4444|DHD_PREMULTIPLY_LIMIT_RGB,
+  <strong><span style="color: #000000;">E_DHD_PIXEL_ORG_ARGB_1555_PRE</span></strong> = E_DHD_PIXEL_ORG_ARGB_1555|DHD_PREMULTIPLY_LIMIT_RGB,
+  <strong><span style="color: #000000;">E_DHD_PIXEL_ORG_RGBA_5551_PRE</span></strong> = E_DHD_PIXEL_ORG_RGBA_5551|DHD_PREMULTIPLY_LIMIT_RGB,
+  <strong><span style="color: #000000;">E_DHD_PIXEL_ORG_AL_88_PRE</span></strong> = E_DHD_PIXEL_ORG_AL_88|DHD_PREMULTIPLY_LIMIT_RGB,
+  <strong><span style="color: #000000;">E_DHD_PIXEL_ORG_AL_44_PRE</span></strong> = E_DHD_PIXEL_ORG_AL_44|DHD_PREMULTIPLY_LIMIT_RGB,
+  <strong><span style="color: #000000;">E_DHD_PIXEL_ORG_L_8_PRE</span></strong> = E_DHD_PIXEL_ORG_L_8|DHD_PREMULTIPLY_LIMIT_RGB,
+  <strong><span style="color: #000000;">E_DHD_PIXEL_ORG_AL_17_PRE</span></strong> = E_DHD_PIXEL_ORG_AL_17|DHD_PREMULTIPLY_LIMIT_RGB
+} dhd_pixel_org_t;</pre></div></div>
+<a name="4465736372697074696F6E"></a><div class="Element14">
+Description</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+ Describes the pixel size and encoding for framebuffer reads and writes. Note that on reads luminance information is copied to all color channels (r,g and b) and formats without an alpha channel will use the blue channel data for alpha. Most formats can be used in a _PRE variation that will limit the color channels to never exceed the alpha channel value on reads (to ensure valid premultiplied alpha data).</p></div>
+</div>
+<a name="4D656D62657273"></a><div class="Element14">
+Members</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element272">
+<div class="TableDiv">
+<table cellspacing="0" class="Table4">
+<tr>
+<td class="Element260" valign="top" width="28%">
+<div class="Element261">
+Members&#160;</div></td><td class="Element264" valign="top" width="72%">
+<div class="Element265">
+Description&#160;</div></td></tr><tr>
+<td class="Element262" valign="top" width="28%">
+<div class="Element263">
+E_DHD_PIXEL_ORG_ARGB_8888&#160;</div></td><td class="Element266" valign="top" width="72%">
+<div class="Element267">
+32 Bit pixel using A8, R8, G8, B8 layout&#160;</div></td></tr><tr>
+<td class="Element262" valign="top" width="28%">
+<div class="Element263">
+E_DHD_PIXEL_ORG_RGBA_8888&#160;</div></td><td class="Element266" valign="top" width="72%">
+<div class="Element267">
+32 Bit pixel using R8, G8, B8, A8 layout&#160;</div></td></tr><tr>
+<td class="Element262" valign="top" width="28%">
+<div class="Element263">
+E_DHD_PIXEL_ORG_ARGB_4444&#160;</div></td><td class="Element266" valign="top" width="72%">
+<div class="Element267">
+16 Bit pixel using A4, R4, G4, B4 layout&#160;</div></td></tr><tr>
+<td class="Element262" valign="top" width="28%">
+<div class="Element263">
+E_DHD_PIXEL_ORG_RGBA_4444&#160;</div></td><td class="Element266" valign="top" width="72%">
+<div class="Element267">
+16 Bit pixel using R4, G4, B4, A4 layout&#160;</div></td></tr><tr>
+<td class="Element262" valign="top" width="28%">
+<div class="Element263">
+E_DHD_PIXEL_ORG_ARGB_1555&#160;</div></td><td class="Element266" valign="top" width="72%">
+<div class="Element267">
+16 Bit pixel using A1, R5, G5, B5 layout&#160;</div></td></tr><tr>
+<td class="Element262" valign="top" width="28%">
+<div class="Element263">
+E_DHD_PIXEL_ORG_RGBA_5551&#160;</div></td><td class="Element266" valign="top" width="72%">
+<div class="Element267">
+16 Bit pixel using R5, G5, B5, A1 layout&#160;</div></td></tr><tr>
+<td class="Element262" valign="top" width="28%">
+<div class="Element263">
+E_DHD_PIXEL_ORG_RGB_565&#160;</div></td><td class="Element266" valign="top" width="72%">
+<div class="Element267">
+16 Bit pixel using R5, G6, B5 layout&#160;</div></td></tr><tr>
+<td class="Element262" valign="top" width="28%">
+<div class="Element263">
+E_DHD_PIXEL_ORG_AL_88&#160;</div></td><td class="Element266" valign="top" width="72%">
+<div class="Element267">
+16 Bit pixel using A8, L8 layout&#160;</div></td></tr><tr>
+<td class="Element262" valign="top" width="28%">
+<div class="Element263">
+E_DHD_PIXEL_ORG_AL_44&#160;</div></td><td class="Element266" valign="top" width="72%">
+<div class="Element267">
+8 Bit pixel using A4, L4 layout&#160;</div></td></tr><tr>
+<td class="Element262" valign="top" width="28%">
+<div class="Element263">
+E_DHD_PIXEL_ORG_A_8&#160;</div></td><td class="Element266" valign="top" width="72%">
+<div class="Element267">
+8 Bit pixel using alpha only&#160;</div></td></tr><tr>
+<td class="Element262" valign="top" width="28%">
+<div class="Element263">
+E_DHD_PIXEL_ORG_L_8&#160;</div></td><td class="Element266" valign="top" width="72%">
+<div class="Element267">
+8 Bit pixel using luminance only&#160;</div></td></tr><tr>
+<td class="Element262" valign="top" width="28%">
+<div class="Element263">
+E_DHD_PIXEL_ORG_AL_17&#160;</div></td><td class="Element266" valign="top" width="72%">
+<div class="Element267">
+8 Bit pixel using A1, L7 layout&#160;</div></td></tr><tr>
+<td class="Element262" valign="top" width="28%">
+<div class="Element263">
+E_DHD_PIXEL_ORG_ARGB_8888_PRE&#160;</div></td><td class="Element266" valign="top" width="72%">
+<div class="Element267">
+32 Bit pixel using A8, R8, G8, B8 layout assuming premultiplied alpha&#160;</div></td></tr><tr>
+<td class="Element262" valign="top" width="28%">
+<div class="Element263">
+E_DHD_PIXEL_ORG_RGBA_8888_PRE&#160;</div></td><td class="Element266" valign="top" width="72%">
+<div class="Element267">
+32 Bit pixel using R8, G8, B8, A8 layout assuming premultiplied alpha&#160;</div></td></tr><tr>
+<td class="Element262" valign="top" width="28%">
+<div class="Element263">
+E_DHD_PIXEL_ORG_ARGB_4444_PRE&#160;</div></td><td class="Element266" valign="top" width="72%">
+<div class="Element267">
+DHD_PREMULTIPLY_LIMIT_RGB Bit pixel using A4, R4, G4, B4 layout assuming premultiplied alpha&#160;</div></td></tr><tr>
+<td class="Element262" valign="top" width="28%">
+<div class="Element263">
+E_DHD_PIXEL_ORG_RGBA_4444_PRE&#160;</div></td><td class="Element266" valign="top" width="72%">
+<div class="Element267">
+DHD_PREMULTIPLY_LIMIT_RGB Bit pixel using R4, G4, B4, A4 layout assuming premultiplied alpha&#160;</div></td></tr><tr>
+<td class="Element262" valign="top" width="28%">
+<div class="Element263">
+E_DHD_PIXEL_ORG_ARGB_1555_PRE&#160;</div></td><td class="Element266" valign="top" width="72%">
+<div class="Element267">
+DHD_PREMULTIPLY_LIMIT_RGB Bit pixel using A1, R5, G5, B5 layout assuming premultiplied alpha&#160;</div></td></tr><tr>
+<td class="Element262" valign="top" width="28%">
+<div class="Element263">
+E_DHD_PIXEL_ORG_RGBA_5551_PRE&#160;</div></td><td class="Element266" valign="top" width="72%">
+<div class="Element267">
+DHD_PREMULTIPLY_LIMIT_RGB Bit pixel using R5, G5, B5, A1 layout assuming premultiplied alpha&#160;</div></td></tr><tr>
+<td class="Element262" valign="top" width="28%">
+<div class="Element263">
+E_DHD_PIXEL_ORG_AL_88_PRE&#160;</div></td><td class="Element266" valign="top" width="72%">
+<div class="Element267">
+DHD_PREMULTIPLY_LIMIT_RGB Bit pixel using A8, L8 layout assuming premultiplied alpha&#160;</div></td></tr><tr>
+<td class="Element262" valign="top" width="28%">
+<div class="Element263">
+E_DHD_PIXEL_ORG_AL_44_PRE&#160;</div></td><td class="Element266" valign="top" width="72%">
+<div class="Element267">
+8 Bit pixel using A4, L4 layout assuming premultiplied alpha&#160;</div></td></tr><tr>
+<td class="Element262" valign="top" width="28%">
+<div class="Element263">
+E_DHD_PIXEL_ORG_L_8_PRE&#160;</div></td><td class="Element266" valign="top" width="72%">
+<div class="Element267">
+8 Bit pixel using luminance only assuming premultiplied alpha&#160;</div></td></tr><tr>
+<td class="Element262" valign="top" width="28%">
+<div class="Element263">
+E_DHD_PIXEL_ORG_AL_17_PRE&#160;</div></td><td class="Element266" valign="top" width="72%">
+<div class="Element267">
+8 Bit pixel using A1, L7 layout assuming premultiplied alpha&#160;</div></td></tr></table></div></div>
+</div>
+</div>
+<a name="46696C65"></a><div class="Element14">
+File</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+davehd_driver.h</p></div>
+</div>
+</div>
+<!-- End Page Content -->
+
+<!-- Begin Page Footer -->
+<div class="Element93">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="100%">
+<div class="Element3">
+Copyright (c) 2013 All rights reserved for TES Electronic Solutions</div>
+</td></tr><tr><td width="100%">
+<div class="Element4">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="idx.html" target="tocidx">Index</a> | <a href="intro.html" target="topic">Home</a></div>
+</td></tr></table></div>
+
+<!-- End Page Footer -->
+</div>
+</div>
+
+<!-- End Client Area -->
+</body></html>

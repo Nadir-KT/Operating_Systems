@@ -1,0 +1,103 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
+<html>
+<head>
+<title>Job Lifetime</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="generator" content="Doc-O-Matic" />
+    <meta http-equiv="Content-Style-Type" content="text/css" />
+    <link rel="STYLESHEET" href="default.css" type="text/css" />
+
+<script type="text/javascript" src="scripts.js"></script>
+<!-- saved from url=(0013)about:internet -->
+</head>
+<body class="Element700" onload="onBodyLoadEx(&#39;index.html&#39;, &#39;topic&#39;, &#39;general_job_lifetime.html&#39;);" onmousedown="onBodyMouseDown();">
+
+<!-- Begin Popups -->
+
+<!-- End Popups -->
+
+<!-- Begin Page Header -->
+<div class="Element710" id="areafixed">
+<div class="Element92">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="33%">
+<div class="Element1">
+D/AVE HD Driver - Internal Documentation</div>
+</td><td width="34%">
+<div class="Element2">
+<a href="contents.html" target="tocidx"><img src="btn_globals_contents_midblue.gif" border="0" alt="Contents" title="Contents" onmouseover="switchImage(this, &#39;btn_globals_contents_midblue_hover.gif&#39;);" onmouseout="switchImage(this, &#39;btn_globals_contents_midblue.gif&#39;);" /></a><a href="idx.html" target="tocidx"><img src="btn_globals_index_midblue.gif" border="0" alt="Index" title="Index" onmouseover="switchImage(this, &#39;btn_globals_index_midblue_hover.gif&#39;);" onmouseout="switchImage(this, &#39;btn_globals_index_midblue.gif&#39;);" /></a><a href="intro.html" target="topic"><img src="btn_globals_home_midblue.gif" border="0" alt="Home" title="Home" onmouseover="switchImage(this, &#39;btn_globals_home_midblue_hover.gif&#39;);" onmouseout="switchImage(this, &#39;btn_globals_home_midblue.gif&#39;);" /></a></div>
+</td><td width="33%">
+<div class="Element90">
+<a href="general_ring_buffer.html" target="topic"><img src="btn_prev_midblue.gif" border="0" alt="Previous" title="Previous" onmouseover="switchImage(this, &#39;btn_prev_midblue_hover.gif&#39;);" onmouseout="switchImage(this, &#39;btn_prev_midblue.gif&#39;);" /></a><a href="general_jobs.html" target="topic"><img src="btn_up_midblue.gif" border="0" alt="Up" title="Up" onmouseover="switchImage(this, &#39;btn_up_midblue_hover.gif&#39;);" onmouseout="switchImage(this, &#39;btn_up_midblue.gif&#39;);" /></a><a href="general_job_waiting.html" target="topic"><img src="btn_next_midblue.gif" border="0" alt="Next" title="Next" onmouseover="switchImage(this, &#39;btn_next_midblue_hover.gif&#39;);" onmouseout="switchImage(this, &#39;btn_next_midblue.gif&#39;);" /></a></div>
+</td></tr></table><div class="Element5">
+Job Lifetime</div>
+<div class="Element7">
+<a href="general_jobs.html" target="topic">Jobs</a> | <a href="#" onclick="sendFeedback('dave_support@tes-dst.com', 'Documentation Feedback', 'Project: D/AVE HD Driver%0ATopic ID: !!General_Job_Lifetime%0ATitle: Job Lifetime');">Send Feedback</a></div>
+</div>
+</div>
+
+<!-- End Page Header -->
+
+<!-- Begin Client Area -->
+<div class="Element720" id="areascroll">
+<div class="Element721">
+
+<!-- Begin Page Content -->
+<div class="Element58">
+<a name="4465736372697074696F6E"></a><div class="Element11">
+<div class="Element10">
+<div class="Element15">
+Job Lifetime</div>
+<p class="Element10">
+&#160;</p>
+<p class="Element10">
+The user mode driver will create a set of job control structures at startup (during <a href="dhd_init.html" target="topic">dhd_init</a>). Initially all of these are DHD_NOT_ASSIGNED, generation 0 and not backed by video memory. At all times one of these (initially the first) is the &#39;active job&#39; which will receive instructions.&#160;</p>
+<p class="Element10">
+&#160;</p>
+<p class="Element10">
+Execution of rendering or flush commands will trigger the creation of GPU instructions into the active job. If it is not currently backed by video memory the kernel driver is called to allocate and map a page of video ram first (size is the default job size).&#160;</p>
+<p class="Element10">
+Instructions are directly written to the mapped video ram, unless the architecture does not support the required mapping. In that case a so called shadow in CPU accessible ram is allocated and used for buffering (done in user mode inside dhd_alloc_job_memory).&#160;</p>
+<p class="Element10">
+&#160;</p>
+<p class="Element10">
+Once a job is full or closed (flush) it is passed to the kernel driver (from dhd_commit_stream to <a href="dhd_gpu_commit.html" target="topic">dhd_gpu_commit</a>) which will link the job control structure into it's <em>ready list</em>. From there it will be scheduled (see <a href="general_job_scheduler.html" target="topic">Job Scheduling</a>) . Once scheduled the job is moved to the <em>active list</em> and get&#39;s assigned an ID. The ID equals the hardware execution order and completion of a job can therefore be checked by comparing a job ID to the current content of the HW sync register (which contains the last completed ID).&#160;</p>
+<p class="Element10">
+&#160;</p>
+<p class="Element10">
+In order to avoid frequent creation and destruction of jobs they are reused. The driver will move finished jobs into its <em>free list</em> and return them to the application for reuse. As the kernel driver can not call into user mode it will return reusable jobs on request (<a href="dhd_gpu_get_reclaimed_jobs.html" target="topic">dhd_gpu_get_reclaimed_jobs</a>) and also on every commit of a new job (<a href="dhd_gpu_commit.html" target="topic">dhd_gpu_commit</a>).&#160;</p>
+<p class="Element10">
+On each call a whole list of free jobs can be returned but the kernel will make sure that each client will only get back jobs it has issued itself (jobs do never move between different clients).&#160;</p>
+<p class="Element10">
+&#160;</p>
+<p class="Element10">
+The user mode driver will receive the jobs and put them back into its free list (inside dhd_reclaim_job_structs). It will reuse both the job struct and the associated video memory, so that no new allocation has to take place. Each time a job struct is reclaimed this way and prepared for reuse its internal generation count will be increased. For more information on this important detail see <a href="general_job_waiting.html" target="topic">Waiting for Job completion</a>.&#160;</p>
+<p class="Element10">
+&#160;</p>
+<p class="Element10">
+When the user mode driver runs out of free jobs and has already created it&#39;s maximum number of jobs (so they are currently all &#39;in flight&#39;) it will sent itself to sleep until the oldest of it&#39;s job has completed - so that at least one job is available for immediate reuse (see dhd_get_free_job).&#160;</p>
+<p class="Element10">
+&#160;</p>
+<p class="Element10">
+Jobs are released only when the user mode client that created them shuts down (dhd_release_job_memory).</p></div>
+</div>
+</div>
+<!-- End Page Content -->
+
+<!-- Begin Page Footer -->
+<div class="Element93">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="100%">
+<div class="Element3">
+Copyright (c) 2013 All rights reserved for TES Electronic Solutions</div>
+</td></tr><tr><td width="100%">
+<div class="Element4">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="idx.html" target="tocidx">Index</a> | <a href="intro.html" target="topic">Home</a></div>
+</td></tr></table></div>
+
+<!-- End Page Footer -->
+</div>
+</div>
+
+<!-- End Client Area -->
+</body></html>

@@ -1,0 +1,95 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
+<html>
+<head>
+<title>Job Scheduling</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="generator" content="Doc-O-Matic" />
+    <meta http-equiv="Content-Style-Type" content="text/css" />
+    <link rel="STYLESHEET" href="default.css" type="text/css" />
+
+<script type="text/javascript" src="scripts.js"></script>
+<!-- saved from url=(0013)about:internet -->
+</head>
+<body class="Element700" onload="onBodyLoadEx(&#39;index.html&#39;, &#39;topic&#39;, &#39;general_job_scheduler.html&#39;);" onmousedown="onBodyMouseDown();">
+
+<!-- Begin Popups -->
+
+<!-- End Popups -->
+
+<!-- Begin Page Header -->
+<div class="Element710" id="areafixed">
+<div class="Element92">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="33%">
+<div class="Element1">
+D/AVE HD Driver - Internal Documentation</div>
+</td><td width="34%">
+<div class="Element2">
+<a href="contents.html" target="tocidx"><img src="btn_globals_contents_midblue.gif" border="0" alt="Contents" title="Contents" onmouseover="switchImage(this, &#39;btn_globals_contents_midblue_hover.gif&#39;);" onmouseout="switchImage(this, &#39;btn_globals_contents_midblue.gif&#39;);" /></a><a href="idx.html" target="tocidx"><img src="btn_globals_index_midblue.gif" border="0" alt="Index" title="Index" onmouseover="switchImage(this, &#39;btn_globals_index_midblue_hover.gif&#39;);" onmouseout="switchImage(this, &#39;btn_globals_index_midblue.gif&#39;);" /></a><a href="intro.html" target="topic"><img src="btn_globals_home_midblue.gif" border="0" alt="Home" title="Home" onmouseover="switchImage(this, &#39;btn_globals_home_midblue_hover.gif&#39;);" onmouseout="switchImage(this, &#39;btn_globals_home_midblue.gif&#39;);" /></a></div>
+</td><td width="33%">
+<div class="Element90">
+<a href="general_job_layout.html" target="topic"><img src="btn_prev_midblue.gif" border="0" alt="Previous" title="Previous" onmouseover="switchImage(this, &#39;btn_prev_midblue_hover.gif&#39;);" onmouseout="switchImage(this, &#39;btn_prev_midblue.gif&#39;);" /></a><a href="general_jobs.html" target="topic"><img src="btn_up_midblue.gif" border="0" alt="Up" title="Up" onmouseover="switchImage(this, &#39;btn_up_midblue_hover.gif&#39;);" onmouseout="switchImage(this, &#39;btn_up_midblue.gif&#39;);" /></a><a href="general_memory_pooling.html" target="topic"><img src="btn_next_midblue.gif" border="0" alt="Next" title="Next" onmouseover="switchImage(this, &#39;btn_next_midblue_hover.gif&#39;);" onmouseout="switchImage(this, &#39;btn_next_midblue.gif&#39;);" /></a></div>
+</td></tr></table><div class="Element5">
+Job Scheduling</div>
+<div class="Element7">
+<a href="general_jobs.html" target="topic">Jobs</a> | <a href="#" onclick="sendFeedback('dave_support@tes-dst.com', 'Documentation Feedback', 'Project: D/AVE HD Driver%0ATopic ID: !!General_Job_Scheduler%0ATitle: Job Scheduling');">Send Feedback</a></div>
+</div>
+</div>
+
+<!-- End Page Header -->
+
+<!-- Begin Client Area -->
+<div class="Element720" id="areascroll">
+<div class="Element721">
+
+<!-- Begin Page Content -->
+<div class="Element58">
+<a name="4465736372697074696F6E"></a><div class="Element11">
+<div class="Element10">
+<div class="Element15">
+Job Scheduling</div>
+<p class="Element10">
+&#160;</p>
+<p class="Element10">
+The job scheduling mechanism works by maintaining a list of ready jobs from which it picks the head element every time a new job can be added to the GPU ringbuffer. Scheduled jobs are removed from the list and all remaining ready jobs move up in the list based on their priority.&#160;</p>
+<p class="Element10">
+&#160;</p>
+<p class="Element10">
+By adding their priority to their current position and resorting based on position, high priority jobs move to the top more quickly than low priority ones. But no matter how big the priority differences are every job is guaranteed to get scheduled at some time, as it will keep accumulating higher position values every time it is not selected.&#160;</p>
+<p class="Element10">
+&#160;</p><div class="Element15">
+Implementation Details</div>
+<p class="Element10">
+&#160;</p>
+<p class="Element10">
+The actual implementation does not sort or reorder lists for performance reasons. Instead it uses the fact that each jobs position value is guaranteed to be n*P at any time (with n being the number of iterations it has not been scheduled and P being the constant job priority).&#160;</p>
+<p class="Element10">
+Instead of sorting the number of iterations is computed (jobs commit iteration - current iteration) and the job position calculated implicitly while searching for the maximum value among the list.&#160;</p>
+<p class="Element10">
+&#160;</p><div class="Element15">
+Affecting Priorities</div>
+<p class="Element10">
+&#160;</p>
+<p class="Element10">
+Jobs inherit their priority from the client that created them (see m_priority in <a href="dhd_gpu_connection_t.html" target="topic">dhd_gpu_connection_t</a>). But right now there is no user mode API to set the client priority. It is advised to use the operating systems thread priorities and keep the gpu priority and job size equal for all clients. This way high priority tasks can commit more jobs than low priority ones, but they can also interrupt the low priority tasks.</p></div>
+</div>
+</div>
+<!-- End Page Content -->
+
+<!-- Begin Page Footer -->
+<div class="Element93">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="100%">
+<div class="Element3">
+Copyright (c) 2013 All rights reserved for TES Electronic Solutions</div>
+</td></tr><tr><td width="100%">
+<div class="Element4">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="idx.html" target="tocidx">Index</a> | <a href="intro.html" target="topic">Home</a></div>
+</td></tr></table></div>
+
+<!-- End Page Footer -->
+</div>
+</div>
+
+<!-- End Client Area -->
+</body></html>

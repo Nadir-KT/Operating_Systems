@@ -1,0 +1,657 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
+<html>
+<head>
+<title>Excludes</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="generator" content="Doc-O-Matic" />
+    <meta http-equiv="Content-Style-Type" content="text/css" />
+    <link rel="STYLESHEET" href="default.css" type="text/css" />
+
+<script type="text/javascript" src="scripts.js"></script>
+<!-- saved from url=(0013)about:internet -->
+</head>
+<body class="Element700" onload="onBodyLoadEx(&#39;index.html&#39;, &#39;topic&#39;, &#39;covexcludes.html&#39;);" onmousedown="onBodyMouseDown();">
+
+<!-- Begin Popups -->
+
+<!-- End Popups -->
+
+<!-- Begin Page Header -->
+<div class="Element710" id="areafixed">
+<div class="Element92">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="33%">
+<div class="Element1">
+D/AVE HD Driver - Internal Documentation</div>
+</td><td width="34%">
+<div class="Element2">
+<a href="contents.html" target="tocidx"><img src="btn_globals_contents_midblue.gif" border="0" alt="Contents" title="Contents" onmouseover="switchImage(this, &#39;btn_globals_contents_midblue_hover.gif&#39;);" onmouseout="switchImage(this, &#39;btn_globals_contents_midblue.gif&#39;);" /></a><a href="idx.html" target="tocidx"><img src="btn_globals_index_midblue.gif" border="0" alt="Index" title="Index" onmouseover="switchImage(this, &#39;btn_globals_index_midblue_hover.gif&#39;);" onmouseout="switchImage(this, &#39;btn_globals_index_midblue.gif&#39;);" /></a><a href="intro.html" target="topic"><img src="btn_globals_home_midblue.gif" border="0" alt="Home" title="Home" onmouseover="switchImage(this, &#39;btn_globals_home_midblue_hover.gif&#39;);" onmouseout="switchImage(this, &#39;btn_globals_home_midblue.gif&#39;);" /></a></div>
+</td><td width="33%">
+<div class="Element90">
+<a href="covreport.html" target="topic"><img src="btn_prev_midblue.gif" border="0" alt="Previous" title="Previous" onmouseover="switchImage(this, &#39;btn_prev_midblue_hover.gif&#39;);" onmouseout="switchImage(this, &#39;btn_prev_midblue.gif&#39;);" /></a><a href="coverage.html" target="topic"><img src="btn_up_midblue.gif" border="0" alt="Up" title="Up" onmouseover="switchImage(this, &#39;btn_up_midblue_hover.gif&#39;);" onmouseout="switchImage(this, &#39;btn_up_midblue.gif&#39;);" /></a><img src="btn_next_d.gif" border="0" alt="Next" title="Next" /></div>
+</td></tr></table><div class="Element5">
+Excludes</div>
+<div class="Element7">
+<a href="coverage.html" target="topic">Code Coverage</a> | <a href="#" onclick="sendFeedback('dave_support@tes-dst.com', 'Documentation Feedback', 'Project: D/AVE HD Driver%0ATopic ID: !!CovExcludes%0ATitle: Excludes');">Send Feedback</a></div>
+</div>
+</div>
+
+<!-- End Page Header -->
+
+<!-- Begin Client Area -->
+<div class="Element720" id="areascroll">
+<div class="Element721">
+
+<!-- Begin Page Content -->
+<div class="Element58">
+<a name="4465736372697074696F6E"></a><div class="Element11">
+<div class="Element10">
+<p class="Element10">
+&#160;</p>
+<p class="Element10">
+<strong>Driver Coverage Exclude Table</strong>&#160;</p>
+<p class="Element10">
+&#160;</p>
+<p class="Element10">
+The following table gives an overview about all embedded directives that exclude code from Coverage Measurement in the source code.&#160;</p>
+<p class="Element10">
+&#160;</p>
+<p class="Element10">
+&#160;</p><div class="Element63">
+<div class="TableDiv">
+<table cellspacing="0" class="Table1">
+<tr>
+<td class="Element65" valign="top" width="5%">
+<div class="Element66">
+Id&#160;</div></td><td class="Element65" valign="top" width="25%">
+<div class="Element66">
+File&#160;</div></td><td class="Element65" valign="top" width="5%">
+<div class="Element66">
+Line&#160;</div></td><td class="Element65" valign="top" width="65%">
+<div class="Element66">
+Exclude Reason&#160;</div></td></tr><tr>
+<td class="Element67" valign="top" width="5%">
+<div class="Element68">
+0&#160;</div></td><td class="Element67" valign="top" width="25%">
+<div class="Element68">
+davehd_kernel_os_win32.c&#160;</div></td><td class="Element67" valign="top" width="5%">
+<div class="Element68">
+128&#160;</div></td><td class="Element67" valign="top" width="65%">
+<div class="Element68">
+Memory allocation failures are hard to test and very unlikely to occur in production. This code has been carefully reviewed.&#160;</div></td></tr><tr>
+<td class="Element67" valign="top" width="5%">
+<div class="Element68">
+1&#160;</div></td><td class="Element67" valign="top" width="25%">
+<div class="Element68">
+davehd_kernel_tlist_win32.c&#160;</div></td><td class="Element67" valign="top" width="5%">
+<div class="Element68">
+33&#160;</div></td><td class="Element67" valign="top" width="65%">
+<div class="Element68">
+This block is excluded from coverage because it would require failures of some kind in debug-only code.&#160;</div></td></tr><tr>
+<td class="Element67" valign="top" width="5%">
+<div class="Element68">
+2&#160;</div></td><td class="Element67" valign="top" width="25%">
+<div class="Element68">
+davehd_kernel_tlist_win32.c&#160;</div></td><td class="Element67" valign="top" width="5%">
+<div class="Element68">
+41&#160;</div></td><td class="Element67" valign="top" width="65%">
+<div class="Element68">
+This block is excluded from coverage because it would require failures of some kind in debug-only code.&#160;</div></td></tr><tr>
+<td class="Element67" valign="top" width="5%">
+<div class="Element68">
+3&#160;</div></td><td class="Element67" valign="top" width="25%">
+<div class="Element68">
+davehd_kernel_tlist_win32.c&#160;</div></td><td class="Element67" valign="top" width="5%">
+<div class="Element68">
+48&#160;</div></td><td class="Element67" valign="top" width="65%">
+<div class="Element68">
+This block is excluded from coverage because it would require failures of some kind in debug-only code.&#160;</div></td></tr><tr>
+<td class="Element67" valign="top" width="5%">
+<div class="Element68">
+4&#160;</div></td><td class="Element67" valign="top" width="25%">
+<div class="Element68">
+davehd_kernel_tlist_win32.c&#160;</div></td><td class="Element67" valign="top" width="5%">
+<div class="Element68">
+68&#160;</div></td><td class="Element67" valign="top" width="65%">
+<div class="Element68">
+This block is excluded from coverage because it would require failures of some kind in debug-only code.&#160;</div></td></tr><tr>
+<td class="Element67" valign="top" width="5%">
+<div class="Element68">
+5&#160;</div></td><td class="Element67" valign="top" width="25%">
+<div class="Element68">
+davehd_kernel_tlist_win32.c&#160;</div></td><td class="Element67" valign="top" width="5%">
+<div class="Element68">
+74&#160;</div></td><td class="Element67" valign="top" width="65%">
+<div class="Element68">
+This block is excluded from coverage because it would require failures of some kind in debug-only code.&#160;</div></td></tr><tr>
+<td class="Element67" valign="top" width="5%">
+<div class="Element68">
+6&#160;</div></td><td class="Element67" valign="top" width="25%">
+<div class="Element68">
+davehd_kernel_client.c&#160;</div></td><td class="Element67" valign="top" width="5%">
+<div class="Element68">
+40&#160;</div></td><td class="Element67" valign="top" width="65%">
+<div class="Element68">
+Memory allocation failures are hard to test and very unlikely to occur in production. This code has been carefully reviewed.&#160;</div></td></tr><tr>
+<td class="Element67" valign="top" width="5%">
+<div class="Element68">
+7&#160;</div></td><td class="Element67" valign="top" width="25%">
+<div class="Element68">
+davehd_kernel_client.c&#160;</div></td><td class="Element67" valign="top" width="5%">
+<div class="Element68">
+65&#160;</div></td><td class="Element67" valign="top" width="65%">
+<div class="Element68">
+Video memory allocations are very unlikely to fail for this case. Testing this allocation failure would be unduely bothersome so this code has just been carefully reviewed&#160;</div></td></tr><tr>
+<td class="Element67" valign="top" width="5%">
+<div class="Element68">
+8&#160;</div></td><td class="Element67" valign="top" width="25%">
+<div class="Element68">
+davehd_kernel_client.c&#160;</div></td><td class="Element67" valign="top" width="5%">
+<div class="Element68">
+163&#160;</div></td><td class="Element67" valign="top" width="65%">
+<div class="Element68">
+This check against conditions that should be impossible to ever be met in their code context, exist solely following the general habit of defensive programming and context independent completeness of code modules.&#160;</div></td></tr><tr>
+<td class="Element67" valign="top" width="5%">
+<div class="Element68">
+9&#160;</div></td><td class="Element67" valign="top" width="25%">
+<div class="Element68">
+davehd_kernel_client.c&#160;</div></td><td class="Element67" valign="top" width="5%">
+<div class="Element68">
+194&#160;</div></td><td class="Element67" valign="top" width="65%">
+<div class="Element68">
+This block is excluded from coverage because it would require failures in the underlying DHD Kernel Driver layer. Instead of writing an API wrapper interface giving control to create such failures the excluded code has been carefully reviewed.&#160;</div></td></tr><tr>
+<td class="Element67" valign="top" width="5%">
+<div class="Element68">
+10&#160;</div></td><td class="Element67" valign="top" width="25%">
+<div class="Element68">
+davehd_kernel_debug.c&#160;</div></td><td class="Element67" valign="top" width="5%">
+<div class="Element68">
+59&#160;</div></td><td class="Element67" valign="top" width="65%">
+<div class="Element68">
+This check against conditions that should be impossible to ever be met in their code context, exist solely following the general habit of defensive programming and context independent completeness of code modules.&#160;</div></td></tr><tr>
+<td class="Element67" valign="top" width="5%">
+<div class="Element68">
+11&#160;</div></td><td class="Element67" valign="top" width="25%">
+<div class="Element68">
+davehd_kernel_debug.c&#160;</div></td><td class="Element67" valign="top" width="5%">
+<div class="Element68">
+106&#160;</div></td><td class="Element67" valign="top" width="65%">
+<div class="Element68">
+This check against conditions that should be impossible to ever be met in their code context, exist solely following the general habit of defensive programming and context independent completeness of code modules.&#160;</div></td></tr><tr>
+<td class="Element67" valign="top" width="5%">
+<div class="Element68">
+12&#160;</div></td><td class="Element67" valign="top" width="25%">
+<div class="Element68">
+davehd_kernel_driver.c&#160;</div></td><td class="Element67" valign="top" width="5%">
+<div class="Element68">
+308&#160;</div></td><td class="Element67" valign="top" width="65%">
+<div class="Element68">
+This check against conditions that should be impossible to ever be met in their code context, exist solely following the general habit of defensive programming and context independent completeness of code modules.&#160;</div></td></tr><tr>
+<td class="Element67" valign="top" width="5%">
+<div class="Element68">
+13&#160;</div></td><td class="Element67" valign="top" width="25%">
+<div class="Element68">
+davehd_kernel_driver.c&#160;</div></td><td class="Element67" valign="top" width="5%">
+<div class="Element68">
+342&#160;</div></td><td class="Element67" valign="top" width="65%">
+<div class="Element68">
+Memory allocation failures are hard to test and very unlikely to occur in production. This code has been carefully reviewed.&#160;</div></td></tr><tr>
+<td class="Element67" valign="top" width="5%">
+<div class="Element68">
+14&#160;</div></td><td class="Element67" valign="top" width="25%">
+<div class="Element68">
+davehd_kernel_driver.c&#160;</div></td><td class="Element67" valign="top" width="5%">
+<div class="Element68">
+1955&#160;</div></td><td class="Element67" valign="top" width="65%">
+<div class="Element68">
+This check against conditions that should be impossible to ever be met in their code context, exist solely following the general habit of defensive programming and context independent completeness of code modules.&#160;</div></td></tr><tr>
+<td class="Element67" valign="top" width="5%">
+<div class="Element68">
+15&#160;</div></td><td class="Element67" valign="top" width="25%">
+<div class="Element68">
+davehd_kernel_driver.c&#160;</div></td><td class="Element67" valign="top" width="5%">
+<div class="Element68">
+1961&#160;</div></td><td class="Element67" valign="top" width="65%">
+<div class="Element68">
+This check against conditions that should be impossible to ever be met in their code context, exist solely following the general habit of defensive programming and context independent completeness of code modules.&#160;</div></td></tr><tr>
+<td class="Element67" valign="top" width="5%">
+<div class="Element68">
+16&#160;</div></td><td class="Element67" valign="top" width="25%">
+<div class="Element68">
+davehd_kernel_error.c&#160;</div></td><td class="Element67" valign="top" width="5%">
+<div class="Element68">
+27&#160;</div></td><td class="Element67" valign="top" width="65%">
+<div class="Element68">
+It would require an hardware error to reach this code. Instead of trying to simulate an hardware error on Softdave, this code has been seen to work as expected on various occasions when doing platform portings.&#160;</div></td></tr><tr>
+<td class="Element67" valign="top" width="5%">
+<div class="Element68">
+17&#160;</div></td><td class="Element67" valign="top" width="25%">
+<div class="Element68">
+davehd_kernel_ring.c&#160;</div></td><td class="Element67" valign="top" width="5%">
+<div class="Element68">
+50&#160;</div></td><td class="Element67" valign="top" width="65%">
+<div class="Element68">
+This check against conditions that should be impossible to ever be met in their code context, exist solely following the general habit of defensive programming and context independent completeness of code modules.&#160;</div></td></tr><tr>
+<td class="Element67" valign="top" width="5%">
+<div class="Element68">
+18&#160;</div></td><td class="Element67" valign="top" width="25%">
+<div class="Element68">
+davehd_kernel_ring.c&#160;</div></td><td class="Element67" valign="top" width="5%">
+<div class="Element68">
+63&#160;</div></td><td class="Element67" valign="top" width="65%">
+<div class="Element68">
+This check against conditions that should be impossible to ever be met in their code context, exist solely following the general habit of defensive programming and context independent completeness of code modules.&#160;</div></td></tr><tr>
+<td class="Element67" valign="top" width="5%">
+<div class="Element68">
+19&#160;</div></td><td class="Element67" valign="top" width="25%">
+<div class="Element68">
+davehd_kernel_ring.c&#160;</div></td><td class="Element67" valign="top" width="5%">
+<div class="Element68">
+88&#160;</div></td><td class="Element67" valign="top" width="65%">
+<div class="Element68">
+This block is excluded from coverage because it would require failures in the underlying DHD Kernel Driver layer. Instead of writing an API wrapper interface giving control to create such failures the excluded code has been carefully reviewed.&#160;</div></td></tr><tr>
+<td class="Element67" valign="top" width="5%">
+<div class="Element68">
+20&#160;</div></td><td class="Element67" valign="top" width="25%">
+<div class="Element68">
+davehd_kernel_ring.c&#160;</div></td><td class="Element67" valign="top" width="5%">
+<div class="Element68">
+142&#160;</div></td><td class="Element67" valign="top" width="65%">
+<div class="Element68">
+This check against conditions that should be impossible to ever be met in their code context, exist solely following the general habit of defensive programming and context independent completeness of code modules.&#160;</div></td></tr><tr>
+<td class="Element67" valign="top" width="5%">
+<div class="Element68">
+21&#160;</div></td><td class="Element67" valign="top" width="25%">
+<div class="Element68">
+davehd_kernel_ring.c&#160;</div></td><td class="Element67" valign="top" width="5%">
+<div class="Element68">
+175&#160;</div></td><td class="Element67" valign="top" width="65%">
+<div class="Element68">
+This block is excluded from coverage because it would require failures in the underlying DHD Kernel Driver layer. Instead of writing an API wrapper interface giving control to create such failures the excluded code has been carefully reviewed.&#160;</div></td></tr><tr>
+<td class="Element67" valign="top" width="5%">
+<div class="Element68">
+22&#160;</div></td><td class="Element67" valign="top" width="25%">
+<div class="Element68">
+davehd_kernel_ring.c&#160;</div></td><td class="Element67" valign="top" width="5%">
+<div class="Element68">
+185&#160;</div></td><td class="Element67" valign="top" width="65%">
+<div class="Element68">
+This block is excluded from coverage because it would require failures in the underlying DHD Kernel Driver layer. Instead of writing an API wrapper interface giving control to create such failures the excluded code has been carefully reviewed.&#160;</div></td></tr><tr>
+<td class="Element67" valign="top" width="5%">
+<div class="Element68">
+23&#160;</div></td><td class="Element67" valign="top" width="25%">
+<div class="Element68">
+davehd_kernel_tlist.c&#160;</div></td><td class="Element67" valign="top" width="5%">
+<div class="Element68">
+135&#160;</div></td><td class="Element67" valign="top" width="65%">
+<div class="Element68">
+Debug code only and only used in a specific configuration. Uncoverable on Win32/Softdave.&#160;</div></td></tr><tr>
+<td class="Element67" valign="top" width="5%">
+<div class="Element68">
+24&#160;</div></td><td class="Element67" valign="top" width="25%">
+<div class="Element68">
+davehd_vidmem_allocator.c&#160;</div></td><td class="Element67" valign="top" width="5%">
+<div class="Element68">
+79&#160;</div></td><td class="Element67" valign="top" width="65%">
+<div class="Element68">
+This block is excluded from coverage because it would require failures in the underlying DHD Kernel Driver layer. Instead of writing an API wrapper interface giving control to create such failures the excluded code has been carefully reviewed.&#160;</div></td></tr><tr>
+<td class="Element67" valign="top" width="5%">
+<div class="Element68">
+25&#160;</div></td><td class="Element67" valign="top" width="25%">
+<div class="Element68">
+davehd_vidmem_allocator.c&#160;</div></td><td class="Element67" valign="top" width="5%">
+<div class="Element68">
+259&#160;</div></td><td class="Element67" valign="top" width="65%">
+<div class="Element68">
+This block is excluded from coverage because it would require failures in the underlying DHD Kernel Driver layer. Instead of writing an API wrapper interface giving control to create such failures the excluded code has been carefully reviewed.&#160;</div></td></tr><tr>
+<td class="Element67" valign="top" width="5%">
+<div class="Element68">
+26&#160;</div></td><td class="Element67" valign="top" width="25%">
+<div class="Element68">
+davehd_os_hw.c&#160;</div></td><td class="Element67" valign="top" width="5%">
+<div class="Element68">
+354&#160;</div></td><td class="Element67" valign="top" width="65%">
+<div class="Element68">
+function is not covered in automatic test suite as the only use is in <a href="dhd_panic.html" target="topic">DHD_PANIC</a>, which also causes a process abort&#160;</div></td></tr><tr>
+<td class="Element67" valign="top" width="5%">
+<div class="Element68">
+27&#160;</div></td><td class="Element67" valign="top" width="25%">
+<div class="Element68">
+davehd_os_win32.c&#160;</div></td><td class="Element67" valign="top" width="5%">
+<div class="Element68">
+27&#160;</div></td><td class="Element67" valign="top" width="65%">
+<div class="Element68">
+functions are not covered in automatic test suite as the only use is in <a href="dhd_panic.html" target="topic">DHD_PANIC</a>, which also causes a process abort&#160;</div></td></tr><tr>
+<td class="Element67" valign="top" width="5%">
+<div class="Element68">
+28&#160;</div></td><td class="Element67" valign="top" width="25%">
+<div class="Element68">
+davehd_cmdlist.c&#160;</div></td><td class="Element67" valign="top" width="5%">
+<div class="Element68">
+103&#160;</div></td><td class="Element67" valign="top" width="65%">
+<div class="Element68">
+The failure of this resource allocation was tested manually and correct behavior of the code was verified. An automatic test would be unduely bothersome and would require to modify the test system, so any testing would no longer be applied against the original module.&#160;</div></td></tr><tr>
+<td class="Element67" valign="top" width="5%">
+<div class="Element68">
+29&#160;</div></td><td class="Element67" valign="top" width="25%">
+<div class="Element68">
+davehd_cmdlist.c&#160;</div></td><td class="Element67" valign="top" width="5%">
+<div class="Element68">
+138&#160;</div></td><td class="Element67" valign="top" width="65%">
+<div class="Element68">
+The failure of this resource allocation was tested manually and correct behavior of the code was verified. An automatic test would be unduely bothersome and would require to modify the test system, so any testing would no longer be applied against the original module.&#160;</div></td></tr><tr>
+<td class="Element67" valign="top" width="5%">
+<div class="Element68">
+30&#160;</div></td><td class="Element67" valign="top" width="25%">
+<div class="Element68">
+davehd_cmdlist.c&#160;</div></td><td class="Element67" valign="top" width="5%">
+<div class="Element68">
+185&#160;</div></td><td class="Element67" valign="top" width="65%">
+<div class="Element68">
+The failure of this resource allocation was tested manually and correct behavior of the code was verified. An automatic test would be unduely bothersome and would require to modify the test system, so any testing would no longer be applied against the original module.&#160;</div></td></tr><tr>
+<td class="Element67" valign="top" width="5%">
+<div class="Element68">
+31&#160;</div></td><td class="Element67" valign="top" width="25%">
+<div class="Element68">
+davehd_cmdlist.c&#160;</div></td><td class="Element67" valign="top" width="5%">
+<div class="Element68">
+229&#160;</div></td><td class="Element67" valign="top" width="65%">
+<div class="Element68">
+The job pointer is checked to be a valid pointer. This is a precaution, the pointer will not be NULL in a regular program run and the effort to create a matching testcase exceeds the benefit of covering the expression.&#160;</div></td></tr><tr>
+<td class="Element67" valign="top" width="5%">
+<div class="Element68">
+32&#160;</div></td><td class="Element67" valign="top" width="25%">
+<div class="Element68">
+davehd_cmdlist.c&#160;</div></td><td class="Element67" valign="top" width="5%">
+<div class="Element68">
+318&#160;</div></td><td class="Element67" valign="top" width="65%">
+<div class="Element68">
+This block is excluded from coverage because it would require failures in the underlying DHD Driver layer. Instead of writing an API wrapper interface giving control to create such failures the excluded code has been carefully reviewed.&#160;</div></td></tr><tr>
+<td class="Element67" valign="top" width="5%">
+<div class="Element68">
+33&#160;</div></td><td class="Element67" valign="top" width="25%">
+<div class="Element68">
+davehd_cmdlist.c&#160;</div></td><td class="Element67" valign="top" width="5%">
+<div class="Element68">
+325&#160;</div></td><td class="Element67" valign="top" width="65%">
+<div class="Element68">
+This block is excluded from coverage because it would require failures in the underlying DHD Driver layer. Instead of writing an API wrapper interface giving control to create such failures the excluded code has been carefully reviewed.&#160;</div></td></tr><tr>
+<td class="Element67" valign="top" width="5%">
+<div class="Element68">
+34&#160;</div></td><td class="Element67" valign="top" width="25%">
+<div class="Element68">
+davehd_cmdlist.c&#160;</div></td><td class="Element67" valign="top" width="5%">
+<div class="Element68">
+381&#160;</div></td><td class="Element67" valign="top" width="65%">
+<div class="Element68">
+This block is excluded from coverage because it would require failures in the underlying DHD Driver layer. Instead of writing an API wrapper interface giving control to create such failures the excluded code has been carefully reviewed.&#160;</div></td></tr><tr>
+<td class="Element67" valign="top" width="5%">
+<div class="Element68">
+35&#160;</div></td><td class="Element67" valign="top" width="25%">
+<div class="Element68">
+davehd_cmdlist.c&#160;</div></td><td class="Element67" valign="top" width="5%">
+<div class="Element68">
+400&#160;</div></td><td class="Element67" valign="top" width="65%">
+<div class="Element68">
+This block is excluded from coverage because it would require failures in the underlying DHD Driver layer. Instead of writing an API wrapper interface giving control to create such failures the excluded code has been carefully reviewed.&#160;</div></td></tr><tr>
+<td class="Element67" valign="top" width="5%">
+<div class="Element68">
+36&#160;</div></td><td class="Element67" valign="top" width="25%">
+<div class="Element68">
+davehd_cmdlist.c&#160;</div></td><td class="Element67" valign="top" width="5%">
+<div class="Element68">
+467&#160;</div></td><td class="Element67" valign="top" width="65%">
+<div class="Element68">
+This block is excluded from coverage because it would require failures in the underlying DHD Driver layer. Instead of writing an API wrapper interface giving control to create such failures the excluded code has been carefully reviewed.&#160;</div></td></tr><tr>
+<td class="Element67" valign="top" width="5%">
+<div class="Element68">
+37&#160;</div></td><td class="Element67" valign="top" width="25%">
+<div class="Element68">
+davehd_cmdlist.c&#160;</div></td><td class="Element67" valign="top" width="5%">
+<div class="Element68">
+497&#160;</div></td><td class="Element67" valign="top" width="65%">
+<div class="Element68">
+This block is excluded from coverage because it would require failures in the underlying DHD Kernel Driver layer. Instead of writing an API wrapper interface giving control to create such failures the excluded code has been carefully reviewed.&#160;</div></td></tr><tr>
+<td class="Element67" valign="top" width="5%">
+<div class="Element68">
+38&#160;</div></td><td class="Element67" valign="top" width="25%">
+<div class="Element68">
+davehd_cmdlist.c&#160;</div></td><td class="Element67" valign="top" width="5%">
+<div class="Element68">
+569&#160;</div></td><td class="Element67" valign="top" width="65%">
+<div class="Element68">
+The job pointer is checked to be a valid pointer. This is a precaution, the pointer will not be NULL in a regular program run and the effort to create a matching testcase exceeds the benefit of covering the expression.&#160;</div></td></tr><tr>
+<td class="Element67" valign="top" width="5%">
+<div class="Element68">
+39&#160;</div></td><td class="Element67" valign="top" width="25%">
+<div class="Element68">
+davehd_cmdlist.c&#160;</div></td><td class="Element67" valign="top" width="5%">
+<div class="Element68">
+608&#160;</div></td><td class="Element67" valign="top" width="65%">
+<div class="Element68">
+Typically all memory pointers are aligned to words so this part can not be reached.&#160;</div></td></tr><tr>
+<td class="Element67" valign="top" width="5%">
+<div class="Element68">
+40&#160;</div></td><td class="Element67" valign="top" width="25%">
+<div class="Element68">
+davehd_cmdlist.c&#160;</div></td><td class="Element67" valign="top" width="5%">
+<div class="Element68">
+696&#160;</div></td><td class="Element67" valign="top" width="65%">
+<div class="Element68">
+The job pointer is checked to be a valid pointer. This is a precaution, the pointer will not be NULL in a regular program run and the effort to create a matching testcase exceeds the benefit of covering the expression.&#160;</div></td></tr><tr>
+<td class="Element67" valign="top" width="5%">
+<div class="Element68">
+41&#160;</div></td><td class="Element67" valign="top" width="25%">
+<div class="Element68">
+davehd_cmdlist.c&#160;</div></td><td class="Element67" valign="top" width="5%">
+<div class="Element68">
+713&#160;</div></td><td class="Element67" valign="top" width="65%">
+<div class="Element68">
+This block is excluded from coverage because it would require failures in the underlying DHD Driver layer. Instead of writing an API wrapper interface giving control to create such failures the excluded code has been carefully reviewed.&#160;</div></td></tr><tr>
+<td class="Element67" valign="top" width="5%">
+<div class="Element68">
+42&#160;</div></td><td class="Element67" valign="top" width="25%">
+<div class="Element68">
+davehd_cmdlist.c&#160;</div></td><td class="Element67" valign="top" width="5%">
+<div class="Element68">
+765&#160;</div></td><td class="Element67" valign="top" width="65%">
+<div class="Element68">
+The failure of this resource allocation was tested manually and correct behavior of the code was verified. An automatic test would be unduely bothersome and would require to modify the test system, so any testing would no longer be applied against the original module.&#160;</div></td></tr><tr>
+<td class="Element67" valign="top" width="5%">
+<div class="Element68">
+43&#160;</div></td><td class="Element67" valign="top" width="25%">
+<div class="Element68">
+davehd_debug.c&#160;</div></td><td class="Element67" valign="top" width="5%">
+<div class="Element68">
+54&#160;</div></td><td class="Element67" valign="top" width="65%">
+<div class="Element68">
+function is not covered in automatic test suite because it causes a process break&#160;</div></td></tr><tr>
+<td class="Element67" valign="top" width="5%">
+<div class="Element68">
+44&#160;</div></td><td class="Element67" valign="top" width="25%">
+<div class="Element68">
+davehd_driver.c&#160;</div></td><td class="Element67" valign="top" width="5%">
+<div class="Element68">
+103&#160;</div></td><td class="Element67" valign="top" width="65%">
+<div class="Element68">
+Memory allocation failures are hard to test and very unlikely to occur in production. This code has been carefully reviewed.&#160;</div></td></tr><tr>
+<td class="Element67" valign="top" width="5%">
+<div class="Element68">
+45&#160;</div></td><td class="Element67" valign="top" width="25%">
+<div class="Element68">
+davehd_driver.c&#160;</div></td><td class="Element67" valign="top" width="5%">
+<div class="Element68">
+121&#160;</div></td><td class="Element67" valign="top" width="65%">
+<div class="Element68">
+This block is excluded from coverage because it would require failures in the underlying DHD Kernel Driver layer. Instead of writing an API wrapper interface giving control to create such failures the excluded code has been carefully reviewed.&#160;</div></td></tr><tr>
+<td class="Element67" valign="top" width="5%">
+<div class="Element68">
+46&#160;</div></td><td class="Element67" valign="top" width="25%">
+<div class="Element68">
+davehd_driver.c&#160;</div></td><td class="Element67" valign="top" width="5%">
+<div class="Element68">
+195&#160;</div></td><td class="Element67" valign="top" width="65%">
+<div class="Element68">
+This block is excluded from coverage because it would require failures in the underlying DHD Kernel Driver layer. Instead of writing an API wrapper interface giving control to create such failures the excluded code has been carefully reviewed.&#160;</div></td></tr><tr>
+<td class="Element67" valign="top" width="5%">
+<div class="Element68">
+47&#160;</div></td><td class="Element67" valign="top" width="25%">
+<div class="Element68">
+davehd_driver.c&#160;</div></td><td class="Element67" valign="top" width="5%">
+<div class="Element68">
+299&#160;</div></td><td class="Element67" valign="top" width="65%">
+<div class="Element68">
+This check against conditions that should be impossible to ever be met in their code context, exist solely following the general habit of defensive programming and context independent completeness of code modules.&#160;</div></td></tr><tr>
+<td class="Element67" valign="top" width="5%">
+<div class="Element68">
+48&#160;</div></td><td class="Element67" valign="top" width="25%">
+<div class="Element68">
+davehd_driver.c&#160;</div></td><td class="Element67" valign="top" width="5%">
+<div class="Element68">
+490&#160;</div></td><td class="Element67" valign="top" width="65%">
+<div class="Element68">
+The race condition catched here (outline above) can not be reproduced reliably enough to be part of the coverage run.&#160;</div></td></tr><tr>
+<td class="Element67" valign="top" width="5%">
+<div class="Element68">
+49&#160;</div></td><td class="Element67" valign="top" width="25%">
+<div class="Element68">
+davehd_driver.c&#160;</div></td><td class="Element67" valign="top" width="5%">
+<div class="Element68">
+952&#160;</div></td><td class="Element67" valign="top" width="65%">
+<div class="Element68">
+This block is excluded from coverage because it would require failures in the underlying DHD Driver layer. Instead of writing an API wrapper interface giving control to create such failures the excluded code has been carefully reviewed.&#160;</div></td></tr><tr>
+<td class="Element67" valign="top" width="5%">
+<div class="Element68">
+50&#160;</div></td><td class="Element67" valign="top" width="25%">
+<div class="Element68">
+davehd_profile.c&#160;</div></td><td class="Element67" valign="top" width="5%">
+<div class="Element68">
+260&#160;</div></td><td class="Element67" valign="top" width="65%">
+<div class="Element68">
+Can not be covered. See dhd_flush_state.&#160;</div></td></tr><tr>
+<td class="Element67" valign="top" width="5%">
+<div class="Element68">
+51&#160;</div></td><td class="Element67" valign="top" width="25%">
+<div class="Element68">
+davehd_stream.c&#160;</div></td><td class="Element67" valign="top" width="5%">
+<div class="Element68">
+215&#160;</div></td><td class="Element67" valign="top" width="65%">
+<div class="Element68">
+This block is excluded from coverage because it would require failures in the underlying DHD Kernel Driver layer. Instead of writing an API wrapper interface giving control to create such failures the excluded code has been carefully reviewed.&#160;</div></td></tr><tr>
+<td class="Element67" valign="top" width="5%">
+<div class="Element68">
+52&#160;</div></td><td class="Element67" valign="top" width="25%">
+<div class="Element68">
+davehd_stream.c&#160;</div></td><td class="Element67" valign="top" width="5%">
+<div class="Element68">
+223&#160;</div></td><td class="Element67" valign="top" width="65%">
+<div class="Element68">
+This block is excluded from coverage because it would require failures in the underlying DHD Kernel Driver layer. Instead of writing an API wrapper interface giving control to create such failures the excluded code has been carefully reviewed.&#160;</div></td></tr><tr>
+<td class="Element67" valign="top" width="5%">
+<div class="Element68">
+53&#160;</div></td><td class="Element67" valign="top" width="25%">
+<div class="Element68">
+davehd_stream.c&#160;</div></td><td class="Element67" valign="top" width="5%">
+<div class="Element68">
+323&#160;</div></td><td class="Element67" valign="top" width="65%">
+<div class="Element68">
+Video memory allocations are very unlikely to fail for this case. Testing this allocation failure would be unduely bothersome so this code has just been carefully reviewed&#160;</div></td></tr><tr>
+<td class="Element67" valign="top" width="5%">
+<div class="Element68">
+54&#160;</div></td><td class="Element67" valign="top" width="25%">
+<div class="Element68">
+davehd_stream.c&#160;</div></td><td class="Element67" valign="top" width="5%">
+<div class="Element68">
+343&#160;</div></td><td class="Element67" valign="top" width="65%">
+<div class="Element68">
+This block is excluded from coverage because it would require failures in the underlying DHD Kernel Driver layer. Instead of writing an API wrapper interface giving control to create such failures the excluded code has been carefully reviewed.&#160;</div></td></tr><tr>
+<td class="Element67" valign="top" width="5%">
+<div class="Element68">
+55&#160;</div></td><td class="Element67" valign="top" width="25%">
+<div class="Element68">
+davehd_stream.c&#160;</div></td><td class="Element67" valign="top" width="5%">
+<div class="Element68">
+357&#160;</div></td><td class="Element67" valign="top" width="65%">
+<div class="Element68">
+This block is excluded from coverage because it would require failures in the underlying DHD Kernel Driver layer. Instead of writing an API wrapper interface giving control to create such failures the excluded code has been carefully reviewed.&#160;</div></td></tr><tr>
+<td class="Element67" valign="top" width="5%">
+<div class="Element68">
+56&#160;</div></td><td class="Element67" valign="top" width="25%">
+<div class="Element68">
+davehd_stream.c&#160;</div></td><td class="Element67" valign="top" width="5%">
+<div class="Element68">
+380&#160;</div></td><td class="Element67" valign="top" width="65%">
+<div class="Element68">
+This block is excluded from coverage because it would require failures in the underlying DHD Kernel Driver layer. Instead of writing an API wrapper interface giving control to create such failures the excluded code has been carefully reviewed.&#160;</div></td></tr><tr>
+<td class="Element67" valign="top" width="5%">
+<div class="Element68">
+57&#160;</div></td><td class="Element67" valign="top" width="25%">
+<div class="Element68">
+davehd_stream.c&#160;</div></td><td class="Element67" valign="top" width="5%">
+<div class="Element68">
+408&#160;</div></td><td class="Element67" valign="top" width="65%">
+<div class="Element68">
+This block is excluded from coverage because it would require failures in the underlying DHD Kernel Driver layer. Instead of writing an API wrapper interface giving control to create such failures the excluded code has been carefully reviewed.&#160;</div></td></tr><tr>
+<td class="Element67" valign="top" width="5%">
+<div class="Element68">
+58&#160;</div></td><td class="Element67" valign="top" width="25%">
+<div class="Element68">
+davehd_stream.h&#160;</div></td><td class="Element67" valign="top" width="5%">
+<div class="Element68">
+62&#160;</div></td><td class="Element67" valign="top" width="65%">
+<div class="Element68">
+Can not be covered. Purely defensive programming.&#160;</div></td></tr><tr>
+<td class="Element67" valign="top" width="5%">
+<div class="Element68">
+59&#160;</div></td><td class="Element67" valign="top" width="25%">
+<div class="Element68">
+davehd_util_convert.c&#160;</div></td><td class="Element67" valign="top" width="5%">
+<div class="Element68">
+444&#160;</div></td><td class="Element67" valign="top" width="65%">
+<div class="Element68">
+This block is excluded from coverage because it would require failures in the underlying DHD Driver layer. Instead of writing an API wrapper interface giving control to create such failures the excluded code has been carefully reviewed.&#160;</div></td></tr><tr>
+<td class="Element67" valign="top" width="5%">
+<div class="Element68">
+60&#160;</div></td><td class="Element67" valign="top" width="25%">
+<div class="Element68">
+davehd_util_state.c&#160;</div></td><td class="Element67" valign="top" width="5%">
+<div class="Element68">
+572&#160;</div></td><td class="Element67" valign="top" width="65%">
+<div class="Element68">
+This block is excluded from coverage because it would require failures in the underlying DHD Driver layer. Instead of writing an API wrapper interface giving control to create such failures the excluded code has been carefully reviewed.&#160;</div></td></tr><tr>
+<td class="Element67" valign="top" width="5%">
+<div class="Element68">
+<strong>Total</strong>&#160;</div></td><td class="Element67" valign="top" width="25%">
+<div class="Element68">
+<strong>61</strong>&#160;</div></td><td class="Element67" valign="top" width="5%">
+<div class="Element68">
+<strong> </strong>&#160;</div></td><td class="Element67" valign="top" width="65%">
+<div class="Element68">
+&#160;</div></td></tr></table></div></div>
+<p class="Element10">
+&#160;</p>
+<p class="Element10">
+Date: 2015-07-03.&#160;</p>
+<p class="Element10">
+&#160;</p></div>
+</div>
+</div>
+<!-- End Page Content -->
+
+<!-- Begin Page Footer -->
+<div class="Element93">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="100%">
+<div class="Element3">
+Copyright (c) 2013 All rights reserved for TES Electronic Solutions</div>
+</td></tr><tr><td width="100%">
+<div class="Element4">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="idx.html" target="tocidx">Index</a> | <a href="intro.html" target="topic">Home</a></div>
+</td></tr></table></div>
+
+<!-- End Page Footer -->
+</div>
+</div>
+
+<!-- End Client Area -->
+</body></html>

@@ -1,0 +1,174 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
+<html>
+<head>
+<title>dhd_draw</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="generator" content="Doc-O-Matic" />
+    <meta http-equiv="Content-Style-Type" content="text/css" />
+    <link rel="STYLESHEET" href="default.css" type="text/css" />
+
+<script type="text/javascript" src="scripts.js"></script>
+<!-- saved from url=(0013)about:internet -->
+</head>
+<body class="Element700" onload="onBodyLoadEx(&#39;index.html&#39;, &#39;topic&#39;, &#39;dhd_draw.html&#39;);" onmousedown="onBodyMouseDown();">
+
+<!-- Begin Popups -->
+
+<!-- End Popups -->
+
+<!-- Begin Page Header -->
+<div class="Element710" id="areafixed">
+<div class="Element92">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="33%">
+<div class="Element1">
+D/AVE HD Driver - Internal Documentation</div>
+</td><td width="34%">
+<div class="Element2">
+<a href="contents.html" target="tocidx"><img src="btn_globals_contents_midblue.gif" border="0" alt="Contents" title="Contents" onmouseover="switchImage(this, &#39;btn_globals_contents_midblue_hover.gif&#39;);" onmouseout="switchImage(this, &#39;btn_globals_contents_midblue.gif&#39;);" /></a><a href="idx.html" target="tocidx"><img src="btn_globals_index_midblue.gif" border="0" alt="Index" title="Index" onmouseover="switchImage(this, &#39;btn_globals_index_midblue_hover.gif&#39;);" onmouseout="switchImage(this, &#39;btn_globals_index_midblue.gif&#39;);" /></a><a href="intro.html" target="topic"><img src="btn_globals_home_midblue.gif" border="0" alt="Home" title="Home" onmouseover="switchImage(this, &#39;btn_globals_home_midblue_hover.gif&#39;);" onmouseout="switchImage(this, &#39;btn_globals_home_midblue.gif&#39;);" /></a></div>
+</td><td width="33%">
+<div class="Element90">
+<a href="dhd_set_col_buffer.html" target="topic"><img src="btn_prev_midblue.gif" border="0" alt="Previous" title="Previous" onmouseover="switchImage(this, &#39;btn_prev_midblue_hover.gif&#39;);" onmouseout="switchImage(this, &#39;btn_prev_midblue.gif&#39;);" /></a><a href="umd_section_rendering.html" target="topic"><img src="btn_up_midblue.gif" border="0" alt="Up" title="Up" onmouseover="switchImage(this, &#39;btn_up_midblue_hover.gif&#39;);" onmouseout="switchImage(this, &#39;btn_up_midblue.gif&#39;);" /></a><a href="dhd_draw_array.html" target="topic"><img src="btn_next_midblue.gif" border="0" alt="Next" title="Next" onmouseover="switchImage(this, &#39;btn_next_midblue_hover.gif&#39;);" onmouseout="switchImage(this, &#39;btn_next_midblue.gif&#39;);" /></a></div>
+</td></tr></table><div class="Element5">
+dhd_draw</div>
+<div class="Element7">
+<a href="umd_section_rendering.html" target="topic">Rendering Functions</a> | <a href="dhd_draw_see_also.html" target="topic">See Also</a> | <a href="#" onclick="sendFeedback('dave_support@tes-dst.com', 'Documentation Feedback', 'Project: D/AVE HD Driver%0ATopic ID: dhd_draw@dhd_handle_t@dhd_uint32_t@dhd_uint32_t@dhd_drawattribute_flag_t%0ATitle: dhd_draw');">Send Feedback</a></div>
+</div>
+</div>
+
+<!-- End Page Header -->
+
+<!-- Begin Client Area -->
+<div class="Element720" id="areascroll">
+<div class="Element721">
+
+<!-- Begin Page Content -->
+<div class="Element58">
+<a name="53756D6D617279"></a><div class="Element14">
+Summary</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+Render a single primitive.</p></div>
+</div>
+<a name="53796E746178"></a><div class="Element99">
+Syntax</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #00008C;">void</span></strong> <strong><span style="color: #000000;">dhd_draw</span></strong>(<a href="dhd_handle_t.html" target="topic">dhd_handle_t</a> <strong><span style="color: #660000;">a_device</span></strong>, <a href="dhd_uint32_t.html" target="topic">dhd_uint32_t</a> <strong><span style="color: #660000;">a_edgecontrol</span></strong>, <a href="dhd_uint32_t.html" target="topic">dhd_uint32_t</a> <strong><span style="color: #660000;">a_edgecount</span></strong>, <a href="dhd_drawattribute_flag_t.html" target="topic">dhd_drawattribute_flag_t</a> <strong><span style="color: #660000;">a_attributes</span></strong>);</pre></div></div>
+<a name="4465736372697074696F6E"></a><div class="Element14">
+Description</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+ The data for edges and attribute (e.g UV) mappings is read from the respective buffers (see <a href="dhd_set_edge_buffer.html" target="topic">dhd_set_edge_buffer</a>, <a href="dhd_set_uv_buffer.html" target="topic">dhd_set_uv_buffer</a> etc.). The amount of data to be read from attribute buffers is specified using the a_attributes flag, which is usually a combination of bits from <a href="dhd_drawattribute_flag_t.html" target="topic">dhd_drawattribute_flag_t</a>. An alternative to the enums from <a href="dhd_drawattribute_flag_t.html" target="topic">dhd_drawattribute_flag_t</a> are the <a href="dhd_draw_uv.html" target="topic">DHD_DRAW_UV</a>(n), <a href="dhd_draw_rhw.html" target="topic">DHD_DRAW_RHW</a>(n) and <a href="dhd_draw_col.html" target="topic">DHD_DRAW_COL</a>(n) macros which can be used if the number of UV pairs per primitive is a dynamic value.&#160;</p>
+<p class="Element10">
+&#160;</p>
+<p class="Element10">
+Note that the attribute parameter specifies how much data is read from the attribute buffers per primitive, it does not trigger usage of that attribute (e.g. texturing). Also if an attribute has been set explicitly (by e.g. <a href="dhd_set_uv.html" target="topic">dhd_set_uv</a>) it should <strong>not</strong> be listed as an attribute flag, as that would overwrite the specified value with data from a buffer.&#160;</p>
+<p class="Element10">
+&#160;</p><div class="Element15">
+Attribute examples</div>
+<div class="Element63">
+<div class="TableDiv">
+<table cellspacing="0" class="Table1">
+<tr>
+<td class="Element65" valign="top" width="41%">
+<div class="Element66">
+Usecase&#160;</div></td><td class="Element65" valign="top" width="59%">
+<div class="Element66">
+Draw attribute flags&#160;</div></td></tr><tr>
+<td class="Element67" valign="top" width="41%">
+<div class="Element68">
+Render without attributes&#160;</div></td><td class="Element67" valign="top" width="59%">
+<div class="Element68">
+E_DHD_DRAW_FLAT&#160;</div></td></tr><tr>
+<td class="Element67" valign="top" width="41%">
+<div class="Element68">
+Render with one texture&#160;</div></td><td class="Element67" valign="top" width="59%">
+<div class="Element68">
+E_DHD_DRAW_UV or E_DHD_DRAW_1UVS or <a href="dhd_draw_uv.html" target="topic">DHD_DRAW_UV</a>(1)&#160;</div></td></tr><tr>
+<td class="Element67" valign="top" width="41%">
+<div class="Element68">
+Render with two textures&#160;</div></td><td class="Element67" valign="top" width="59%">
+<div class="Element68">
+E_DHD_DRAW_2UVS or <a href="dhd_draw_uv.html" target="topic">DHD_DRAW_UV</a>(2)&#160;</div></td></tr><tr>
+<td class="Element67" valign="top" width="41%">
+<div class="Element68">
+Render with one texture and perspective&#160;</div></td><td class="Element67" valign="top" width="59%">
+<div class="Element68">
+E_DHD_DRAW_UV | E_DHD_DRAW_RHW or <a href="dhd_draw_uv.html" target="topic">DHD_DRAW_UV</a>(1) | <a href="dhd_draw_rhw.html" target="topic">DHD_DRAW_RHW</a>(1)&#160;</div></td></tr><tr>
+<td class="Element67" valign="top" width="41%">
+<div class="Element68">
+Render with four textures and depth&#160;</div></td><td class="Element67" valign="top" width="59%">
+<div class="Element68">
+E_DHD_DRAW_UV(4) | E_DHD_DRAW_DEPTH&#160;</div></td></tr></table></div></div>
+</div>
+</div>
+<a name="506172616D6574657273"></a><div class="Element14">
+Parameters</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element252">
+<div class="TableDiv">
+<table cellspacing="0" class="Table3">
+<tr>
+<td class="Element240" valign="top" width="28%">
+<div class="Element241">
+Parameters&#160;</div></td><td class="Element244" valign="top" width="72%">
+<div class="Element245">
+Description&#160;</div></td></tr><tr>
+<td class="Element242" valign="top" width="28%">
+<div class="Element243">
+a_device&#160;</div></td><td class="Element246" valign="top" width="72%">
+<div class="Element247">
+Driver context handle (as returned by <a href="dhd_init.html" target="topic">dhd_init</a>)&#160;</div></td></tr><tr>
+<td class="Element242" valign="top" width="28%">
+<div class="Element243">
+a_edgecontrol&#160;</div></td><td class="Element246" valign="top" width="72%">
+<div class="Element247">
+Bits that describe the active geometry edges. (see <a href="umd_section_edgemacros.html" target="topic">Edge Macros</a>)&#160;</div></td></tr><tr>
+<td class="Element242" valign="top" width="28%">
+<div class="Element243">
+a_edgecount&#160;</div></td><td class="Element246" valign="top" width="72%">
+<div class="Element247">
+Number of edges to read from edge buffer (as specified by <a href="dhd_set_edge_buffer.html" target="topic">dhd_set_edge_buffer</a>)&#160;</div></td></tr><tr>
+<td class="Element242" valign="top" width="28%">
+<div class="Element243">
+a_attributes&#160;</div></td><td class="Element246" valign="top" width="72%">
+<div class="Element247">
+Number of attributes to be read from attribute buffers (see <a href="dhd_drawattribute_flag_t.html" target="topic">dhd_drawattribute_flag_t</a>)&#160;</div></td></tr></table></div></div>
+</div>
+</div>
+<a name="53656520416C736F"></a><div class="Element14">
+See Also</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+<a href="dhd_set_bbox.html" target="topic">dhd_set_bbox</a>, <a href="dhd_set_edge_buffer.html" target="topic">dhd_set_edge_buffer</a>, <a href="dhd_set_uv_buffer.html" target="topic">dhd_set_uv_buffer</a>, <a href="dhd_set_rhw_buffer.html" target="topic">dhd_set_rhw_buffer</a>, <a href="dhd_set_col_buffer.html" target="topic">dhd_set_col_buffer</a>, <a href="dhd_set_depth_buffer.html" target="topic">dhd_set_depth_buffer</a></p></div>
+</div>
+<a name="46696C65"></a><div class="Element14">
+File</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+davehd_driver.h</p></div>
+</div>
+</div>
+<!-- End Page Content -->
+
+<!-- Begin Page Footer -->
+<div class="Element93">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="100%">
+<div class="Element3">
+Copyright (c) 2013 All rights reserved for TES Electronic Solutions</div>
+</td></tr><tr><td width="100%">
+<div class="Element4">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="idx.html" target="tocidx">Index</a> | <a href="intro.html" target="topic">Home</a></div>
+</td></tr></table></div>
+
+<!-- End Page Footer -->
+</div>
+</div>
+
+<!-- End Client Area -->
+</body></html>

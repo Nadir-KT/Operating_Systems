@@ -1,0 +1,125 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
+<html>
+<head>
+<title>Waiting for Job completion</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="generator" content="Doc-O-Matic" />
+    <meta http-equiv="Content-Style-Type" content="text/css" />
+    <link rel="STYLESHEET" href="default.css" type="text/css" />
+
+<script type="text/javascript" src="scripts.js"></script>
+<!-- saved from url=(0013)about:internet -->
+</head>
+<body class="Element700" onload="onBodyLoadEx(&#39;index.html&#39;, &#39;topic&#39;, &#39;general_job_waiting.html&#39;);" onmousedown="onBodyMouseDown();">
+
+<!-- Begin Popups -->
+
+<!-- End Popups -->
+
+<!-- Begin Page Header -->
+<div class="Element710" id="areafixed">
+<div class="Element92">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="33%">
+<div class="Element1">
+D/AVE HD Driver - Internal Documentation</div>
+</td><td width="34%">
+<div class="Element2">
+<a href="contents.html" target="tocidx"><img src="btn_globals_contents_midblue.gif" border="0" alt="Contents" title="Contents" onmouseover="switchImage(this, &#39;btn_globals_contents_midblue_hover.gif&#39;);" onmouseout="switchImage(this, &#39;btn_globals_contents_midblue.gif&#39;);" /></a><a href="idx.html" target="tocidx"><img src="btn_globals_index_midblue.gif" border="0" alt="Index" title="Index" onmouseover="switchImage(this, &#39;btn_globals_index_midblue_hover.gif&#39;);" onmouseout="switchImage(this, &#39;btn_globals_index_midblue.gif&#39;);" /></a><a href="intro.html" target="topic"><img src="btn_globals_home_midblue.gif" border="0" alt="Home" title="Home" onmouseover="switchImage(this, &#39;btn_globals_home_midblue_hover.gif&#39;);" onmouseout="switchImage(this, &#39;btn_globals_home_midblue.gif&#39;);" /></a></div>
+</td><td width="33%">
+<div class="Element90">
+<a href="general_job_lifetime.html" target="topic"><img src="btn_prev_midblue.gif" border="0" alt="Previous" title="Previous" onmouseover="switchImage(this, &#39;btn_prev_midblue_hover.gif&#39;);" onmouseout="switchImage(this, &#39;btn_prev_midblue.gif&#39;);" /></a><a href="general_jobs.html" target="topic"><img src="btn_up_midblue.gif" border="0" alt="Up" title="Up" onmouseover="switchImage(this, &#39;btn_up_midblue_hover.gif&#39;);" onmouseout="switchImage(this, &#39;btn_up_midblue.gif&#39;);" /></a><a href="general_job_layout.html" target="topic"><img src="btn_next_midblue.gif" border="0" alt="Next" title="Next" onmouseover="switchImage(this, &#39;btn_next_midblue_hover.gif&#39;);" onmouseout="switchImage(this, &#39;btn_next_midblue.gif&#39;);" /></a></div>
+</td></tr></table><div class="Element5">
+Waiting for Job completion</div>
+<div class="Element7">
+<a href="general_jobs.html" target="topic">Jobs</a> | <a href="#" onclick="sendFeedback('dave_support@tes-dst.com', 'Documentation Feedback', 'Project: D/AVE HD Driver%0ATopic ID: !!General_Job_Waiting%0ATitle: Waiting for Job completion');">Send Feedback</a></div>
+</div>
+</div>
+
+<!-- End Page Header -->
+
+<!-- Begin Client Area -->
+<div class="Element720" id="areascroll">
+<div class="Element721">
+
+<!-- Begin Page Content -->
+<div class="Element58">
+<a name="4465736372697074696F6E"></a><div class="Element11">
+<div class="Element10">
+<div class="Element15">
+Waiting for Job completion</div>
+<p class="Element10">
+&#160;</p>
+<p class="Element10">
+All synchronization between CPU and GPU is based on the kernel function <a href="dhd_gpu_wait_for_job.html" target="topic">dhd_gpu_wait_for_job</a>. Waiting for arbitrary points in the instruction stream (as offered by the user mode driver via <a href="dhd_finish.html" target="topic">dhd_finish</a> or <a href="dhd_finish_marked.html" target="topic">dhd_finish_marked</a>) is implemented by closing the active job even when it is not yet full in order to force a job boundary that <a href="dhd_gpu_wait_for_job.html" target="topic">dhd_gpu_wait_for_job</a> can wait for.&#160;</p>
+<p class="Element10">
+&#160;</p>
+<p class="Element10">
+Scheduled jobs are assigned monotonically increasing IDs and the kernel driver will ensure the HW sync register always contains the ID of the last fully completed job. It does so by adding writes to the ID register after each call to a job stream (so that after the job has returned the sync ID is updated).&#160;</p>
+<p class="Element10">
+&#160;</p>
+<p class="Element10">
+Asynchronously reading back the sync ID register provides a way to determine all jobs that are completed, as all of them must have an assigned ID that is lower than the current value. The actual comparison is a little more complicated as it has to account for wrap around (see <a href="dhd_less_wraparound.html" target="topic">DHD_LESS_WRAPAROUND</a> macro). As the IDs are 32bit values and we can detect only a single wrap around, there may never be more than 2^30 jobs in flight - which can safely be assumed.&#160;</p>
+<p class="Element10">
+&#160;</p>
+<p class="Element10">
+But due to the fact that job structures are reused it is not possible to wait for a job simply by comparing it&#39;s assigned ID to the sync register. If the job has already completed, got reused and is in flight <em>again</em> when the wait is called, it&#39;s assigned ID will refer to a totally different activity.Therefore just having a job handle (a pointer to the job structure) does not uniquely identify a job.&#160;</p>
+<p class="Element10">
+&#160;</p>
+<p class="Element10">
+To solve this each job also carries a generation count that is incremented every time the job is reused. When the user mode driver wants to wait for a specific job it will store two things:</p>
+<ul class="Element630">
+<li class="Element600">the job handle (a pointer to the job struct)</li>
+<li class="Element600">the jobs current generation (retrieved from the job struct at the point in time where it has just been committed)</li>
+</ul><p class="Element10">
+To make sure that there is no race on the generation it is entirely managed on the user mode side. The user mode driver is the only instance that will modify generation counts and it will do so only inside dhd_reclaim_job_structs. By reading the generation before calling dhd_reclaim_job_structs the value is guaranteed to be valid.&#160;</p>
+<p class="Element10">
+Adding generation counts not only enable the reuse of job structs but they also improve the performance of waits as you will see soon.&#160;</p>
+<p class="Element10">
+&#160;</p>
+<p class="Element10">
+The actual wait for a job is a multi stage process. The older a job is, the earlier the wait can return and the faster it will be.&#160;</p>
+<p class="Element10">
+Input is the job handle and the generation that job had when it was committed.</p>
+<ul class="Element630">
+<li class="Element600">first the jobs current generation is compared to the commit time generation. If they differ the job is already reused and thus has to be finished. Wait will return immediately - even without calling into the kernel.</li>
+<li class="Element600">when the job is still in the expected generation it might be active and the kernel <a href="dhd_gpu_wait_for_job.html" target="topic">dhd_gpu_wait_for_job</a> is called.</li>
+<li class="Element600">kernel will check if the job ID is already completed (as described above) if it is it will directly return.</li>
+<li class="Element600">if the ID is not yet completed <a href="dhd_gpu_wait_for_job.html" target="topic">dhd_gpu_wait_for_job</a> will return E_DHD_ERROR_SCHEDULE_FOR_WAIT to the bridge. The bridge will then put the calling usermode to sleep and wake it up once the sync ID has advanced beyond it's target job.</li>
+</ul><p class="Element10">
+&#160;</p>
+<p class="Element10">
+Note that the last stage is not executed if the driver is compiled in POLLING mode (usually done only in non multithreaded systems) in that configuration <a href="dhd_gpu_wait_for_job.html" target="topic">dhd_gpu_wait_for_job</a> will just poll and block until the desired condition is met.&#160;</p>
+<p class="Element10">
+&#160;</p>
+<p class="Element10">
+There is one more case that might block the calling thread even longer. When the job to wait for is still UNASSIGNED, meaning it has not even been scheduled. In that case <a href="dhd_gpu_wait_for_job.html" target="topic">dhd_gpu_wait_for_job</a> will instruct the bridge to SCHEDULE_FOR_WAIT till the oldest known job. So each time a job has finished <a href="dhd_gpu_wait_for_job.html" target="topic">dhd_gpu_wait_for_job</a> can look again at the job and see if it has been scheduled now.&#160;</p>
+<p class="Element10">
+&#160;</p>
+<p class="Element10">
+The bridge handles waiting clients by passing them to the kernel driver using dhd_gpu_bridge_add_waiting, storing the job ID / generation they are waiting on and a signal to raise in order to wake them up. As the kernel does not know details about the platform specific part of waking waiting clients up it simply stores a &#39;token&#39; which is later returned to the bridge in order to do the real wakeup.&#160;</p>
+<p class="Element10">
+&#160;</p>
+<p class="Element10">
+The kernel will then trigger <a href="dhd_gpu_bridge_wakeup.html" target="topic">dhd_gpu_bridge_wakeup</a> when it recieves a sync IRQ indicating the HW has finished processing a certain job. On each change of the HW syncid the list of waiting clients is pruned to remove all satisfied clients.</p></div>
+</div>
+</div>
+<!-- End Page Content -->
+
+<!-- Begin Page Footer -->
+<div class="Element93">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="100%">
+<div class="Element3">
+Copyright (c) 2013 All rights reserved for TES Electronic Solutions</div>
+</td></tr><tr><td width="100%">
+<div class="Element4">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="idx.html" target="tocidx">Index</a> | <a href="intro.html" target="topic">Home</a></div>
+</td></tr></table></div>
+
+<!-- End Page Footer -->
+</div>
+</div>
+
+<!-- End Client Area -->
+</body></html>

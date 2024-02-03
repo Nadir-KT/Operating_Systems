@@ -1,0 +1,129 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
+<html>
+<head>
+<title>Kernel Initialisation</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="generator" content="Doc-O-Matic" />
+    <meta http-equiv="Content-Style-Type" content="text/css" />
+    <link rel="STYLESHEET" href="default.css" type="text/css" />
+
+<script type="text/javascript" src="scripts.js"></script>
+<!-- saved from url=(0013)about:internet -->
+</head>
+<body class="Element700" onload="onBodyLoadEx(&#39;index.html&#39;, &#39;topic&#39;, &#39;general_kernel_init.html&#39;);" onmousedown="onBodyMouseDown();">
+
+<!-- Begin Popups -->
+
+<!-- End Popups -->
+
+<!-- Begin Page Header -->
+<div class="Element710" id="areafixed">
+<div class="Element92">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="33%">
+<div class="Element1">
+D/AVE HD Driver - Internal Documentation</div>
+</td><td width="34%">
+<div class="Element2">
+<a href="contents.html" target="tocidx"><img src="btn_globals_contents_midblue.gif" border="0" alt="Contents" title="Contents" onmouseover="switchImage(this, &#39;btn_globals_contents_midblue_hover.gif&#39;);" onmouseout="switchImage(this, &#39;btn_globals_contents_midblue.gif&#39;);" /></a><a href="idx.html" target="tocidx"><img src="btn_globals_index_midblue.gif" border="0" alt="Index" title="Index" onmouseover="switchImage(this, &#39;btn_globals_index_midblue_hover.gif&#39;);" onmouseout="switchImage(this, &#39;btn_globals_index_midblue.gif&#39;);" /></a><a href="intro.html" target="topic"><img src="btn_globals_home_midblue.gif" border="0" alt="Home" title="Home" onmouseover="switchImage(this, &#39;btn_globals_home_midblue_hover.gif&#39;);" onmouseout="switchImage(this, &#39;btn_globals_home_midblue.gif&#39;);" /></a></div>
+</td><td width="33%">
+<div class="Element90">
+<a href="general_porting.html" target="topic"><img src="btn_prev_midblue.gif" border="0" alt="Previous" title="Previous" onmouseover="switchImage(this, &#39;btn_prev_midblue_hover.gif&#39;);" onmouseout="switchImage(this, &#39;btn_prev_midblue.gif&#39;);" /></a><a href="general_porting.html" target="topic"><img src="btn_up_midblue.gif" border="0" alt="Up" title="Up" onmouseover="switchImage(this, &#39;btn_up_midblue_hover.gif&#39;);" onmouseout="switchImage(this, &#39;btn_up_midblue.gif&#39;);" /></a><a href="general_gpuheap.html" target="topic"><img src="btn_next_midblue.gif" border="0" alt="Next" title="Next" onmouseover="switchImage(this, &#39;btn_next_midblue_hover.gif&#39;);" onmouseout="switchImage(this, &#39;btn_next_midblue.gif&#39;);" /></a></div>
+</td></tr></table><div class="Element5">
+Kernel Initialisation</div>
+<div class="Element7">
+<a href="general_porting.html" target="topic">Porting</a> | <a href="#" onclick="sendFeedback('dave_support@tes-dst.com', 'Documentation Feedback', 'Project: D/AVE HD Driver%0ATopic ID: !!General_Kernel_init%0ATitle: Kernel Initialisation');">Send Feedback</a></div>
+</div>
+</div>
+
+<!-- End Page Header -->
+
+<!-- Begin Client Area -->
+<div class="Element720" id="areascroll">
+<div class="Element721">
+
+<!-- Begin Page Content -->
+<div class="Element58">
+<a name="4465736372697074696F6E"></a><div class="Element11">
+<div class="Element10">
+<div class="Element15">
+Kernel mode initialisation</div>
+<p class="Element10">
+&#160;</p>
+<p class="Element10">
+Usually the kernel mode driver should be initialized by the OS at boot time. To ease development and in systems that do not have a real OS the kernel can also be initialized by the application. It is done this way e.g. in the windows drivertest to make testing and debugging the kernel part easier.&#160;</p>
+<p class="Element10">
+&#160;</p>
+<p class="Element10">
+The first steps in kernel initialization are always :&#160;</p>
+<p class="Element10">
+<span class="Element146">dhd_gpu_os_init();</span>&#160;</p>
+<p class="Element10">
+<span class="Element146"><a href="dhd_gpu_bridge_init_server.html" target="topic">dhd_gpu_bridge_init_server</a>();</span>&#160;</p>
+<p class="Element10">
+&#160;</p>
+<p class="Element10">
+This will setup the cpu heap pools (in case pooling is used) and the kernel bridge, which will be the central communication hub for usermode requests. After this is setup gpu_calls can be used. Kernel initialisation will continue by calling <a href="dhd_gpu_init.html" target="topic">dhd_gpu_init</a> for each HW instance. The input is a gpu config description and an integer between 0 and <a href="dhd_max_gpu_count.html" target="topic">DHD_MAX_GPU_COUNT</a> which will identify the HW instance later. The convention is to enumerate existing HW instances so that instance 0 is always present and there is no gap.&#160;</p>
+<p class="Element10">
+&#160;</p>
+<p class="Element10">
+A hardware description basically features the memory mapped register base address, an HW IRQ index, the video ram details and additional parameters specifying <a href="general_job_layout.html" target="topic">job memory layout</a>. All of this is put into a local <a href="dhd_gpu_config_t.html" target="topic">dhd_gpu_config_t</a> type variable, like this : <span class="Element146"><a href="dhd_gpu_config_t.html" target="topic">dhd_gpu_config_t</a> gpu_config;</span>&#160;</p>
+<p class="Element10">
+&#160;</p>
+<p class="Element10">
+<span class="Element146">// init device description</span>&#160;</p>
+<p class="Element10">
+<span class="Element146">gpu_config.m_register_base_address = (void*) REGISTER_BASE;</span>&#160;</p>
+<p class="Element10">
+<span class="Element146">gpu_config.m_irq_index = 0;</span>&#160;</p>
+<p class="Element10">
+<span class="Element146">gpu_config.m_vidmem_base_address = VIDMEM_BASE;</span>&#160;</p>
+<p class="Element10">
+<span class="Element146">gpu_config.m_vidmem_size = VIDMEM_SIZE;</span>&#160;</p>
+<p class="Element10">
+<span class="Element146">gpu_config.m_default_jobsize = 512;</span>&#160;</p>
+<p class="Element10">
+<span class="Element146">gpu_config.m_default_jobcount = 8;</span>&#160;</p>
+<p class="Element10">
+<span class="Element146">gpu_config.m_default_ringsize = 2048;</span>&#160;</p>
+<p class="Element10">
+&#160;</p>
+<p class="Element10">
+Passing the gpu_config to the kernel is not done by calling <a href="dhd_gpu_init.html" target="topic">dhd_gpu_init</a> directly, but via the bridge as a kernel call. Since this is not a regular call from user mode, it will use a bridge handle of 0.&#160;</p>
+<p class="Element10">
+<span class="Element146"><a href="dhd_gpu_call_data_t.html" target="topic">dhd_gpu_call_data_t</a> gpucall;</span>&#160;</p>
+<p class="Element10">
+<span class="Element146">gpucall.m_init.m_instance = 0;</span>&#160;</p>
+<p class="Element10">
+<span class="Element146">gpucall.m_init.m_config = &amp;gpu_config;</span>&#160;</p>
+<p class="Element10">
+<span class="Element146"><a href="dhd_gpu_call.html" target="topic">dhd_gpu_call</a>( 0, E_DHD_CALL_INIT, &amp;gpucall );</span>&#160;</p>
+<p class="Element10">
+&#160;</p>
+<p class="Element10">
+After the <a href="dhd_gpu_call.html" target="topic">dhd_gpu_call</a> has returned with E_DHD_OK the specified kernel instance can be used. Real code definitely should check the return value of <a href="dhd_gpu_call.html" target="topic">dhd_gpu_call</a>.&#160;</p>
+<p class="Element10">
+&#160;</p>
+<p class="Element10">
+Which could e.g. also be E_DHD_ERROR_INVALID_ARGUMENT or E_DHD_ERROR_HW_REVISION_MISMATCH. The latter indicates an incompatibility between hardware and the current driver. In case of an error, the HW revision can be read out from gpucall.m_init.m_version_major_out, gpucall.m_init.m_version_minor_out and gpucall.m_init.m_revision_out. This has been added to ease error reporting as the user can not call <a href="dhd_gpu_query_instance.html" target="topic">dhd_gpu_query_instance</a> without a properly initialized kernel.</p></div>
+</div>
+</div>
+<!-- End Page Content -->
+
+<!-- Begin Page Footer -->
+<div class="Element93">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="100%">
+<div class="Element3">
+Copyright (c) 2013 All rights reserved for TES Electronic Solutions</div>
+</td></tr><tr><td width="100%">
+<div class="Element4">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="idx.html" target="tocidx">Index</a> | <a href="intro.html" target="topic">Home</a></div>
+</td></tr></table></div>
+
+<!-- End Page Footer -->
+</div>
+</div>
+
+<!-- End Client Area -->
+</body></html>

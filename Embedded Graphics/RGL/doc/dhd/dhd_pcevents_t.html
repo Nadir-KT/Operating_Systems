@@ -1,0 +1,519 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
+<html>
+<head>
+<title>dhd_pcevents_t</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="generator" content="Doc-O-Matic" />
+    <meta http-equiv="Content-Style-Type" content="text/css" />
+    <link rel="STYLESHEET" href="default.css" type="text/css" />
+
+<script type="text/javascript" src="scripts.js"></script>
+<!-- saved from url=(0013)about:internet -->
+</head>
+<body class="Element700" onload="onBodyLoadEx(&#39;index.html&#39;, &#39;topic&#39;, &#39;dhd_pcevents_t.html&#39;);" onmousedown="onBodyMouseDown();">
+
+<!-- Begin Popups -->
+
+<!-- End Popups -->
+
+<!-- Begin Page Header -->
+<div class="Element710" id="areafixed">
+<div class="Element92">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="33%">
+<div class="Element1">
+D/AVE HD Driver - Internal Documentation</div>
+</td><td width="34%">
+<div class="Element2">
+<a href="contents.html" target="tocidx"><img src="btn_globals_contents_midblue.gif" border="0" alt="Contents" title="Contents" onmouseover="switchImage(this, &#39;btn_globals_contents_midblue_hover.gif&#39;);" onmouseout="switchImage(this, &#39;btn_globals_contents_midblue.gif&#39;);" /></a><a href="idx.html" target="tocidx"><img src="btn_globals_index_midblue.gif" border="0" alt="Index" title="Index" onmouseover="switchImage(this, &#39;btn_globals_index_midblue_hover.gif&#39;);" onmouseout="switchImage(this, &#39;btn_globals_index_midblue.gif&#39;);" /></a><a href="intro.html" target="topic"><img src="btn_globals_home_midblue.gif" border="0" alt="Home" title="Home" onmouseover="switchImage(this, &#39;btn_globals_home_midblue_hover.gif&#39;);" onmouseout="switchImage(this, &#39;btn_globals_home_midblue.gif&#39;);" /></a></div>
+</td><td width="33%">
+<div class="Element90">
+<a href="dhd_outscale_t.html" target="topic"><img src="btn_prev_midblue.gif" border="0" alt="Previous" title="Previous" onmouseover="switchImage(this, &#39;btn_prev_midblue_hover.gif&#39;);" onmouseout="switchImage(this, &#39;btn_prev_midblue.gif&#39;);" /></a><a href="records_umd.html" target="topic"><img src="btn_up_midblue.gif" border="0" alt="Up" title="Up" onmouseover="switchImage(this, &#39;btn_up_midblue_hover.gif&#39;);" onmouseout="switchImage(this, &#39;btn_up_midblue.gif&#39;);" /></a><a href="dhd_performance_counter_t.html" target="topic"><img src="btn_next_midblue.gif" border="0" alt="Next" title="Next" onmouseover="switchImage(this, &#39;btn_next_midblue_hover.gif&#39;);" onmouseout="switchImage(this, &#39;btn_next_midblue.gif&#39;);" /></a></div>
+</td></tr></table><div class="Element5">
+dhd_pcevents_t</div>
+<div class="Element7">
+<a href="records_umd.html" target="topic">Structs, Records, Enums</a> | <a href="#" onclick="sendFeedback('dave_support@tes-dst.com', 'Documentation Feedback', 'Project: D/AVE HD Driver%0ATopic ID: dhd_pcevents_t%0ATitle: dhd_pcevents_t');">Send Feedback</a></div>
+</div>
+</div>
+
+<!-- End Page Header -->
+
+<!-- Begin Client Area -->
+<div class="Element720" id="areascroll">
+<div class="Element721">
+
+<!-- Begin Page Content -->
+<div class="Element58">
+<a name="53756D6D617279"></a><div class="Element14">
+Summary</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+Performance counter events.</p></div>
+</div>
+<a name="53796E746178"></a><div class="Element99">
+Syntax</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #00008C;">typedef</span></strong> <strong><span style="color: #00008C;">enum</span></strong> <strong><span style="color: #000000;">tagdhd_pcevents</span></strong> {
+  <strong><span style="color: #000000;">E_DHD_PC_STR_FETCH_START</span></strong> = 0,
+  <strong><span style="color: #000000;">E_DHD_PC_STR_BURST_READ</span></strong>,
+  <strong><span style="color: #000000;">E_DHD_PC_STR_WORD_READ</span></strong>,
+  <strong><span style="color: #000000;">E_DHD_PC_STW_BURST_WRITE</span></strong>,
+  <strong><span style="color: #000000;">E_DHD_PC_STW_WORD_WRITE</span></strong>,
+  <strong><span style="color: #000000;">E_DHD_PC_CLR_BURST_WRITE</span></strong>,
+  <strong><span style="color: #000000;">E_DHD_PC_CLR_WORD_WRITE</span></strong>,
+  <strong><span style="color: #000000;">E_DHD_PC_PSU_PRIMITIVE</span></strong>,
+  <strong><span style="color: #000000;">E_DHD_PC_PSU_STRIPE</span></strong>,
+  <strong><span style="color: #000000;">E_DHD_PC_PSU_VISIBLE_PIXEL</span></strong>,
+  <strong><span style="color: #000000;">E_DHD_PC_PSU_INVISIBLE_PIXEL</span></strong>,
+  <strong><span style="color: #000000;">E_DHD_PC_ZSS_SPAN_LENGTH_LIMIT</span></strong>,
+  <strong><span style="color: #000000;">E_DHD_PC_ZSC_BURST_READ</span></strong>,
+  <strong><span style="color: #000000;">E_DHD_PC_ZSC_BURST_WRITE</span></strong>,
+  <strong><span style="color: #000000;">E_DHD_PC_ZSC_WORD_READ</span></strong>,
+  <strong><span style="color: #000000;">E_DHD_PC_ZSC_WORD_WRITE</span></strong>,
+  <strong><span style="color: #000000;">E_DHD_PC_ZSC_PIXEL_READ</span></strong>,
+  <strong><span style="color: #000000;">E_DHD_PC_ZSC_PIXEL_READ_HIT</span></strong>,
+  <strong><span style="color: #000000;">E_DHD_PC_ZSC_PIXEL_READ_WAIT</span></strong>,
+  <strong><span style="color: #000000;">E_DHD_PC_ZSC_PIXEL_WRITE</span></strong>,
+  <strong><span style="color: #000000;">E_DHD_PC_ZSC_SPAN_CONFLICT</span></strong>,
+  <strong><span style="color: #000000;">E_DHD_PC_ZSC_SPAN_CONFLICT_WAIT</span></strong>,
+  <strong><span style="color: #000000;">E_DHD_PC_ZSC_CACHE_FULL_WAIT</span></strong>,
+  <strong><span style="color: #000000;">E_DHD_PC_ZSU_DEPTH_TEST_FAILED</span></strong>,
+  <strong><span style="color: #000000;">E_DHD_PC_ZSU_STENCIL_TEST_FAILED</span></strong>,
+  <strong><span style="color: #000000;">E_DHD_PC_FBD_ALPHA_TEST_FAILED</span></strong>,
+  <strong><span style="color: #000000;">E_DHD_PC_FBS_SPAN_LENGTH_LIMIT</span></strong>,
+  <strong><span style="color: #000000;">E_DHD_PC_FBS_READ_GAP_LIMIT</span></strong>,
+  <strong><span style="color: #000000;">E_DHD_PC_FBC_BURST_READ</span></strong>,
+  <strong><span style="color: #000000;">E_DHD_PC_FBC_BURST_WRITE</span></strong>,
+  <strong><span style="color: #000000;">E_DHD_PC_FBC_WORD_READ</span></strong>,
+  <strong><span style="color: #000000;">E_DHD_PC_FBC_WORD_WRITE</span></strong>,
+  <strong><span style="color: #000000;">E_DHD_PC_FBC_PIXEL_READ</span></strong>,
+  <strong><span style="color: #000000;">E_DHD_PC_FBC_PIXEL_READ_HIT</span></strong>,
+  <strong><span style="color: #000000;">E_DHD_PC_FBC_PIXEL_READ_WAIT</span></strong>,
+  <strong><span style="color: #000000;">E_DHD_PC_FBC_PIXEL_WRITE</span></strong>,
+  <strong><span style="color: #000000;">E_DHD_PC_FBC_SPAN_CONFLICT</span></strong>,
+  <strong><span style="color: #000000;">E_DHD_PC_FBC_SPAN_CONFLICT_WAIT</span></strong>,
+  <strong><span style="color: #000000;">E_DHD_PC_FBC_CACHE_FULL_WAIT</span></strong>,
+  <strong><span style="color: #000000;">E_DHD_PC_TXS_PREFETCH_MISS</span></strong>,
+  <strong><span style="color: #000000;">E_DHD_PC_TXS_REFRESH</span></strong>,
+  <strong><span style="color: #000000;">E_DHD_PC_TXC_BURST_READ</span></strong>,
+  <strong><span style="color: #000000;">E_DHD_PC_TXC_WORD_READ</span></strong>,
+  <strong><span style="color: #000000;">E_DHD_PC_TXC_PIXEL_READ</span></strong>,
+  <strong><span style="color: #000000;">E_DHD_PC_TXC_PIXEL_READ_HIT</span></strong>,
+  <strong><span style="color: #000000;">E_DHD_PC_TXC_PIXEL_READ_FETCH_WAIT</span></strong>,
+  <strong><span style="color: #000000;">E_DHD_PC_TXC_PIXEL_READ_RAM_WAIT</span></strong>,
+  <strong><span style="color: #000000;">E_DHD_PC_TXC_JOB_LINE_READY</span></strong>,
+  <strong><span style="color: #000000;">E_DHD_PC_TXC_JOB_LINE_WAIT</span></strong>,
+  <strong><span style="color: #000000;">E_DHD_PC_RLD_BURST_READ</span></strong>,
+  <strong><span style="color: #000000;">E_DHD_PC_RLD_WORD_READ</span></strong>,
+  <strong><span style="color: #000000;">E_DHD_PC_RLD_REWIND</span></strong>,
+  <strong><span style="color: #000000;">E_DHD_PC_TXP_CLUT_ACCESS_WAIT</span></strong>,
+  <strong><span style="color: #000000;">E_DHD_PC_STC_COMMAND</span></strong>,
+  <strong><span style="color: #000000;">E_DHD_PC_STC_STR_WAIT</span></strong>,
+  <strong><span style="color: #000000;">E_DHD_PC_STC_REG_WAIT</span></strong>,
+  <strong><span style="color: #000000;">E_DHD_PC_STC_COMMAND_WAIT</span></strong>,
+  <strong><span style="color: #000000;">E_DHD_PC_STC_ACTIVE</span></strong>,
+  <strong><span style="color: #000000;">E_DHD_PC_STC_CORE_ACTIVE</span></strong>,
+  <strong><span style="color: #000000;">E_DHD_PC_STC_BUSY</span></strong>,
+  <strong><span style="color: #000000;">E_DHD_PC_STR_BUSY</span></strong>,
+  <strong><span style="color: #000000;">E_DHD_PC_STW_BUSY</span></strong>,
+  <strong><span style="color: #000000;">E_DHD_PC_REG_BUSY</span></strong>,
+  <strong><span style="color: #000000;">E_DHD_PC_PSU_BUSY</span></strong>,
+  <strong><span style="color: #000000;">E_DHD_PC_TXI_BUSY</span></strong>,
+  <strong><span style="color: #000000;">E_DHD_PC_TEX_BUSY</span></strong>,
+  <strong><span style="color: #000000;">E_DHD_PC_COL_BUSY</span></strong>,
+  <strong><span style="color: #000000;">E_DHD_PC_BLEND_BUSY</span></strong>,
+  <strong><span style="color: #000000;">E_DHD_PC_CLEAR_BUSY</span></strong>,
+  <strong><span style="color: #000000;">E_DHD_PC_CLOCK</span></strong>
+} dhd_pcevents_t;</pre></div></div>
+<a name="4D656D62657273"></a><div class="Element14">
+Members</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element272">
+<div class="TableDiv">
+<table cellspacing="0" class="Table4">
+<tr>
+<td class="Element260" valign="top" width="28%">
+<div class="Element261">
+Members&#160;</div></td><td class="Element264" valign="top" width="72%">
+<div class="Element265">
+Description&#160;</div></td></tr><tr>
+<td class="Element262" valign="top" width="28%">
+<div class="Element263">
+E_DHD_PC_STR_FETCH_START&#160;</div></td><td class="Element266" valign="top" width="72%">
+<div class="Element267">
+Stream reader start of fetch event&#160;</div></td></tr><tr>
+<td class="Element262" valign="top" width="28%">
+<div class="Element263">
+E_DHD_PC_STR_BURST_READ&#160;</div></td><td class="Element266" valign="top" width="72%">
+<div class="Element267">
+Stream reader did a burst read on MBI&#160;</div></td></tr><tr>
+<td class="Element262" valign="top" width="28%">
+<div class="Element263">
+E_DHD_PC_STR_WORD_READ&#160;</div></td><td class="Element266" valign="top" width="72%">
+<div class="Element267">
+Stream reader received a word from MBI (1 event for every word in a burst)&#160;</div></td></tr><tr>
+<td class="Element262" valign="top" width="28%">
+<div class="Element263">
+E_DHD_PC_STW_BURST_WRITE&#160;</div></td><td class="Element266" valign="top" width="72%">
+<div class="Element267">
+Stream writer did a burst write on MBI&#160;</div></td></tr><tr>
+<td class="Element262" valign="top" width="28%">
+<div class="Element263">
+E_DHD_PC_STW_WORD_WRITE&#160;</div></td><td class="Element266" valign="top" width="72%">
+<div class="Element267">
+Stream writer did a word write on MBI (1 event for every word in a burst)&#160;</div></td></tr><tr>
+<td class="Element262" valign="top" width="28%">
+<div class="Element263">
+E_DHD_PC_CLR_BURST_WRITE&#160;</div></td><td class="Element266" valign="top" width="72%">
+<div class="Element267">
+Clear unit did a burst write on MBI&#160;</div></td></tr><tr>
+<td class="Element262" valign="top" width="28%">
+<div class="Element263">
+E_DHD_PC_CLR_WORD_WRITE&#160;</div></td><td class="Element266" valign="top" width="72%">
+<div class="Element267">
+Clear unit did a word write on MBI (1 event for every word in a burst)&#160;</div></td></tr><tr>
+<td class="Element262" valign="top" width="28%">
+<div class="Element263">
+E_DHD_PC_PSU_PRIMITIVE&#160;</div></td><td class="Element266" valign="top" width="72%">
+<div class="Element267">
+New primitive enumerated&#160;</div></td></tr><tr>
+<td class="Element262" valign="top" width="28%">
+<div class="Element263">
+E_DHD_PC_PSU_STRIPE&#160;</div></td><td class="Element266" valign="top" width="72%">
+<div class="Element267">
+New stripe enumerated&#160;</div></td></tr><tr>
+<td class="Element262" valign="top" width="28%">
+<div class="Element263">
+E_DHD_PC_PSU_VISIBLE_PIXEL&#160;</div></td><td class="Element266" valign="top" width="72%">
+<div class="Element267">
+Visible pixel enumerated&#160;</div></td></tr><tr>
+<td class="Element262" valign="top" width="28%">
+<div class="Element263">
+E_DHD_PC_PSU_INVISIBLE_PIXEL&#160;</div></td><td class="Element266" valign="top" width="72%">
+<div class="Element267">
+Invisible pixel enumerated&#160;</div></td></tr><tr>
+<td class="Element262" valign="top" width="28%">
+<div class="Element263">
+E_DHD_PC_ZSS_SPAN_LENGTH_LIMIT&#160;</div></td><td class="Element266" valign="top" width="72%">
+<div class="Element267">
+ZSA buffer span split due to span length limit reached&#160;</div></td></tr><tr>
+<td class="Element262" valign="top" width="28%">
+<div class="Element263">
+E_DHD_PC_ZSC_BURST_READ&#160;</div></td><td class="Element266" valign="top" width="72%">
+<div class="Element267">
+ZSA buffer cache did a burst read on MBI&#160;</div></td></tr><tr>
+<td class="Element262" valign="top" width="28%">
+<div class="Element263">
+E_DHD_PC_ZSC_BURST_WRITE&#160;</div></td><td class="Element266" valign="top" width="72%">
+<div class="Element267">
+ZSA buffer cache did a burst write on MBI&#160;</div></td></tr><tr>
+<td class="Element262" valign="top" width="28%">
+<div class="Element263">
+E_DHD_PC_ZSC_WORD_READ&#160;</div></td><td class="Element266" valign="top" width="72%">
+<div class="Element267">
+ZSA buffer cache received a word from MBI (1 event for every word in a burst)&#160;</div></td></tr><tr>
+<td class="Element262" valign="top" width="28%">
+<div class="Element263">
+E_DHD_PC_ZSC_WORD_WRITE&#160;</div></td><td class="Element266" valign="top" width="72%">
+<div class="Element267">
+ZSA buffer cache did a word write on MBI (1 event for every word in a burst)&#160;</div></td></tr><tr>
+<td class="Element262" valign="top" width="28%">
+<div class="Element263">
+E_DHD_PC_ZSC_PIXEL_READ&#160;</div></td><td class="Element266" valign="top" width="72%">
+<div class="Element267">
+ZSA buffer cache processed a pixel read&#160;</div></td></tr><tr>
+<td class="Element262" valign="top" width="28%">
+<div class="Element263">
+E_DHD_PC_ZSC_PIXEL_READ_HIT&#160;</div></td><td class="Element266" valign="top" width="72%">
+<div class="Element267">
+ZSA buffer cache processed a read without any wait cycle&#160;</div></td></tr><tr>
+<td class="Element262" valign="top" width="28%">
+<div class="Element263">
+E_DHD_PC_ZSC_PIXEL_READ_WAIT&#160;</div></td><td class="Element266" valign="top" width="72%">
+<div class="Element267">
+ZSA buffer cache wait cycles on read side (&gt;= 1 event per miss)&#160;</div></td></tr><tr>
+<td class="Element262" valign="top" width="28%">
+<div class="Element263">
+E_DHD_PC_ZSC_PIXEL_WRITE&#160;</div></td><td class="Element266" valign="top" width="72%">
+<div class="Element267">
+ZSA buffer cache processed a pixel write&#160;</div></td></tr><tr>
+<td class="Element262" valign="top" width="28%">
+<div class="Element263">
+E_DHD_PC_ZSC_SPAN_CONFLICT&#160;</div></td><td class="Element266" valign="top" width="72%">
+<div class="Element267">
+ZSA buffer span conflict occured between new job requiring a read and a line already in the ZSA cache: Read range of new job overlaps write range of open line.&#160;</div></td></tr><tr>
+<td class="Element262" valign="top" width="28%">
+<div class="Element263">
+E_DHD_PC_ZSC_SPAN_CONFLICT_WAIT&#160;</div></td><td class="Element266" valign="top" width="72%">
+<div class="Element267">
+Wait cycles at ZSA buffer prefetch queue interface due to span conflict.&#160;</div></td></tr><tr>
+<td class="Element262" valign="top" width="28%">
+<div class="Element263">
+E_DHD_PC_ZSC_CACHE_FULL_WAIT&#160;</div></td><td class="Element266" valign="top" width="72%">
+<div class="Element267">
+Wait cycles at ZSA buffer prefetch queue interface because line could not be allocated as there is no unused line available.&#160;</div></td></tr><tr>
+<td class="Element262" valign="top" width="28%">
+<div class="Element263">
+E_DHD_PC_ZSU_DEPTH_TEST_FAILED&#160;</div></td><td class="Element266" valign="top" width="72%">
+<div class="Element267">
+Pixel failed depth test&#160;</div></td></tr><tr>
+<td class="Element262" valign="top" width="28%">
+<div class="Element263">
+E_DHD_PC_ZSU_STENCIL_TEST_FAILED&#160;</div></td><td class="Element266" valign="top" width="72%">
+<div class="Element267">
+Pixel failed stencil test&#160;</div></td></tr><tr>
+<td class="Element262" valign="top" width="28%">
+<div class="Element263">
+E_DHD_PC_FBD_ALPHA_TEST_FAILED&#160;</div></td><td class="Element266" valign="top" width="72%">
+<div class="Element267">
+Pixel dropped through alpha test&#160;</div></td></tr><tr>
+<td class="Element262" valign="top" width="28%">
+<div class="Element263">
+E_DHD_PC_FBS_SPAN_LENGTH_LIMIT&#160;</div></td><td class="Element266" valign="top" width="72%">
+<div class="Element267">
+Span split due to span length limit reached&#160;</div></td></tr><tr>
+<td class="Element262" valign="top" width="28%">
+<div class="Element263">
+E_DHD_PC_FBS_READ_GAP_LIMIT&#160;</div></td><td class="Element266" valign="top" width="72%">
+<div class="Element267">
+Span split due to read gap limit reached&#160;</div></td></tr><tr>
+<td class="Element262" valign="top" width="28%">
+<div class="Element263">
+E_DHD_PC_FBC_BURST_READ&#160;</div></td><td class="Element266" valign="top" width="72%">
+<div class="Element267">
+Framebuffer cache did a burst read on MBI&#160;</div></td></tr><tr>
+<td class="Element262" valign="top" width="28%">
+<div class="Element263">
+E_DHD_PC_FBC_BURST_WRITE&#160;</div></td><td class="Element266" valign="top" width="72%">
+<div class="Element267">
+Framebuffer cache did a burst write on MBI&#160;</div></td></tr><tr>
+<td class="Element262" valign="top" width="28%">
+<div class="Element263">
+E_DHD_PC_FBC_WORD_READ&#160;</div></td><td class="Element266" valign="top" width="72%">
+<div class="Element267">
+Framebuffer cache received a word from MBI (1 event for every word in a burst)&#160;</div></td></tr><tr>
+<td class="Element262" valign="top" width="28%">
+<div class="Element263">
+E_DHD_PC_FBC_WORD_WRITE&#160;</div></td><td class="Element266" valign="top" width="72%">
+<div class="Element267">
+Framebuffer cache did a word write on MBI (1 event for every word in a burst)&#160;</div></td></tr><tr>
+<td class="Element262" valign="top" width="28%">
+<div class="Element263">
+E_DHD_PC_FBC_PIXEL_READ&#160;</div></td><td class="Element266" valign="top" width="72%">
+<div class="Element267">
+Framebuffer cache processed a pixel read&#160;</div></td></tr><tr>
+<td class="Element262" valign="top" width="28%">
+<div class="Element263">
+E_DHD_PC_FBC_PIXEL_READ_HIT&#160;</div></td><td class="Element266" valign="top" width="72%">
+<div class="Element267">
+Framebuffer cache processed a read without any wait cycle&#160;</div></td></tr><tr>
+<td class="Element262" valign="top" width="28%">
+<div class="Element263">
+E_DHD_PC_FBC_PIXEL_READ_WAIT&#160;</div></td><td class="Element266" valign="top" width="72%">
+<div class="Element267">
+Framebuffer cache wait cycles on read side (&gt;= 1 event per miss)&#160;</div></td></tr><tr>
+<td class="Element262" valign="top" width="28%">
+<div class="Element263">
+E_DHD_PC_FBC_PIXEL_WRITE&#160;</div></td><td class="Element266" valign="top" width="72%">
+<div class="Element267">
+Framebuffer cache processed a pixel write&#160;</div></td></tr><tr>
+<td class="Element262" valign="top" width="28%">
+<div class="Element263">
+E_DHD_PC_FBC_SPAN_CONFLICT&#160;</div></td><td class="Element266" valign="top" width="72%">
+<div class="Element267">
+Span conflict occured between new job requiring a read and a line already in the framebuffer cache: Read range of new job overlaps write range of open line.&#160;</div></td></tr><tr>
+<td class="Element262" valign="top" width="28%">
+<div class="Element263">
+E_DHD_PC_FBC_SPAN_CONFLICT_WAIT&#160;</div></td><td class="Element266" valign="top" width="72%">
+<div class="Element267">
+Wait cycles at prefetch queue interface due to span conflict.&#160;</div></td></tr><tr>
+<td class="Element262" valign="top" width="28%">
+<div class="Element263">
+E_DHD_PC_FBC_CACHE_FULL_WAIT&#160;</div></td><td class="Element266" valign="top" width="72%">
+<div class="Element267">
+Wait cycles at prefetch queue interface because line could not be allocated as there is no unused line available.&#160;</div></td></tr><tr>
+<td class="Element262" valign="top" width="28%">
+<div class="Element263">
+E_DHD_PC_TXS_PREFETCH_MISS&#160;</div></td><td class="Element266" valign="top" width="72%">
+<div class="Element267">
+Cache miss in the in the prefetching texture cache scheduler&#160;</div></td></tr><tr>
+<td class="Element262" valign="top" width="28%">
+<div class="Element263">
+E_DHD_PC_TXS_REFRESH&#160;</div></td><td class="Element266" valign="top" width="72%">
+<div class="Element267">
+Line refresh job sent from texel schedule to texture cache&#160;</div></td></tr><tr>
+<td class="Element262" valign="top" width="28%">
+<div class="Element263">
+E_DHD_PC_TXC_BURST_READ&#160;</div></td><td class="Element266" valign="top" width="72%">
+<div class="Element267">
+Texture cache did a burst read on MBI&#160;</div></td></tr><tr>
+<td class="Element262" valign="top" width="28%">
+<div class="Element263">
+E_DHD_PC_TXC_WORD_READ&#160;</div></td><td class="Element266" valign="top" width="72%">
+<div class="Element267">
+Texture cache received a word from MBI (1 event for every word in a burst)&#160;</div></td></tr><tr>
+<td class="Element262" valign="top" width="28%">
+<div class="Element263">
+E_DHD_PC_TXC_PIXEL_READ&#160;</div></td><td class="Element266" valign="top" width="72%">
+<div class="Element267">
+Texture cache processed a pixel read (i.e.&#160;</div></td></tr><tr>
+<td class="Element262" valign="top" width="28%">
+<div class="Element263">
+E_DHD_PC_TXC_PIXEL_READ_HIT&#160;</div></td><td class="Element266" valign="top" width="72%">
+<div class="Element267">
+Texture cache processed a pixel read without the need to wait for a fetch.&#160;</div></td></tr><tr>
+<td class="Element262" valign="top" width="28%">
+<div class="Element263">
+E_DHD_PC_TXC_PIXEL_READ_FETCH_WAIT&#160;</div></td><td class="Element266" valign="top" width="72%">
+<div class="Element267">
+Wait cycles at pipeline read interface because of wait for line to be fetched.&#160;</div></td></tr><tr>
+<td class="Element262" valign="top" width="28%">
+<div class="Element263">
+E_DHD_PC_TXC_PIXEL_READ_RAM_WAIT&#160;</div></td><td class="Element266" valign="top" width="72%">
+<div class="Element267">
+Wait cycles inserted in pipeline read path because read RAM needed to be accessed more than once and prefetch was not successful.&#160;</div></td></tr><tr>
+<td class="Element262" valign="top" width="28%">
+<div class="Element263">
+E_DHD_PC_TXC_JOB_LINE_READY&#160;</div></td><td class="Element266" valign="top" width="72%">
+<div class="Element267">
+A job was taken from the prefetch queue without the need to wait for the access count to reach the replace count.&#160;</div></td></tr><tr>
+<td class="Element262" valign="top" width="28%">
+<div class="Element263">
+E_DHD_PC_TXC_JOB_LINE_WAIT&#160;</div></td><td class="Element266" valign="top" width="72%">
+<div class="Element267">
+Wait cycles at prefetch queue interface because job could not be fetched as the access count had not yet reached the replace count.&#160;</div></td></tr><tr>
+<td class="Element262" valign="top" width="28%">
+<div class="Element263">
+E_DHD_PC_RLD_BURST_READ&#160;</div></td><td class="Element266" valign="top" width="72%">
+<div class="Element267">
+RLD did a burst read on MBI&#160;</div></td></tr><tr>
+<td class="Element262" valign="top" width="28%">
+<div class="Element263">
+E_DHD_PC_RLD_WORD_READ&#160;</div></td><td class="Element266" valign="top" width="72%">
+<div class="Element267">
+RLD did a word read on MBI (1 event for every word in a burst)&#160;</div></td></tr><tr>
+<td class="Element262" valign="top" width="28%">
+<div class="Element263">
+E_DHD_PC_RLD_REWIND&#160;</div></td><td class="Element266" valign="top" width="72%">
+<div class="Element267">
+RLD rewinds to start of texture code&#160;</div></td></tr><tr>
+<td class="Element262" valign="top" width="28%">
+<div class="Element263">
+E_DHD_PC_TXP_CLUT_ACCESS_WAIT&#160;</div></td><td class="Element266" valign="top" width="72%">
+<div class="Element267">
+Wait cycles when accessing CLUT: Count every additional cycle of CLUT access which exceeds the optimal throughput of 1 cycle/pixel.&#160;</div></td></tr><tr>
+<td class="Element262" valign="top" width="28%">
+<div class="Element263">
+E_DHD_PC_STC_COMMAND&#160;</div></td><td class="Element266" valign="top" width="72%">
+<div class="Element267">
+Finished execution of a stream command&#160;</div></td></tr><tr>
+<td class="Element262" valign="top" width="28%">
+<div class="Element263">
+E_DHD_PC_STC_STR_WAIT&#160;</div></td><td class="Element266" valign="top" width="72%">
+<div class="Element267">
+Wait cycles when STC waits for data from STR&#160;</div></td></tr><tr>
+<td class="Element262" valign="top" width="28%">
+<div class="Element263">
+E_DHD_PC_STC_REG_WAIT&#160;</div></td><td class="Element266" valign="top" width="72%">
+<div class="Element267">
+Wait cycles when STC waits for register write acknowledge from register file&#160;</div></td></tr><tr>
+<td class="Element262" valign="top" width="28%">
+<div class="Element263">
+E_DHD_PC_STC_COMMAND_WAIT&#160;</div></td><td class="Element266" valign="top" width="72%">
+<div class="Element267">
+Wait cycles when STC waits because of wait command&#160;</div></td></tr><tr>
+<td class="Element262" valign="top" width="28%">
+<div class="Element263">
+E_DHD_PC_STC_ACTIVE&#160;</div></td><td class="Element266" valign="top" width="72%">
+<div class="Element267">
+Active cycles of the STC while not in pause-reached mode&#160;</div></td></tr><tr>
+<td class="Element262" valign="top" width="28%">
+<div class="Element263">
+E_DHD_PC_STC_CORE_ACTIVE&#160;</div></td><td class="Element266" valign="top" width="72%">
+<div class="Element267">
+Active cycles of the STC-Core only when the ACG would be enabled&#160;</div></td></tr><tr>
+<td class="Element262" valign="top" width="28%">
+<div class="Element263">
+E_DHD_PC_STC_BUSY&#160;</div></td><td class="Element266" valign="top" width="72%">
+<div class="Element267">
+Busy cycles of STC&#160;</div></td></tr><tr>
+<td class="Element262" valign="top" width="28%">
+<div class="Element263">
+E_DHD_PC_STR_BUSY&#160;</div></td><td class="Element266" valign="top" width="72%">
+<div class="Element267">
+Busy cycles of STR&#160;</div></td></tr><tr>
+<td class="Element262" valign="top" width="28%">
+<div class="Element263">
+E_DHD_PC_STW_BUSY&#160;</div></td><td class="Element266" valign="top" width="72%">
+<div class="Element267">
+Busy cycles of STW&#160;</div></td></tr><tr>
+<td class="Element262" valign="top" width="28%">
+<div class="Element263">
+E_DHD_PC_REG_BUSY&#160;</div></td><td class="Element266" valign="top" width="72%">
+<div class="Element267">
+Busy cycles of REG&#160;</div></td></tr><tr>
+<td class="Element262" valign="top" width="28%">
+<div class="Element263">
+E_DHD_PC_PSU_BUSY&#160;</div></td><td class="Element266" valign="top" width="72%">
+<div class="Element267">
+Busy cycles of PSU&#160;</div></td></tr><tr>
+<td class="Element262" valign="top" width="28%">
+<div class="Element263">
+E_DHD_PC_TXI_BUSY&#160;</div></td><td class="Element266" valign="top" width="72%">
+<div class="Element267">
+Busy cycles of modules after PSU, up to ZSS&#160;</div></td></tr><tr>
+<td class="Element262" valign="top" width="28%">
+<div class="Element263">
+E_DHD_PC_TEX_BUSY&#160;</div></td><td class="Element266" valign="top" width="72%">
+<div class="Element267">
+Busy cycles of modules after ZSS, up to TXS&#160;</div></td></tr><tr>
+<td class="Element262" valign="top" width="28%">
+<div class="Element263">
+E_DHD_PC_COL_BUSY&#160;</div></td><td class="Element266" valign="top" width="72%">
+<div class="Element267">
+Busy cycles of modules after TXS, up to FBS&#160;</div></td></tr><tr>
+<td class="Element262" valign="top" width="28%">
+<div class="Element263">
+E_DHD_PC_BLEND_BUSY&#160;</div></td><td class="Element266" valign="top" width="72%">
+<div class="Element267">
+Busy cycles of modules after FBS, up to FBC&#160;</div></td></tr><tr>
+<td class="Element262" valign="top" width="28%">
+<div class="Element263">
+E_DHD_PC_CLEAR_BUSY&#160;</div></td><td class="Element266" valign="top" width="72%">
+<div class="Element267">
+Busy cycles of clear unit&#160;</div></td></tr><tr>
+<td class="Element262" valign="top" width="28%">
+<div class="Element263">
+E_DHD_PC_CLOCK&#160;</div></td><td class="Element266" valign="top" width="72%">
+<div class="Element267">
+Every clock cycle&#160;</div></td></tr></table></div></div>
+</div>
+</div>
+<a name="46696C65"></a><div class="Element14">
+File</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+davehd_driver.h</p></div>
+</div>
+</div>
+<!-- End Page Content -->
+
+<!-- Begin Page Footer -->
+<div class="Element93">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="100%">
+<div class="Element3">
+Copyright (c) 2013 All rights reserved for TES Electronic Solutions</div>
+</td></tr><tr><td width="100%">
+<div class="Element4">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="idx.html" target="tocidx">Index</a> | <a href="intro.html" target="topic">Home</a></div>
+</td></tr></table></div>
+
+<!-- End Page Footer -->
+</div>
+</div>
+
+<!-- End Client Area -->
+</body></html>

@@ -1,0 +1,180 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
+<html>
+<head>
+<title>Memory Pooling</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="generator" content="Doc-O-Matic" />
+    <meta http-equiv="Content-Style-Type" content="text/css" />
+    <link rel="STYLESHEET" href="default.css" type="text/css" />
+
+<script type="text/javascript" src="scripts.js"></script>
+<!-- saved from url=(0013)about:internet -->
+</head>
+<body class="Element700" onload="onBodyLoadEx(&#39;index.html&#39;, &#39;topic&#39;, &#39;general_memory_pooling.html&#39;);" onmousedown="onBodyMouseDown();">
+
+<!-- Begin Popups -->
+
+<!-- End Popups -->
+
+<!-- Begin Page Header -->
+<div class="Element710" id="areafixed">
+<div class="Element92">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="33%">
+<div class="Element1">
+D/AVE HD Driver - Internal Documentation</div>
+</td><td width="34%">
+<div class="Element2">
+<a href="contents.html" target="tocidx"><img src="btn_globals_contents_midblue.gif" border="0" alt="Contents" title="Contents" onmouseover="switchImage(this, &#39;btn_globals_contents_midblue_hover.gif&#39;);" onmouseout="switchImage(this, &#39;btn_globals_contents_midblue.gif&#39;);" /></a><a href="idx.html" target="tocidx"><img src="btn_globals_index_midblue.gif" border="0" alt="Index" title="Index" onmouseover="switchImage(this, &#39;btn_globals_index_midblue_hover.gif&#39;);" onmouseout="switchImage(this, &#39;btn_globals_index_midblue.gif&#39;);" /></a><a href="intro.html" target="topic"><img src="btn_globals_home_midblue.gif" border="0" alt="Home" title="Home" onmouseover="switchImage(this, &#39;btn_globals_home_midblue_hover.gif&#39;);" onmouseout="switchImage(this, &#39;btn_globals_home_midblue.gif&#39;);" /></a></div>
+</td><td width="33%">
+<div class="Element90">
+<a href="general_job_scheduler.html" target="topic"><img src="btn_prev_midblue.gif" border="0" alt="Previous" title="Previous" onmouseover="switchImage(this, &#39;btn_prev_midblue_hover.gif&#39;);" onmouseout="switchImage(this, &#39;btn_prev_midblue.gif&#39;);" /></a><a href="advanced.html" target="topic"><img src="btn_up_midblue.gif" border="0" alt="Up" title="Up" onmouseover="switchImage(this, &#39;btn_up_midblue_hover.gif&#39;);" onmouseout="switchImage(this, &#39;btn_up_midblue.gif&#39;);" /></a><a href="general_settings.html" target="topic"><img src="btn_next_midblue.gif" border="0" alt="Next" title="Next" onmouseover="switchImage(this, &#39;btn_next_midblue_hover.gif&#39;);" onmouseout="switchImage(this, &#39;btn_next_midblue.gif&#39;);" /></a></div>
+</td></tr></table><div class="Element5">
+Memory Pooling</div>
+<div class="Element7">
+<a href="advanced.html" target="topic">Advanced</a> | <a href="#" onclick="sendFeedback('dave_support@tes-dst.com', 'Documentation Feedback', 'Project: D/AVE HD Driver%0ATopic ID: !!General_Memory_Pooling%0ATitle: Memory Pooling');">Send Feedback</a></div>
+</div>
+</div>
+
+<!-- End Page Header -->
+
+<!-- Begin Client Area -->
+<div class="Element720" id="areascroll">
+<div class="Element721">
+
+<!-- Begin Page Content -->
+<div class="Element58">
+<a name="4465736372697074696F6E"></a><div class="Element11">
+<div class="Element10">
+<div class="Element15">
+Details on memory pools</div>
+<p class="Element10">
+&#160;</p>
+<p class="Element10">
+Memory pooling can be enabled to prevent the driver from allocating cpu memory at runtime. Pooling can be enabled separately for kernel mode and user mode driver.&#160;</p>
+<p class="Element10">
+The recommended setting is to use kernel memory pooling, but to use dynamic memory in the user mode part (on most platforms a standard allocator will be available in the user mode driver.)&#160;</p>
+<p class="Element10">
+&#160;</p><div class="Element15">
+User Mode Pooling</div>
+<p class="Element10">
+&#160;</p>
+<p class="Element10">
+User mode memory pooling prevents the user mode driver from using dynamic memory allocation. It can be enabled by defining <a href="dhd_user_use_pooling.html" target="topic">DHD_USER_USE_POOLING</a> in davehd_settings.h. The following settings affect the pool sizes and have to be respected in the platform dependent pool initialisation (<a href="dhd_alloc_setup_pool.html" target="topic">dhd_alloc_setup_pool</a>()/<a href="dhd_alloc_shutdown_pool.html" target="topic">dhd_alloc_shutdown_pool</a>()):</p>
+<ul class="Element630">
+<li class="Element600"><a href="dhd_max_user_buffers.html" target="topic">DHD_MAX_USER_BUFFERS</a></li>
+<li class="Element600"><a href="dhd_max_user_jobs.html" target="topic">DHD_MAX_USER_JOBS</a></li>
+<li class="Element600"><a href="dhd_max_user_shadow.html" target="topic">DHD_MAX_USER_SHADOW</a></li>
+</ul><p class="Element10">
+&#160;</p>
+<p class="Element10">
+<a href="dhd_alloc_setup_pool.html" target="topic">dhd_alloc_setup_pool</a>() is called during <a href="dhd_os_init.html" target="topic">dhd_os_init</a>() once for each pool type. It returns a memory block for the requested element. The memory block should be large enough to hold the number of elements specified in the table below. The size of an element can be queried using dhd_get_alloc_size(). </p><div class="Element63">
+<div class="TableDiv">
+<table cellspacing="0" class="Table1">
+<tr>
+<td class="Element65" valign="top" width="15%">
+<div class="Element66">
+element&#160;</div></td><td class="Element65" valign="top" width="40%">
+<div class="Element66">
+element count&#160;</div></td><td class="Element65" valign="top" width="46%">
+<div class="Element66">
+purpose&#160;</div></td></tr><tr>
+<td class="Element67" valign="top" width="15%">
+<div class="Element68">
+E_DHD_ALLOC_CLINE&#160;</div></td><td class="Element67" valign="top" width="40%">
+<div class="Element68">
+<a href="dhd_max_user_shadow.html" target="topic">DHD_MAX_USER_SHADOW</a><br /><strong>Note:</strong> this is not an element count but the requested size of the shadow buffer.&#160;</div></td><td class="Element67" valign="top" width="46%">
+<div class="Element68">
+Used to store shadow buffers. Should be at least as big as the biggest possible/expected buffer.&#160;</div></td></tr><tr>
+<td class="Element67" valign="top" width="15%">
+<div class="Element68">
+E_DHD_ALLOC_BUFFER&#160;</div></td><td class="Element67" valign="top" width="40%">
+<div class="Element68">
+<a href="dhd_max_user_buffers.html" target="topic">DHD_MAX_USER_BUFFERS</a>&#160;</div></td><td class="Element67" valign="top" width="46%">
+<div class="Element68">
+Used to store internal information of user buffers.&#160;</div></td></tr><tr>
+<td class="Element67" valign="top" width="15%">
+<div class="Element68">
+E_DHD_ALLOC_GPUJOB&#160;</div></td><td class="Element67" valign="top" width="40%">
+<div class="Element68">
+<a href="dhd_max_user_jobs.html" target="topic">DHD_MAX_USER_JOBS</a>&#160;</div></td><td class="Element67" valign="top" width="46%">
+<div class="Element68">
+Used to store job information.&#160;</div></td></tr></table></div></div>
+<p class="Element10">
+&#160;</p>
+<p class="Element10">
+&#160;</p>
+<div class="Element15">
+Kernel Mode Pooling</div>
+<p class="Element10">
+&#160;</p>
+<p class="Element10">
+Kernel memory pooling prevents the kernel mode driver from using dynamic memory allocation. It can be enabled by defining <a href="dhd_kernel_use_pooling.html" target="topic">DHD_KERNEL_USE_POOLING</a> in davehd_settings.h. The following settings affect the pool sizes and have to be respected in the platform dependent pool initialisation (<a href="dhd_kalloc_setup_pool.html" target="topic">dhd_kalloc_setup_pool</a>()/<a href="dhd_kalloc_shutdown_pool.html" target="topic">dhd_kalloc_shutdown_pool</a>()):</p>
+<ul class="Element630">
+<li class="Element600"><a href="dhd_max_vidmem_chunks.html" target="topic">DHD_MAX_VIDMEM_CHUNKS</a></li>
+<li class="Element600"><a href="dhd_max_kernel_clients.html" target="topic">DHD_MAX_KERNEL_CLIENTS</a></li>
+<li class="Element600"><a href="dhd_max_gpu_count.html" target="topic">DHD_MAX_GPU_COUNT</a></li>
+</ul><p class="Element10">
+&#160;</p>
+<p class="Element10">
+<a href="dhd_kalloc_setup_pool.html" target="topic">dhd_kalloc_setup_pool</a>() is called during dhd_gpu_os_init() once for each pool type. It returns a memory block for the requested element. The memory block should be large enough to hold the number of elements specified in the table below. The size of an element can be queried using dhd_get_kalloc_size(). </p><div class="Element63">
+<div class="TableDiv">
+<table cellspacing="0" class="Table1">
+<tr>
+<td class="Element65" valign="top" width="17%">
+<div class="Element66">
+element&#160;</div></td><td class="Element65" valign="top" width="17%">
+<div class="Element66">
+element count&#160;</div></td><td class="Element65" valign="top" width="66%">
+<div class="Element66">
+purpose&#160;</div></td></tr><tr>
+<td class="Element67" valign="top" width="17%">
+<div class="Element68">
+E_DHD_KALLOC_STATESTORE&#160;</div></td><td class="Element67" valign="top" width="17%">
+<div class="Element68">
+<a href="dhd_max_kernel_clients.html" target="topic">DHD_MAX_KERNEL_CLIENTS</a>&#160;</div></td><td class="Element67" valign="top" width="66%">
+<div class="Element68">
+Used to store metadata for state storing (the actual state will be stored in video ram).&#160;</div></td></tr><tr>
+<td class="Element67" valign="top" width="17%">
+<div class="Element68">
+E_DHD_KALLOC_CONNECTION&#160;</div></td><td class="Element67" valign="top" width="17%">
+<div class="Element68">
+<a href="dhd_max_kernel_clients.html" target="topic">DHD_MAX_KERNEL_CLIENTS</a>&#160;</div></td><td class="Element67" valign="top" width="66%">
+<div class="Element68">
+Used to store information about a specific connection from user mode.&#160;</div></td></tr><tr>
+<td class="Element67" valign="top" width="17%">
+<div class="Element68">
+E_DHD_KALLOC_VMEMBLOCK&#160;</div></td><td class="Element67" valign="top" width="17%">
+<div class="Element68">
+<a href="dhd_max_vidmem_chunks.html" target="topic">DHD_MAX_VIDMEM_CHUNKS</a>&#160;</div></td><td class="Element67" valign="top" width="66%">
+<div class="Element68">
+Used by the video ram allocator for storing information about each memory block (see also <a href="general_gpuheap.html" target="topic">GPU Heap</a>).&#160;</div></td></tr><tr>
+<td class="Element67" valign="top" width="17%">
+<div class="Element68">
+E_DHD_KALLOC_VMEMHEAP&#160;</div></td><td class="Element67" valign="top" width="17%">
+<div class="Element68">
+<a href="dhd_max_gpu_count.html" target="topic">DHD_MAX_GPU_COUNT</a>&#160;</div></td><td class="Element67" valign="top" width="66%">
+<div class="Element68">
+Used by the video ram allocator for associating a heap with each gpu instance.&#160;</div></td></tr></table></div></div>
+</div>
+</div>
+</div>
+<!-- End Page Content -->
+
+<!-- Begin Page Footer -->
+<div class="Element93">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="100%">
+<div class="Element3">
+Copyright (c) 2013 All rights reserved for TES Electronic Solutions</div>
+</td></tr><tr><td width="100%">
+<div class="Element4">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="idx.html" target="tocidx">Index</a> | <a href="intro.html" target="topic">Home</a></div>
+</td></tr></table></div>
+
+<!-- End Page Footer -->
+</div>
+</div>
+
+<!-- End Client Area -->
+</body></html>

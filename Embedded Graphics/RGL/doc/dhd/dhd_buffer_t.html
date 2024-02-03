@@ -1,0 +1,160 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
+<html>
+<head>
+<title>dhd_buffer_t</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="generator" content="Doc-O-Matic" />
+    <meta http-equiv="Content-Style-Type" content="text/css" />
+    <link rel="STYLESHEET" href="default.css" type="text/css" />
+
+<script type="text/javascript" src="scripts.js"></script>
+<!-- saved from url=(0013)about:internet -->
+</head>
+<body class="Element700" onload="onBodyLoadEx(&#39;index.html&#39;, &#39;topic&#39;, &#39;dhd_buffer_t.html&#39;);" onmousedown="onBodyMouseDown();">
+
+<!-- Begin Popups -->
+
+<!-- End Popups -->
+
+<!-- Begin Page Header -->
+<div class="Element710" id="areafixed">
+<div class="Element92">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="33%">
+<div class="Element1">
+D/AVE HD Driver - Internal Documentation</div>
+</td><td width="34%">
+<div class="Element2">
+<a href="contents.html" target="tocidx"><img src="btn_globals_contents_midblue.gif" border="0" alt="Contents" title="Contents" onmouseover="switchImage(this, &#39;btn_globals_contents_midblue_hover.gif&#39;);" onmouseout="switchImage(this, &#39;btn_globals_contents_midblue.gif&#39;);" /></a><a href="idx.html" target="tocidx"><img src="btn_globals_index_midblue.gif" border="0" alt="Index" title="Index" onmouseover="switchImage(this, &#39;btn_globals_index_midblue_hover.gif&#39;);" onmouseout="switchImage(this, &#39;btn_globals_index_midblue.gif&#39;);" /></a><a href="intro.html" target="topic"><img src="btn_globals_home_midblue.gif" border="0" alt="Home" title="Home" onmouseover="switchImage(this, &#39;btn_globals_home_midblue_hover.gif&#39;);" onmouseout="switchImage(this, &#39;btn_globals_home_midblue.gif&#39;);" /></a></div>
+</td><td width="33%">
+<div class="Element90">
+<a href="dhd_buffer_flags_t.html" target="topic"><img src="btn_prev_midblue.gif" border="0" alt="Previous" title="Previous" onmouseover="switchImage(this, &#39;btn_prev_midblue_hover.gif&#39;);" onmouseout="switchImage(this, &#39;btn_prev_midblue.gif&#39;);" /></a><a href="records_umd.html" target="topic"><img src="btn_up_midblue.gif" border="0" alt="Up" title="Up" onmouseover="switchImage(this, &#39;btn_up_midblue_hover.gif&#39;);" onmouseout="switchImage(this, &#39;btn_up_midblue.gif&#39;);" /></a><a href="dhd_channel_select_t.html" target="topic"><img src="btn_next_midblue.gif" border="0" alt="Next" title="Next" onmouseover="switchImage(this, &#39;btn_next_midblue_hover.gif&#39;);" onmouseout="switchImage(this, &#39;btn_next_midblue.gif&#39;);" /></a></div>
+</td></tr></table><div class="Element5">
+dhd_buffer_t</div>
+<div class="Element7">
+<a href="records_umd.html" target="topic">Structs, Records, Enums</a> | <a href="#" onclick="sendFeedback('dave_support@tes-dst.com', 'Documentation Feedback', 'Project: D/AVE HD Driver%0ATopic ID: dhd_buffer_t%0ATitle: dhd_buffer_t');">Send Feedback</a></div>
+</div>
+</div>
+
+<!-- End Page Header -->
+
+<!-- Begin Client Area -->
+<div class="Element720" id="areascroll">
+<div class="Element721">
+
+<!-- Begin Page Content -->
+<div class="Element58">
+<a name="53756D6D617279"></a><div class="Element14">
+Summary</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+A rectangular region of video memory.</p></div>
+</div>
+<a name="53796E746178"></a><div class="Element99">
+Syntax</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #00008C;">typedef</span></strong> <strong><span style="color: #00008C;">struct</span></strong> <strong><span style="color: #000000;">tagdhd_buffer</span></strong> {
+  <a href="dhd_vidmem_t.html" target="topic">dhd_vidmem_t</a> <strong><span style="color: #000000;">m_memory</span></strong>;
+  <a href="dhd_buffer_internal_t.html" target="topic">dhd_buffer_internal_t</a> * <strong><span style="color: #000000;">m_internal</span></strong>;
+  <a href="dhd_uint16_t.html" target="topic">dhd_uint16_t</a> <strong><span style="color: #000000;">m_width</span></strong>, m_height;
+  <a href="dhd_uint16_t.html" target="topic">dhd_uint16_t</a> <strong><span style="color: #000000;">m_pitch</span></strong>;
+  <a href="dhd_uint16_t.html" target="topic">dhd_uint16_t</a> <strong><span style="color: #000000;">m_bpp</span></strong>;
+  <a href="dhd_uint16_t.html" target="topic">dhd_uint16_t</a> <strong><span style="color: #000000;">m_reserved</span></strong>;
+  <a href="dhd_memory_usage_t.html" target="topic">dhd_memory_usage_t</a> <strong><span style="color: #000000;">m_usage</span></strong>;
+  <a href="dhd_enum_t.html" target="topic">dhd_enum_t</a> <strong><span style="color: #000000;">m_format</span></strong>;
+  <a href="dhd_address_mode_t.html" target="topic">dhd_address_mode_t</a> <strong><span style="color: #000000;">m_access</span></strong>;
+  <a href="dhd_wrap_mode_t.html" target="topic">dhd_wrap_mode_t</a> <strong><span style="color: #000000;">m_uaxis_wrap</span></strong>;
+  <a href="dhd_wrap_mode_t.html" target="topic">dhd_wrap_mode_t</a> <strong><span style="color: #000000;">m_vaxis_wrap</span></strong>;
+} dhd_buffer_t;</pre></div></div>
+<a name="4D656D62657273"></a><div class="Element14">
+Members</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element272">
+<div class="TableDiv">
+<table cellspacing="0" class="Table4">
+<tr>
+<td class="Element260" valign="top" width="28%">
+<div class="Element261">
+Members&#160;</div></td><td class="Element264" valign="top" width="72%">
+<div class="Element265">
+Description&#160;</div></td></tr><tr>
+<td class="Element262" valign="top" width="28%">
+<div class="Element263">
+m_memory&#160;</div></td><td class="Element266" valign="top" width="72%">
+<div class="Element267">
+memory region that contains this buffer&#160;</div></td></tr><tr>
+<td class="Element262" valign="top" width="28%">
+<div class="Element263">
+m_internal&#160;</div></td><td class="Element266" valign="top" width="72%">
+<div class="Element267">
+pointer to driver internal data for this buffer&#160;</div></td></tr><tr>
+<td class="Element262" valign="top" width="28%">
+<div class="Element263">
+m_pitch&#160;</div></td><td class="Element266" valign="top" width="72%">
+<div class="Element267">
+pixels per line&#160;</div></td></tr><tr>
+<td class="Element262" valign="top" width="28%">
+<div class="Element263">
+m_bpp&#160;</div></td><td class="Element266" valign="top" width="72%">
+<div class="Element267">
+bytes per pixel&#160;</div></td></tr><tr>
+<td class="Element262" valign="top" width="28%">
+<div class="Element263">
+m_reserved&#160;</div></td><td class="Element266" valign="top" width="72%">
+<div class="Element267">
+currently unused&#160;</div></td></tr><tr>
+<td class="Element262" valign="top" width="28%">
+<div class="Element263">
+m_usage&#160;</div></td><td class="Element266" valign="top" width="72%">
+<div class="Element267">
+intended buffer usage&#160;</div></td></tr><tr>
+<td class="Element262" valign="top" width="28%">
+<div class="Element263">
+m_format&#160;</div></td><td class="Element266" valign="top" width="72%">
+<div class="Element267">
+[optional] <a href="dhd_pixel_org_t.html" target="topic">dhd_pixel_org_t</a>, <a href="dhd_depth_org_t.html" target="topic">dhd_depth_org_t</a> or <a href="dhd_texel_org_t.html" target="topic">dhd_texel_org_t</a> for use with utility functions&#160;</div></td></tr><tr>
+<td class="Element262" valign="top" width="28%">
+<div class="Element263">
+m_access&#160;</div></td><td class="Element266" valign="top" width="72%">
+<div class="Element267">
+[optional] memory storage format for use with utility functions&#160;</div></td></tr><tr>
+<td class="Element262" valign="top" width="28%">
+<div class="Element263">
+m_uaxis_wrap&#160;</div></td><td class="Element266" valign="top" width="72%">
+<div class="Element267">
+[optional] U axis wrap mode for use with utility functions&#160;</div></td></tr><tr>
+<td class="Element262" valign="top" width="28%">
+<div class="Element263">
+m_vaxis_wrap&#160;</div></td><td class="Element266" valign="top" width="72%">
+<div class="Element267">
+[optional] V axis wrap mode for use with utility functions&#160;</div></td></tr></table></div></div>
+</div>
+</div>
+<a name="46696C65"></a><div class="Element14">
+File</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+davehd_driver.h</p></div>
+</div>
+</div>
+<!-- End Page Content -->
+
+<!-- Begin Page Footer -->
+<div class="Element93">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="100%">
+<div class="Element3">
+Copyright (c) 2013 All rights reserved for TES Electronic Solutions</div>
+</td></tr><tr><td width="100%">
+<div class="Element4">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="idx.html" target="tocidx">Index</a> | <a href="intro.html" target="topic">Home</a></div>
+</td></tr></table></div>
+
+<!-- End Page Footer -->
+</div>
+</div>
+
+<!-- End Client Area -->
+</body></html>

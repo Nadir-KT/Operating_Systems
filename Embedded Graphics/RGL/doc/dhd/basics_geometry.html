@@ -1,0 +1,251 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
+<html>
+<head>
+<title>Specifying Geometry</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="generator" content="Doc-O-Matic" />
+    <meta http-equiv="Content-Style-Type" content="text/css" />
+    <link rel="STYLESHEET" href="default.css" type="text/css" />
+
+<script type="text/javascript" src="scripts.js"></script>
+<!-- saved from url=(0013)about:internet -->
+</head>
+<body class="Element700" onload="onBodyLoadEx(&#39;index.html&#39;, &#39;topic&#39;, &#39;basics_geometry.html&#39;);" onmousedown="onBodyMouseDown();">
+
+<!-- Begin Popups -->
+
+<!-- End Popups -->
+
+<!-- Begin Page Header -->
+<div class="Element710" id="areafixed">
+<div class="Element92">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="33%">
+<div class="Element1">
+D/AVE HD Driver - Internal Documentation</div>
+</td><td width="34%">
+<div class="Element2">
+<a href="contents.html" target="tocidx"><img src="btn_globals_contents_midblue.gif" border="0" alt="Contents" title="Contents" onmouseover="switchImage(this, &#39;btn_globals_contents_midblue_hover.gif&#39;);" onmouseout="switchImage(this, &#39;btn_globals_contents_midblue.gif&#39;);" /></a><a href="idx.html" target="tocidx"><img src="btn_globals_index_midblue.gif" border="0" alt="Index" title="Index" onmouseover="switchImage(this, &#39;btn_globals_index_midblue_hover.gif&#39;);" onmouseout="switchImage(this, &#39;btn_globals_index_midblue.gif&#39;);" /></a><a href="intro.html" target="topic"><img src="btn_globals_home_midblue.gif" border="0" alt="Home" title="Home" onmouseover="switchImage(this, &#39;btn_globals_home_midblue_hover.gif&#39;);" onmouseout="switchImage(this, &#39;btn_globals_home_midblue.gif&#39;);" /></a></div>
+</td><td width="33%">
+<div class="Element90">
+<a href="basics_memory.html" target="topic"><img src="btn_prev_midblue.gif" border="0" alt="Previous" title="Previous" onmouseover="switchImage(this, &#39;btn_prev_midblue_hover.gif&#39;);" onmouseout="switchImage(this, &#39;btn_prev_midblue.gif&#39;);" /></a><a href="general.html" target="topic"><img src="btn_up_midblue.gif" border="0" alt="Up" title="Up" onmouseover="switchImage(this, &#39;btn_up_midblue_hover.gif&#39;);" onmouseout="switchImage(this, &#39;btn_up_midblue.gif&#39;);" /></a><a href="basics_compressed_textures.html" target="topic"><img src="btn_next_midblue.gif" border="0" alt="Next" title="Next" onmouseover="switchImage(this, &#39;btn_next_midblue_hover.gif&#39;);" onmouseout="switchImage(this, &#39;btn_next_midblue.gif&#39;);" /></a></div>
+</td></tr></table><div class="Element5">
+Specifying Geometry</div>
+<div class="Element7">
+<a href="general.html" target="topic">General</a> | <a href="#" onclick="sendFeedback('dave_support@tes-dst.com', 'Documentation Feedback', 'Project: D/AVE HD Driver%0ATopic ID: !!Basics_Geometry%0ATitle: Specifying Geometry');">Send Feedback</a></div>
+</div>
+</div>
+
+<!-- End Page Header -->
+
+<!-- Begin Client Area -->
+<div class="Element720" id="areascroll">
+<div class="Element721">
+
+<!-- Begin Page Content -->
+<div class="Element58">
+<a name="4465736372697074696F6E"></a><div class="Element11">
+<div class="Element10">
+<div class="Element15">
+General</div>
+<p class="Element10">
+&#160;</p>
+<p class="Element10">
+DAVE HD is rendering geometry defined by a set of edges, not vertices (most vector rendering cores do this internally but you have direct access to this notation using the DHD api). When using edges the driver assumes that the right side of an edge is part of the geometry when looking in edge direction from start to end. This definition ensures that a set of clockwise edges will form a valid geometry.&#160;</p>
+<p class="Element10">
+<img src="triangle_vertexbased.png" border="0" alt="vertex based definition" title="vertex based definition" align="left" /> <img src="triangle_edgebased.png" border="0" alt="edge based definition" title="edge based definition" />&#160;</p><div class="Element15">
+Vertex Based Setup</div>
+<p class="Element10">
+While non native to the DAVE HD there are still utility functions to setup geometry defined by vertices as this is often more convenient.&#160;</p>
+<p class="Element10">
+You can use the following functions to create geometry data for rendering: </p><div class="Element63">
+<div class="TableDiv">
+<table cellspacing="0" class="Table1">
+<tr>
+<td class="Element65" valign="top" width="37%">
+<div class="Element66">
+Function&#160;</div></td><td class="Element65" valign="top" width="63%">
+<div class="Element66">
+Description&#160;</div></td></tr><tr>
+<td class="Element67" valign="top" width="37%">
+<div class="Element68">
+<a href="dhd_setup_tri_attributes.html" target="topic">dhd_setup_tri_attributes</a>&#160;</div></td><td class="Element67" valign="top" width="63%">
+<div class="Element68">
+Setup triangle with attributes.&#160;</div></td></tr><tr>
+<td class="Element67" valign="top" width="37%">
+<div class="Element68">
+<a href="dhd_setup_tri_noaa.html" target="topic">dhd_setup_tri_noaa</a>&#160;</div></td><td class="Element67" valign="top" width="63%">
+<div class="Element68">
+Setup simple, non antialiased triangle.&#160;</div></td></tr><tr>
+<td class="Element67" valign="top" width="37%">
+<div class="Element68">
+<a href="dhd_setup_tri_aa.html" target="topic">dhd_setup_tri_aa</a>&#160;</div></td><td class="Element67" valign="top" width="63%">
+<div class="Element68">
+Setup simple, antialiased triangle.&#160;</div></td></tr><tr>
+<td class="Element67" valign="top" width="37%">
+<div class="Element68">
+<a href="dhd_setup_box_noaa.html" target="topic">dhd_setup_box_noaa</a>&#160;</div></td><td class="Element67" valign="top" width="63%">
+<div class="Element68">
+Setup non antialiased box.&#160;</div></td></tr><tr>
+<td class="Element67" valign="top" width="37%">
+<div class="Element68">
+<a href="dhd_setup_box_aa.html" target="topic">dhd_setup_box_aa</a>&#160;</div></td><td class="Element67" valign="top" width="63%">
+<div class="Element68">
+Setup antialiased box.&#160;</div></td></tr><tr>
+<td class="Element67" valign="top" width="37%">
+<div class="Element68">
+<a href="dhd_setup_line_noaa.html" target="topic">dhd_setup_line_noaa</a>&#160;</div></td><td class="Element67" valign="top" width="63%">
+<div class="Element68">
+Setup thin, non antialiased line.&#160;</div></td></tr><tr>
+<td class="Element67" valign="top" width="37%">
+<div class="Element68">
+<a href="dhd_setup_line_aa.html" target="topic">dhd_setup_line_aa</a>&#160;</div></td><td class="Element67" valign="top" width="63%">
+<div class="Element68">
+Setup wide, antialiased line.&#160;</div></td></tr></table></div></div>
+<p class="Element10">
+&#160;</p>
+<p class="Element10">
+Even though the utilities hide most of the internal details it is still recommended to familiarize yourself with how the hardware (and thus the driver) expects and uses the data on a lower level.&#160;</p>
+<p class="Element10">
+&#160;</p><div class="Element15">
+Edge Based Setup</div>
+<p class="Element10">
+Edge information is stored and passed in <a href="dhd_edge_data_t.html" target="topic">dhd_edge_data_t</a> structs as as set of three 32bit fixed point values (18bit fractional).&#160;</p>
+<p class="Element10">
+&#160;</p>
+<p class="Element10">
+&#160;</p>
+<p class="Element10">
+Usually these structures are not filled out manually but rather by using one of the following utility functions: </p><div class="Element63">
+<div class="TableDiv">
+<table cellspacing="0" class="Table1">
+<tr>
+<td class="Element65" valign="top" width="32%">
+<div class="Element66">
+Function&#160;</div></td><td class="Element65" valign="top" width="68%">
+<div class="Element66">
+Description&#160;</div></td></tr><tr>
+<td class="Element67" valign="top" width="32%">
+<div class="Element68">
+<a href="dhd_setup_edge_noaa_notie.html" target="topic">dhd_setup_edge_noaa_notie</a>&#160;</div></td><td class="Element67" valign="top" width="68%">
+<div class="Element68">
+setup a simple non antialiased edge.&#160;</div></td></tr><tr>
+<td class="Element67" valign="top" width="32%">
+<div class="Element68">
+<a href="dhd_setup_edge_noaa.html" target="topic">dhd_setup_edge_noaa</a>&#160;</div></td><td class="Element67" valign="top" width="68%">
+<div class="Element68">
+setup a non antialiased edge with automatic tiebreaking.&#160;</div></td></tr><tr>
+<td class="Element67" valign="top" width="32%">
+<div class="Element68">
+<a href="dhd_setup_edge_aa.html" target="topic">dhd_setup_edge_aa</a>&#160;</div></td><td class="Element67" valign="top" width="68%">
+<div class="Element68">
+setup an antialiased edge.&#160;</div></td></tr><tr>
+<td class="Element67" valign="top" width="32%">
+<div class="Element68">
+<a href="dhd_setup_edge_aa2.html" target="topic">dhd_setup_edge_aa2</a>&#160;</div></td><td class="Element67" valign="top" width="68%">
+<div class="Element68">
+setup an antialiased edge with increased precision.&#160;</div></td></tr></table></div></div>
+<p class="Element10">
+&#160;</p>
+<p class="Element10">
+As given above the functions are ordered by CPU complexity from simple to complex, which usually directly translates to execution speed. So <a href="dhd_setup_edge_noaa_notie.html" target="topic">dhd_setup_edge_noaa_notie</a> will be the fastest way to setup an edge and <a href="dhd_setup_edge_aa2.html" target="topic">dhd_setup_edge_aa2</a> the slowest. In order to quickly pick the optimal variant check the following requirements:&#160;</p>
+<p class="Element10">
+&#160;</p>
+<ul class="Element630">
+<li class="Element600">Do you need to further manipulate resulting edge data ? If so you might need <a href="dhd_setup_edge_aa2.html" target="topic">dhd_setup_edge_aa2</a>, see below.</li>
+<li class="Element600">Does the edge need antialiasing ? If so use <a href="dhd_setup_edge_aa.html" target="topic">dhd_setup_edge_aa</a></li>
+<li class="Element600">Is the edge shared by any other geometry ? If not use <a href="dhd_setup_edge_noaa_notie.html" target="topic">dhd_setup_edge_noaa_notie</a></li>
+<li class="Element600">Can you easily flag shared edges manually ? If so still <a href="dhd_setup_edge_noaa_notie.html" target="topic">dhd_setup_edge_noaa_notie</a> and E_DHD_INVERT</li>
+<li class="Element600">Otherwise use <a href="dhd_setup_edge_noaa.html" target="topic">dhd_setup_edge_noaa</a></li>
+</ul><p class="Element10">
+&#160;</p>
+<p class="Element10">
+Once an antialiased edge is setup it can be easily shifted (normal to the edge direction) by a single addition. This requires a precisely normalized edge (<a href="dhd_setup_edge_aa2.html" target="topic">dhd_setup_edge_aa2</a>)&#160;</p>
+<p class="Element10">
+&#160;</p><div class="Element15">
+Tie breaking</div>
+<p class="Element10">
+&#160;</p>
+<p class="Element10">
+Tie breaking rules are applied when using <a href="dhd_setup_edge_noaa.html" target="topic">dhd_setup_edge_noaa</a> (therefore also in <a href="dhd_setup_tri_attributes.html" target="topic">dhd_setup_tri_attributes</a>, <a href="dhd_setup_box_noaa.html" target="topic">dhd_setup_box_noaa</a> and <a href="dhd_setup_line_noaa.html" target="topic">dhd_setup_line_noaa</a>). These rules ensure:&#160;</p>
+<p class="Element10">
+&#160;</p>
+<ul class="Element630">
+<li class="Element600">Neighboured (shared) edges in geometries will not overlap.</li>
+<li class="Element600">Clear definition which pixels of non-antialiased edges will be drawn.</li>
+</ul><p class="Element10">
+&#160;</p>
+<p class="Element10">
+Tie breaking will be decided via edge direction:&#160;</p>
+<p class="Element10">
+&#160;</p>
+<ul class="Element630">
+<li class="Element600">Upwards or left pointing edges will be drawn inclusive,</li>
+<li class="Element600">downward or horizontally right pointing edges will be moved in the direction of the edge normal resulting in an inwards movement.</li>
+</ul><p class="Element10">
+&#160;</p>
+<p class="Element10">
+Setting the E_DHD_INVERT Edge flag inverts also the effect of tie breaking (as the hardware always ensures that the same edge drawn with and without E_DHD_INVERT aligns gaplessly)&#160;</p>
+<p class="Element10">
+&#160;</p><div class="Element15">
+Limitations</div>
+<p class="Element10">
+&#160;</p>
+<p class="Element10">
+Non antialiased edges are limited to a width and height of 2048 because of the limitations of the limiter x/y step registers. However, antialiased edges can be set up with a width and height of 4096 pixels.&#160;</p>
+<p class="Element10">
+&#160;</p><div class="Element15">
+Example</div>
+<p class="Element10">
+&#160;</p>
+<p class="Element10">
+Creating the four edges for a wide line and passing them to the driver for rendering could look like this: </p><div class="Element170">
+<a href="#" onclick="CopyElementToClipboard(&#39;code00010&#39;);">Copy Code</a></div>
+<div class="Element13"><div class="Element12" id="code00010"><pre class="Element12">dhd_prim_data_t prim;
+dhd_edge_data_t edges[4];
+
+<strong><span style="color: #00008C;">if</span></strong> (! dhd_setup_line_aa(my_device, x1, y1, x2, y2, width, &amp;prim, edges, E_DHD_CLIP_FRAMEBUFFER)) {
+   <strong><span style="color: #00008C;">return</span></strong>;  <em><span style="color: #008000;">// no need to render, line is not visible</span></em>
+}
+
+dhd_set_edge_buffer(my_device, edges, 0, 4);
+dhd_draw_array(my_device, 1, &amp;prim, 0, 4, E_DHD_DRAW_FLAT);</pre></div></div>
+<p class="Element10">
+&#160;</p>
+<p class="Element10">
+In production code it is recommended to always use <a href="dhd_draw_array.html" target="topic">dhd_draw_array</a>, but of course it is also possible to specify the bounding box manually and use <a href="dhd_draw.html" target="topic">dhd_draw</a> in case of a single primitive. The setup function would still use a <a href="dhd_prim_data_t.html" target="topic">dhd_prim_data_t</a> for storage but it can be manually passed to the driver like this :&#160;</p>
+<p class="Element10">
+&#160;</p><div class="Element170">
+<a href="#" onclick="CopyElementToClipboard(&#39;code00011&#39;);">Copy Code</a></div>
+<div class="Element13"><div class="Element12" id="code00011"><pre class="Element12">dhd_prim_data_t prim;
+dhd_edge_data_t edges[4];
+
+<strong><span style="color: #00008C;">if</span></strong> (! dhd_setup_line_aa(my_device, x1, y1, x2, y2, width, &amp;prim, edges, E_DHD_CLIP_FRAMEBUFFER)) {
+   <strong><span style="color: #00008C;">return</span></strong>;  <em><span style="color: #008000;">// no need to render, line is not visible</span></em>
+}
+
+dhd_set_edge_buffer(my_device, edges, 0, 4);
+dhd_set_bbox( device, prim.m_xmin, prim.m_ymin, prim.m_xmax, prim.m_ymax, prim.m_ystart );
+dhd_draw(my_device, prim.m_edgecontrol, 4, E_DHD_DRAW_FLAT);</pre></div></div>
+</div>
+</div>
+</div>
+<!-- End Page Content -->
+
+<!-- Begin Page Footer -->
+<div class="Element93">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="100%">
+<div class="Element3">
+Copyright (c) 2013 All rights reserved for TES Electronic Solutions</div>
+</td></tr><tr><td width="100%">
+<div class="Element4">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="idx.html" target="tocidx">Index</a> | <a href="intro.html" target="topic">Home</a></div>
+</td></tr></table></div>
+
+<!-- End Page Footer -->
+</div>
+</div>
+
+<!-- End Client Area -->
+</body></html>

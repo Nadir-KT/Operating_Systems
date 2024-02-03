@@ -1,0 +1,94 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
+<html>
+<head>
+<title>Using Compressed Textures</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="generator" content="Doc-O-Matic" />
+    <meta http-equiv="Content-Style-Type" content="text/css" />
+    <link rel="STYLESHEET" href="default.css" type="text/css" />
+
+<script type="text/javascript" src="scripts.js"></script>
+<!-- saved from url=(0013)about:internet -->
+</head>
+<body class="Element700" onload="onBodyLoadEx(&#39;index.html&#39;, &#39;topic&#39;, &#39;basics_compressed_textures.html&#39;);" onmousedown="onBodyMouseDown();">
+
+<!-- Begin Popups -->
+
+<!-- End Popups -->
+
+<!-- Begin Page Header -->
+<div class="Element710" id="areafixed">
+<div class="Element92">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="33%">
+<div class="Element1">
+D/AVE HD Driver - Internal Documentation</div>
+</td><td width="34%">
+<div class="Element2">
+<a href="contents.html" target="tocidx"><img src="btn_globals_contents_midblue.gif" border="0" alt="Contents" title="Contents" onmouseover="switchImage(this, &#39;btn_globals_contents_midblue_hover.gif&#39;);" onmouseout="switchImage(this, &#39;btn_globals_contents_midblue.gif&#39;);" /></a><a href="idx.html" target="tocidx"><img src="btn_globals_index_midblue.gif" border="0" alt="Index" title="Index" onmouseover="switchImage(this, &#39;btn_globals_index_midblue_hover.gif&#39;);" onmouseout="switchImage(this, &#39;btn_globals_index_midblue.gif&#39;);" /></a><a href="intro.html" target="topic"><img src="btn_globals_home_midblue.gif" border="0" alt="Home" title="Home" onmouseover="switchImage(this, &#39;btn_globals_home_midblue_hover.gif&#39;);" onmouseout="switchImage(this, &#39;btn_globals_home_midblue.gif&#39;);" /></a></div>
+</td><td width="33%">
+<div class="Element90">
+<a href="basics_geometry.html" target="topic"><img src="btn_prev_midblue.gif" border="0" alt="Previous" title="Previous" onmouseover="switchImage(this, &#39;btn_prev_midblue_hover.gif&#39;);" onmouseout="switchImage(this, &#39;btn_prev_midblue.gif&#39;);" /></a><a href="general.html" target="topic"><img src="btn_up_midblue.gif" border="0" alt="Up" title="Up" onmouseover="switchImage(this, &#39;btn_up_midblue_hover.gif&#39;);" onmouseout="switchImage(this, &#39;btn_up_midblue.gif&#39;);" /></a><a href="advanced.html" target="topic"><img src="btn_next_midblue.gif" border="0" alt="Next" title="Next" onmouseover="switchImage(this, &#39;btn_next_midblue_hover.gif&#39;);" onmouseout="switchImage(this, &#39;btn_next_midblue.gif&#39;);" /></a></div>
+</td></tr></table><div class="Element5">
+Using Compressed Textures</div>
+<div class="Element7">
+<a href="general.html" target="topic">General</a> | <a href="#" onclick="sendFeedback('dave_support@tes-dst.com', 'Documentation Feedback', 'Project: D/AVE HD Driver%0ATopic ID: !!Basics_Compressed_Textures%0ATitle: Using Compressed Textures');">Send Feedback</a></div>
+</div>
+</div>
+
+<!-- End Page Header -->
+
+<!-- Begin Client Area -->
+<div class="Element720" id="areascroll">
+<div class="Element721">
+
+<!-- Begin Page Content -->
+<div class="Element58">
+<a name="4465736372697074696F6E"></a><div class="Element11">
+<div class="Element10">
+<div class="Element15">
+General</div>
+<p class="Element10">
+&#160;</p>
+<p class="Element10">
+The D/AVE HD directly supports lossless RLE compressed images. When the application tolerates a little impact on image quality, additional compression may be applied to the stored images. This driver supports hardware accelerated decompression of a D3D10 BC1 derived format to an in-memory uncompressed texture. It can be utilized to minimize the required storage while maintaining fast application startup times.&#160;</p>
+<p class="Element10">
+The compressed format features the same image quality as D3D10 BC1 while offering the possibility of adding an 8 bit alpha layer. All image data is additionally RLE compressed. The resulting file consumes about 4 bits per pixel, where the alpha layer has a negligible effect as it is mostly used as a highly compressible mask.&#160;</p>
+<p class="Element10">
+&#160;</p><div class="Element15">
+Image Generation</div>
+<p class="Element10">
+&#160;</p>
+<p class="Element10">
+For easy generation of images, you may use any D3D10 BC1 compatible tool that outputs the data as a DDS file, for example the AMD Compressonator (<a onclick="openExternalLink(&#39;http://developer.amd.com/tools-and-sdks/archive/legacy-cpu-gpu-tools/the-compressonator&#39;);" style="cursor: pointer;"><img src="indicator_external_link.gif" border="0" alt="" title="" />http://developer.amd.com/tools-and-sdks/archive/legacy-cpu-gpu-tools/the-compressonator/</a>).&#160;</p>
+<p class="Element10">
+&#160;</p>
+<p class="Element10">
+The DDS file can then be fed into the provided dds_to_linear_rle.py python script which optionally takes the original image to extract the alpha channel: </p><div class="Element170">
+<a href="#" onclick="CopyElementToClipboard(&#39;code00012&#39;);">Copy Code</a></div>
+<div class="Element13"><div class="Element12" id="code00012"><pre class="Element12">python dds_to_linear_rle.py -a original_image.png bc1_of_original_image.dds compressed_image.bin</pre></div></div>
+<p class="Element10">
+&#160;</p>
+<p class="Element10">
+The resulting bin file must then be made available in CPU accessible memory and can be decompressed to a new buffer using <a href="dhd_decompress_texture.html" target="topic">dhd_decompress_texture</a>. Depending on the options the runtime differs between two and three render passes (two for decompressing the RGB565 image into an ARGB8888 framebuffer, one optional additional pass for alpha).</p></div>
+</div>
+</div>
+<!-- End Page Content -->
+
+<!-- Begin Page Footer -->
+<div class="Element93">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="100%">
+<div class="Element3">
+Copyright (c) 2013 All rights reserved for TES Electronic Solutions</div>
+</td></tr><tr><td width="100%">
+<div class="Element4">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="idx.html" target="tocidx">Index</a> | <a href="intro.html" target="topic">Home</a></div>
+</td></tr></table></div>
+
+<!-- End Page Footer -->
+</div>
+</div>
+
+<!-- End Client Area -->
+</body></html>
