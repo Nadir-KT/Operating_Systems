@@ -8,6 +8,20 @@ https://ofitselfso.com/BeagleNotes/HowToConnectBeagleboneBlackToTheInternetViaUS
 sudo /sbin/route add default gw 192.168.7.1
 RNDIS TCP/IPv4: 192.168.7.1
 Subnet mask: 255.255.255.0
+DNS: 8.8.8.8
+ping 8.8.8.8
+sudo nano /etc/resolv.conf
+nameserver 8.8.8.8
+
+sudo reboot
+sudo /sbin/route add default gw 192.168.7.1
+ping google.com
 https://www.instructables.com/How-to-Access-Beaglebone-Via-VNC/
 sudo apt-get update && sudo apt-get upgrade
 sudo apt-get install tightvncserver
+tightvncserver 
+vncserver
+Would you like to enter a view-only password (y/n)? n
+192.168.7.2:1
+vncserver -kill :1
+https://www.digitalocean.com/community/tutorials/how-to-install-and-configure-vnc-on-debian-9
