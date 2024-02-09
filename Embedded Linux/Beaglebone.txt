@@ -1,0 +1,13 @@
+https://www.digikey.com/en/maker/blogs/how-to-connect-a-beaglebone-black-to-the-internet-using-usb
+https://www.fis.gatech.edu/how-to-connect-to-a-bbb/
+PuTTy
+Host Name (or IP address): 192.168.7.2
+login as: debian
+password: temppwd
+https://ofitselfso.com/BeagleNotes/HowToConnectBeagleboneBlackToTheInternetViaUSB.php
+sudo /sbin/route add default gw 192.168.7.1
+RNDIS TCP/IPv4: 192.168.7.1
+Subnet mask: 255.255.255.0
+https://www.instructables.com/How-to-Access-Beaglebone-Via-VNC/
+sudo apt-get update && sudo apt-get upgrade
+sudo apt-get install tightvncserver
