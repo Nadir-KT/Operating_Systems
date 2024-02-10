@@ -1,0 +1,80 @@
+From d2ead38efa13a03d5fbf4cdd8d06010f5256e88d Mon Sep 17 00:00:00 2001
+From: Ashutosh singh <ashutosh.s@phytec.in>
+Date: Fri, 20 Dec 2013 14:55:32 +0530
+Subject: [PATCH 20/24] phyBOARD-RANA-AM335x: Added CAN0 Support
+
+Signed-off-by: Ashutosh singh <ashutosh.s@phytec.in>
+---
+ arch/arm/configs/rana_am335x_defconfig             |    5 +++++
+ .../mach-omap2/include/mach/board-rana-am335x.h    |   18 +++++++++++++++++-
+ 2 files changed, 22 insertions(+), 1 deletion(-)
+
+diff --git a/arch/arm/configs/rana_am335x_defconfig b/arch/arm/configs/rana_am335x_defconfig
+index 91946d8..94e3040 100644
+--- a/arch/arm/configs/rana_am335x_defconfig
++++ b/arch/arm/configs/rana_am335x_defconfig
+@@ -84,6 +84,11 @@ CONFIG_IP_NF_FILTER=y
+ CONFIG_IP_NF_TARGET_LOG=y
+ CONFIG_NF_NAT=y
+ CONFIG_IP_NF_TARGET_MASQUERADE=y
++CONFIG_CAN=y
++CONFIG_CAN_RAW=y
++CONFIG_CAN_BCM=y
++CONFIG_CAN_D_CAN=y
++CONFIG_CAN_D_CAN_PLATFORM=y
+ CONFIG_UEVENT_HELPER_PATH="/sbin/hotplug"
+ CONFIG_DEVTMPFS=y
+ CONFIG_DEVTMPFS_MOUNT=y
+diff --git a/arch/arm/mach-omap2/include/mach/board-rana-am335x.h b/arch/arm/mach-omap2/include/mach/board-rana-am335x.h
+index 33cb01b..143d923 100644
+--- a/arch/arm/mach-omap2/include/mach/board-rana-am335x.h
++++ b/arch/arm/mach-omap2/include/mach/board-rana-am335x.h
+@@ -38,7 +38,7 @@
+ #define GPIO_TO_PIN(bank, gpio) (32 * (bank) + (gpio))
+ 
+ #define DEVICE_LEN 80
+-#define DEVICE 7
++#define DEVICE 8
+ 
+ static char rana_board_devices_str[DEVICE_LEN] __initdata = "none";
+ static int i;
+@@ -175,6 +175,13 @@ static struct pinmux_config uart4_pin_mux[] = {
+ 	{NULL, 0},
+ };
+ 
++/* Pin-Mux for CAN0 */
++static struct pinmux_config can0_pin_mux[] = {
++	{"mii1_txd2.dcan0_rx_mux0", OMAP_MUX_MODE1 | AM33XX_PIN_INPUT_PULLUP},
++	{"mii1_txd3.dcan0_tx_mux0", OMAP_MUX_MODE1 | AM33XX_PULL_ENBL},
++	{NULL, 0},
++};
++
+ /* MMC0 Platform Data*/
+ static struct omap2_hsmmc_info am335x_mmc[] __initdata = {
+ 	{
+@@ -427,6 +434,14 @@ static void rana_am335x_uart4_init(void)
+ 	return;
+ }
+ 
++/* CAN0 initialization */
++static void rana_am335x_can0_init(void)
++{
++	setup_pin_mux(can0_pin_mux);
++	printk(KERN_INFO"Phytec AM335X : CAN0 Init\n");
++	return;
++}
++
+ struct devices {
+ 	char *device_name;
+ 	void (*device_init) (void);
+@@ -440,6 +455,7 @@ struct devices rana_am335x_device[] = {
+ 	{"UART2", rana_am335x_uart2_init},
+ 	{"UART3", rana_am335x_uart3_init},
+ 	{"UART4", rana_am335x_uart4_init},
++	{"CAN0", rana_am335x_can0_init},
+ 	{"NULL", NULL },
+ };
+ 
+-- 
+1.7.9.5
+

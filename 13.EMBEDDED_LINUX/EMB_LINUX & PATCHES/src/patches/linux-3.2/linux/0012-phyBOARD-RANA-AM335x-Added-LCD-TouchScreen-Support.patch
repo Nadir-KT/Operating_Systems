@@ -1,0 +1,93 @@
+From cbf9d8ecd04ea4fc91b69e515333747bed21b98f Mon Sep 17 00:00:00 2001
+From: Ashutosh singh <ashutosh.s@phytec.in>
+Date: Fri, 20 Dec 2013 14:26:20 +0530
+Subject: [PATCH 12/24] phyBOARD-RANA-AM335x: Added LCD TouchScreen Support
+
+Signed-off-by: Ashutosh singh <ashutosh.s@phytec.in>
+---
+ arch/arm/configs/rana_am335x_defconfig             |    3 +++
+ .../mach-omap2/include/mach/board-rana-am335x.h    |   27 ++++++++++++++++++++
+ 2 files changed, 30 insertions(+)
+
+diff --git a/arch/arm/configs/rana_am335x_defconfig b/arch/arm/configs/rana_am335x_defconfig
+index a0ff6f2..26380e8 100644
+--- a/arch/arm/configs/rana_am335x_defconfig
++++ b/arch/arm/configs/rana_am335x_defconfig
+@@ -127,6 +127,8 @@ CONFIG_INPUT_EVDEV=y
+ # CONFIG_KEYBOARD_ATKBD is not set
+ CONFIG_KEYBOARD_GPIO=y
+ CONFIG_KEYBOARD_MATRIX=y
++CONFIG_INPUT_TOUCHSCREEN=y
++CONFIG_TOUCHSCREEN_TI_TSC=y
+ CONFIG_INPUT_MISC=y
+ # CONFIG_SERIO_SERPORT is not set
+ CONFIG_VT_HW_CONSOLE_BINDING=y
+@@ -138,6 +140,7 @@ CONFIG_GENERIC_PWM=y
+ CONFIG_DAVINCI_EHRPWM=y
+ CONFIG_ECAP_PWM=y
+ # CONFIG_HWMON is not set
++CONFIG_MFD_TI_TSCADC=y
+ CONFIG_MFD_TPS65217=y
+ CONFIG_MFD_TPS65910=y
+ CONFIG_REGULATOR_DUMMY=y
+diff --git a/arch/arm/mach-omap2/include/mach/board-rana-am335x.h b/arch/arm/mach-omap2/include/mach/board-rana-am335x.h
+index 37e64fc..641d2e1 100644
+--- a/arch/arm/mach-omap2/include/mach/board-rana-am335x.h
++++ b/arch/arm/mach-omap2/include/mach/board-rana-am335x.h
+@@ -26,6 +26,11 @@
+ /* LCD controller is similar to DA850 */
+ #include <video/da8xx-fb.h>
+ 
++/* TSc controller */
++#include <linux/input/ti_tsc.h>
++#include <linux/mfd/ti_tscadc.h>
++#include <linux/platform_data/ti_adc.h>
++
+ /* convert GPIO signal to GPIO pin number */
+ #define GPIO_TO_PIN(bank, gpio) (32 * (bank) + (gpio))
+ 
+@@ -229,6 +234,17 @@ static struct pwmss_platform_data pwm_pdata = {
+ 	.version = PWM_VERSION_1
+ };
+ 
++/* TSc platform data */
++static struct tsc_data am335x_touchscreen_data = {
++	.wires			= 4,
++	.x_plate_resistance	= 200,
++	.steps_to_configure	= 5,
++};
++
++static struct mfd_tscadc_board tscadc = {
++	.tsc_init       = &am335x_touchscreen_data,
++};
++
+ /* MMC0 Initialization */
+ static void mmc0_init(void)
+ {
+@@ -282,12 +298,23 @@ static int __init ecap0_init(void)
+ }
+ late_initcall(ecap0_init);
+ 
++/* TSc initialization */
++static void tsc_init(void)
++{
++	int err;
++
++	err = am33xx_register_mfd_tscadc(&tscadc);
++	if (err)
++		pr_err("failed to register touchscreen device\n");
++}
++
+ /* RANA-AM335x LCD initialization */
+ static void rana_am335x_lcd_init(void)
+ {
+ 	printk(KERN_INFO"Phytec AM335X : LCD Init\n");
+ 	lcd_init();
+ 	enable_ecap0();
++	tsc_init();
+ 	return;
+ }
+ 
+-- 
+1.7.9.5
+

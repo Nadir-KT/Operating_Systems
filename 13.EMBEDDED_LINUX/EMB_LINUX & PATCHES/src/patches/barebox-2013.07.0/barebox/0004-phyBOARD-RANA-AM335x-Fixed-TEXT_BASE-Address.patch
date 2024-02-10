@@ -1,0 +1,28 @@
+From 2d602f361f6f27796703137eb8e461c5e0877892 Mon Sep 17 00:00:00 2001
+From: Ashutosh singh <ashutosh.s@phytec.in>
+Date: Thu, 5 Dec 2013 10:13:13 +0530
+Subject: [PATCH 4/6] phyBOARD-RANA-AM335x: Fixed TEXT_BASE Address.
+
+Fixed TEXT_BASE Address for 128MB RAM.
+
+Signed-off-by: Ashutosh singh <ashutosh.s@phytec.in>
+---
+ arch/arm/configs/rana_am335x_defconfig |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/arm/configs/rana_am335x_defconfig b/arch/arm/configs/rana_am335x_defconfig
+index b69f8b6..32ac191 100644
+--- a/arch/arm/configs/rana_am335x_defconfig
++++ b/arch/arm/configs/rana_am335x_defconfig
+@@ -10,7 +10,7 @@ CONFIG_CMD_ARM_MMUINFO=y
+ CONFIG_ARM_OPTIMZED_STRING_FUNCTIONS=y
+ CONFIG_ARM_UNWIND=y
+ CONFIG_MMU=y
+-CONFIG_TEXT_BASE=0x8f000000
++CONFIG_TEXT_BASE=0x87ED0000
+ CONFIG_MALLOC_SIZE=0x2000000
+ CONFIG_PROMPT="barebox@rana-AM335X>"
+ CONFIG_LONGHELP=y
+-- 
+1.7.9.5
+

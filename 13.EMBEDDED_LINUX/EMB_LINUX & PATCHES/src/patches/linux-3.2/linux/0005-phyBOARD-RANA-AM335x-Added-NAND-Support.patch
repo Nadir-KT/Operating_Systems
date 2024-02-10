@@ -1,0 +1,209 @@
+From d4a1c95e7713f577a8fae87c7b71fefe51e0195a Mon Sep 17 00:00:00 2001
+From: Ashutosh singh <ashutosh.s@phytec.in>
+Date: Fri, 20 Dec 2013 11:24:06 +0530
+Subject: [PATCH 05/24] phyBOARD-RANA-AM335x: Added NAND Support.
+
+Signed-off-by: Ashutosh singh <ashutosh.s@phytec.in>
+---
+ arch/arm/configs/rana_am335x_defconfig |   34 ++++++++++------
+ arch/arm/mach-omap2/board-rana.c       |   67 +++++++++++++++++++++++++++++++-
+ 2 files changed, 88 insertions(+), 13 deletions(-)
+
+diff --git a/arch/arm/configs/rana_am335x_defconfig b/arch/arm/configs/rana_am335x_defconfig
+index 3f57f71..2936ee4 100644
+--- a/arch/arm/configs/rana_am335x_defconfig
++++ b/arch/arm/configs/rana_am335x_defconfig
+@@ -69,7 +69,22 @@ CONFIG_BINFMT_MISC=y
+ CONFIG_UEVENT_HELPER_PATH="/sbin/hotplug"
+ CONFIG_DEVTMPFS=y
+ CONFIG_DEVTMPFS_MOUNT=y
+-# CONFIG_BLK_DEV is not set
++CONFIG_MTD=y
++CONFIG_MTD_CMDLINE_PARTS=y
++CONFIG_MTD_CHAR=y
++CONFIG_MTD_BLOCK=y
++CONFIG_MTD_OOPS=y
++CONFIG_MTD_CFI=y
++CONFIG_MTD_CFI_INTELEXT=y
++CONFIG_MTD_NAND=y
++CONFIG_MTD_NAND_OMAP2=y
++CONFIG_MTD_ONENAND=y
++CONFIG_MTD_ONENAND_VERIFY_WRITE=y
++CONFIG_MTD_ONENAND_OMAP2=y
++CONFIG_MTD_UBI=y
++CONFIG_BLK_DEV_LOOP=y
++CONFIG_BLK_DEV_RAM=y
++CONFIG_BLK_DEV_RAM_SIZE=16384
+ CONFIG_SCSI=y
+ CONFIG_BLK_DEV_SD=y
+ CONFIG_SCSI_MULTI_LUN=y
+@@ -80,18 +95,19 @@ CONFIG_INPUT_EVDEV=y
+ CONFIG_KEYBOARD_GPIO=y
+ CONFIG_KEYBOARD_MATRIX=y
+ CONFIG_INPUT_TOUCHSCREEN=y
+-CONFIG_TOUCHSCREEN_TI_TSC=y
++CONFIG_INPUT_MISC=y
+ # CONFIG_SERIO_SERPORT is not set
+ CONFIG_VT_HW_CONSOLE_BINDING=y
+ # CONFIG_LEGACY_PTYS is not set
+ # CONFIG_HW_RANDOM is not set
+ CONFIG_I2C_CHARDEV=y
+ CONFIG_GPIO_SYSFS=y
+-CONFIG_SENSORS_LM75=y
+-CONFIG_MFD_TI_TSCADC=y
++# CONFIG_HWMON is not set
++CONFIG_MFD_TPS65217=y
+ CONFIG_MFD_TPS65910=y
+ CONFIG_REGULATOR_DUMMY=y
+ CONFIG_REGULATOR_FIXED_VOLTAGE=y
++CONFIG_REGULATOR_TPS65217=y
+ CONFIG_REGULATOR_TPS65910=y
+ CONFIG_FB=y
+ CONFIG_FB_MODE_HELPERS=y
+@@ -105,7 +121,6 @@ CONFIG_BACKLIGHT_CLASS_DEVICE=y
+ CONFIG_BACKLIGHT_TLC59108=y
+ CONFIG_DISPLAY_SUPPORT=y
+ CONFIG_FRAMEBUFFER_CONSOLE=y
+-CONFIG_FRAMEBUFFER_CONSOLE_DETECT_PRIMARY=y
+ CONFIG_FRAMEBUFFER_CONSOLE_ROTATION=y
+ CONFIG_FONTS=y
+ CONFIG_FONT_8x8=y
+@@ -118,8 +133,7 @@ CONFIG_MMC_UNSAFE_RESUME=y
+ CONFIG_SDIO_UART=y
+ CONFIG_MMC_OMAP_HS=y
+ CONFIG_RTC_CLASS=y
+-CONFIG_RTC_DRV_M41T80=y
+-CONFIG_RTC_DRV_TPS65910=y
++CONFIG_RTC_DRV_OMAP=y
+ # CONFIG_IOMMU_SUPPORT is not set
+ CONFIG_EXT2_FS=y
+ CONFIG_EXT3_FS=y
+@@ -129,7 +143,8 @@ CONFIG_QFMT_V2=y
+ CONFIG_MSDOS_FS=y
+ CONFIG_VFAT_FS=y
+ CONFIG_TMPFS=y
+-# CONFIG_MISC_FILESYSTEMS is not set
++CONFIG_UBIFS_FS=y
++CONFIG_CRAMFS=y
+ CONFIG_PARTITION_ADVANCED=y
+ CONFIG_NLS_CODEPAGE_437=y
+ CONFIG_NLS_ISO8859_1=y
+@@ -144,12 +159,9 @@ CONFIG_CRYPTO_ECB=y
+ CONFIG_CRYPTO_MICHAEL_MIC=y
+ CONFIG_CRYPTO_AES=y
+ CONFIG_CRYPTO_ARC4=y
+-CONFIG_CRYPTO_DEFLATE=y
+-CONFIG_CRYPTO_LZO=y
+ # CONFIG_CRYPTO_ANSI_CPRNG is not set
+ # CONFIG_CRYPTO_HW is not set
+ CONFIG_CRC_CCITT=y
+-CONFIG_CRC16=y
+ CONFIG_CRC_T10DIF=y
+ CONFIG_CRC_ITU_T=y
+ CONFIG_CRC7=y
+diff --git a/arch/arm/mach-omap2/board-rana.c b/arch/arm/mach-omap2/board-rana.c
+index ad9e7e1..49af121 100644
+--- a/arch/arm/mach-omap2/board-rana.c
++++ b/arch/arm/mach-omap2/board-rana.c
+@@ -46,12 +46,13 @@
+ #include <plat/common.h>
+ #include <plat/emif.h>
+ #include <plat/mmc.h>
+-
++#include <plat/nand.h>
+ 
+ #include "cpuidle33xx.h"
+ #include "mux.h"
+ #include "hsmmc.h"
+-
++#include "board-flash.h"
++#include "devices.h"
+ #include "common.h"
+ #include "am33xx_generic.h"
+ 
+@@ -71,6 +72,47 @@ static struct omap_board_mux board_mux[] __initdata = {
+ #define board_mux	NULL
+ #endif
+ 
++/* Pin mux for nand flash module */
++static struct pinmux_config nand_pin_mux[] = {
++	{"gpmc_ad0.gpmc_ad0",     OMAP_MUX_MODE0 | AM33XX_PIN_INPUT_PULLUP},
++	{"gpmc_ad1.gpmc_ad1",     OMAP_MUX_MODE0 | AM33XX_PIN_INPUT_PULLUP},
++	{"gpmc_ad2.gpmc_ad2",     OMAP_MUX_MODE0 | AM33XX_PIN_INPUT_PULLUP},
++	{"gpmc_ad3.gpmc_ad3",     OMAP_MUX_MODE0 | AM33XX_PIN_INPUT_PULLUP},
++	{"gpmc_ad4.gpmc_ad4",     OMAP_MUX_MODE0 | AM33XX_PIN_INPUT_PULLUP},
++	{"gpmc_ad5.gpmc_ad5",     OMAP_MUX_MODE0 | AM33XX_PIN_INPUT_PULLUP},
++	{"gpmc_ad6.gpmc_ad6",     OMAP_MUX_MODE0 | AM33XX_PIN_INPUT_PULLUP},
++	{"gpmc_ad7.gpmc_ad7",     OMAP_MUX_MODE0 | AM33XX_PIN_INPUT_PULLUP},
++	{"gpmc_wait0.gpmc_wait0", OMAP_MUX_MODE0 | AM33XX_PIN_INPUT_PULLUP},
++	{"gpmc_wpn.gpmc_wpn",     OMAP_MUX_MODE7 | AM33XX_PIN_INPUT_PULLUP},
++	{"gpmc_csn0.gpmc_csn0",   OMAP_MUX_MODE0 | AM33XX_PULL_DISA},
++	{"gpmc_advn_ale.gpmc_advn_ale",  OMAP_MUX_MODE0 | AM33XX_PULL_DISA},
++	{"gpmc_oen_ren.gpmc_oen_ren",    OMAP_MUX_MODE0 | AM33XX_PULL_DISA},
++	{"gpmc_wen.gpmc_wen",     OMAP_MUX_MODE0 | AM33XX_PULL_DISA},
++	{"gpmc_ben0_cle.gpmc_ben0_cle",  OMAP_MUX_MODE0 | AM33XX_PULL_DISA},
++	{NULL, 0},
++};
++
++static struct gpmc_timings am335x_nand_timings = {
++	/* granularity of 10 is sufficient because of calculations */
++	.sync_clk	= 0,
++	.cs_on		= 0,
++	.cs_rd_off	= 30,
++	.cs_wr_off	= 30,
++	.adv_on		= 0,
++	.adv_rd_off	= 30,
++	.adv_wr_off	= 30,
++	.oe_on		= 10,
++	.we_off		= 20,
++	.oe_off		= 30,
++	.access		= 30,
++	.rd_cycle	= 30,
++	.wr_cycle	= 30,
++	.cs_cycle_delay	= 50,
++	.cs_delay_en	= 1,
++	.wr_access	= 30,
++	.wr_data_mux_bus = 0,
++};
++
+ static struct regulator_init_data am335x_dummy = {
+ 	.constraints.always_on	= true,
+ };
+@@ -144,6 +186,26 @@ static void __init rana_am335x_i2c_init(void)
+ 					ARRAY_SIZE(rana_am335x_i2c_boardinfo));
+ }
+ 
++/* NAND Initialization */
++static void am335x_nand_init(void)
++{
++	struct omap_nand_platform_data *pdata;
++	struct gpmc_devices_info gpmc_device[2] = {
++			{ NULL, 0 },
++			{ NULL, 0 },
++	};
++	setup_pin_mux(nand_pin_mux);
++	pdata = omap_nand_init(NULL, 0, 0, 0, &am335x_nand_timings);
++	if (!pdata)
++		return;
++	pdata->ecc_opt		= OMAP_ECC_BCH8_CODE_HW;
++	pdata->elm_used		= true;
++	gpmc_device[0].pdata	= pdata;
++	gpmc_device[0].flag	= GPMC_DEVICE_NAND;
++	omap_init_gpmc(gpmc_device, sizeof(gpmc_device));
++	omap_init_elm();
++}
++
+ static void rana_am335x_mux_init(void)
+ {
+ 	mmc0_init();
+@@ -192,6 +254,7 @@ static void __init rana_am335x_init(void)
+ 	omap_sdrc_init(NULL, NULL);
+ 	rana_am335x_mux_init();
+ 	rtc_irq_init();
++	am335x_nand_init();
+ }
+ 
+ static void __init am335x_map_io(void)
+-- 
+1.7.9.5
+

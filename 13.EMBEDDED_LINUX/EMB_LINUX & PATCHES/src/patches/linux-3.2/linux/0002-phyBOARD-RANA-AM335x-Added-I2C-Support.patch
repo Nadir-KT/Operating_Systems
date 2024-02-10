@@ -1,0 +1,63 @@
+From cbc3b313989d93f86e80fbb6d396d4be4cc4878c Mon Sep 17 00:00:00 2001
+From: Ashutosh singh <ashutosh.s@phytec.in>
+Date: Mon, 4 Nov 2013 14:51:40 +0530
+Subject: [PATCH 02/24] phyBOARD-RANA-AM335x: Added I2C Support.
+
+Signed-off-by: Ashutosh singh <ashutosh.s@phytec.in>
+---
+ arch/arm/configs/rana_am335x_defconfig |    3 +--
+ arch/arm/mach-omap2/board-rana.c       |   14 ++++++++++++++
+ 2 files changed, 15 insertions(+), 2 deletions(-)
+
+diff --git a/arch/arm/configs/rana_am335x_defconfig b/arch/arm/configs/rana_am335x_defconfig
+index ac89c3a..dea43d5 100644
+--- a/arch/arm/configs/rana_am335x_defconfig
++++ b/arch/arm/configs/rana_am335x_defconfig
+@@ -85,8 +85,7 @@ CONFIG_TOUCHSCREEN_TI_TSC=y
+ CONFIG_VT_HW_CONSOLE_BINDING=y
+ # CONFIG_LEGACY_PTYS is not set
+ # CONFIG_HW_RANDOM is not set
+-# CONFIG_I2C_COMPAT is not set
+-# CONFIG_I2C_HELPER_AUTO is not set
++CONFIG_I2C_CHARDEV=y
+ CONFIG_GPIO_SYSFS=y
+ CONFIG_SENSORS_LM75=y
+ CONFIG_MFD_TI_TSCADC=y
+diff --git a/arch/arm/mach-omap2/board-rana.c b/arch/arm/mach-omap2/board-rana.c
+index 62f4443..b3b625f 100644
+--- a/arch/arm/mach-omap2/board-rana.c
++++ b/arch/arm/mach-omap2/board-rana.c
+@@ -21,6 +21,7 @@
+ 
+ #include <linux/kernel.h>
+ #include <linux/init.h>
++#include <linux/i2c.h>
+ #include <linux/module.h>
+ #include <linux/gpio.h>
+ #include <linux/input.h>
+@@ -55,9 +56,22 @@
+ 
+ #include <mach/board-rana-am335x.h>
+ 
++static struct i2c_board_info __initdata rana_am335x_i2c_boardinfo[] = {
++	{
++	},
++};
++
++/* I2C Initialisation */
++static void __init rana_am335x_i2c_init(void)
++{
++	omap_register_i2c_bus(1, 100, rana_am335x_i2c_boardinfo,
++					ARRAY_SIZE(rana_am335x_i2c_boardinfo));
++}
++
+ static void rana_am335x_mux_init(void)
+ {
+ 	mmc0_init();
++	rana_am335x_i2c_init();
+ 	return;
+ }
+ 
+-- 
+1.7.9.5
+

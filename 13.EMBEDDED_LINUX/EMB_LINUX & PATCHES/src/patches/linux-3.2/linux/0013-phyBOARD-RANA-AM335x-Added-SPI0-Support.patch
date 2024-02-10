@@ -1,0 +1,110 @@
+From d3735cd18c4a91a306ffbb7989a04aaf87bfde4a Mon Sep 17 00:00:00 2001
+From: Ashutosh singh <ashutosh.s@phytec.in>
+Date: Fri, 20 Dec 2013 14:34:49 +0530
+Subject: [PATCH 13/24] phyBOARD-RANA-AM335x: Added SPI0 Support
+
+Signed-off-by: Ashutosh singh <ashutosh.s@phytec.in>
+---
+ arch/arm/configs/rana_am335x_defconfig             |    3 ++
+ .../mach-omap2/include/mach/board-rana-am335x.h    |   39 +++++++++++++++++++-
+ 2 files changed, 41 insertions(+), 1 deletion(-)
+
+diff --git a/arch/arm/configs/rana_am335x_defconfig b/arch/arm/configs/rana_am335x_defconfig
+index 26380e8..91946d8 100644
+--- a/arch/arm/configs/rana_am335x_defconfig
++++ b/arch/arm/configs/rana_am335x_defconfig
+@@ -135,6 +135,9 @@ CONFIG_VT_HW_CONSOLE_BINDING=y
+ # CONFIG_LEGACY_PTYS is not set
+ # CONFIG_HW_RANDOM is not set
+ CONFIG_I2C_CHARDEV=y
++CONFIG_SPI=y
++CONFIG_SPI_OMAP24XX=y
++CONFIG_SPI_SPIDEV=y
+ CONFIG_GPIO_SYSFS=y
+ CONFIG_GENERIC_PWM=y
+ CONFIG_DAVINCI_EHRPWM=y
+diff --git a/arch/arm/mach-omap2/include/mach/board-rana-am335x.h b/arch/arm/mach-omap2/include/mach/board-rana-am335x.h
+index 641d2e1..34ca33a 100644
+--- a/arch/arm/mach-omap2/include/mach/board-rana-am335x.h
++++ b/arch/arm/mach-omap2/include/mach/board-rana-am335x.h
+@@ -31,11 +31,14 @@
+ #include <linux/mfd/ti_tscadc.h>
+ #include <linux/platform_data/ti_adc.h>
+ 
++#include <linux/spi/spi.h>
++#include <linux/spi/flash.h>
++
+ /* convert GPIO signal to GPIO pin number */
+ #define GPIO_TO_PIN(bank, gpio) (32 * (bank) + (gpio))
+ 
+ #define DEVICE_LEN 10
+-#define DEVICE 1
++#define DEVICE 2
+ 
+ static char rana_board_devices_str[DEVICE_LEN] __initdata = "none";
+ static int i;
+@@ -124,6 +127,19 @@ static struct pinmux_config ecap0_pin_mux[] = {
+ 	{NULL, 0},
+ };
+ 
++/* pin-mux for SPI0 */
++static struct pinmux_config spi0_pin_mux[] = {
++	{"spi0_d0.spi0_d0", OMAP_MUX_MODE0 | AM33XX_PULL_ENBL |
++					AM33XX_PULL_UP | AM33XX_INPUT_EN},
++	{"spi0_cs0.spi0_cs0", OMAP_MUX_MODE0 | AM33XX_PULL_ENBL |
++					AM33XX_PULL_UP | AM33XX_INPUT_EN},
++	{"spi0_sclk.spi0_sclk",	OMAP_MUX_MODE0 | AM33XX_PULL_ENBL |
++							AM33XX_INPUT_EN},
++	{"spi0_d1.spi0_d1", OMAP_MUX_MODE0 | AM33XX_PULL_ENBL |
++							AM33XX_INPUT_EN},
++	{NULL, 0},
++};
++
+ /* MMC0 Platform Data*/
+ static struct omap2_hsmmc_info am335x_mmc[] __initdata = {
+ 	{
+@@ -245,6 +261,17 @@ static struct mfd_tscadc_board tscadc = {
+ 	.tsc_init       = &am335x_touchscreen_data,
+ };
+ 
++/* SPI0 Platform Data */
++static struct spi_board_info am335x_spi0_slave_info[] = {
++	{
++		.modalias	= "spidev",
++		.irq		= -1,
++		.max_speed_hz	= 24000000,
++		.bus_num	= 1,
++		.chip_select	= 0,
++	},
++};
++
+ /* MMC0 Initialization */
+ static void mmc0_init(void)
+ {
+@@ -318,6 +345,15 @@ static void rana_am335x_lcd_init(void)
+ 	return;
+ }
+ 
++/* SPI0 initialization */
++static void rana_am335x_spi0_init(void)
++{
++	setup_pin_mux(spi0_pin_mux);
++	spi_register_board_info(am335x_spi0_slave_info,
++			ARRAY_SIZE(am335x_spi0_slave_info));
++	printk(KERN_INFO"Phytec AM335X : SPI0 Init\n");
++	return;
++}
+ 
+ struct devices {
+ 	char *device_name;
+@@ -326,6 +362,7 @@ struct devices {
+ 
+ struct devices rana_am335x_device[] = {
+ 	{"LCD", rana_am335x_lcd_init},
++	{"SPI0", rana_am335x_spi0_init},
+ 	{"NULL", NULL },
+ };
+ 
+-- 
+1.7.9.5
+

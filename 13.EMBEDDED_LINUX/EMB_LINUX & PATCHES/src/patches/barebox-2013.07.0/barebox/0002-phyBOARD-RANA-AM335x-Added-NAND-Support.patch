@@ -1,0 +1,197 @@
+From fc87021c62b94819a5d4027597fc43f58373599c Mon Sep 17 00:00:00 2001
+From: Ashutosh singh <ashutosh.s@phytec.in>
+Date: Thu, 19 Dec 2013 17:00:18 +0530
+Subject: [PATCH 2/6] phyBOARD-RANA-AM335x: Added NAND Support.
+
+Signed-off-by: Ashutosh singh <ashutosh.s@phytec.in>
+---
+ arch/arm/boards/rana/board.c                |   48 +++++++++++++++++++++++++++
+ arch/arm/boards/rana/env/boot/nand          |   10 ++++++
+ arch/arm/boards/rana/env/init/mtdparts-nand |   11 ++++++
+ arch/arm/boards/rana/mux.c                  |   23 +++++++++++++
+ arch/arm/boards/rana/mux.h                  |    1 +
+ arch/arm/configs/rana_am335x_defconfig      |    6 ++++
+ 6 files changed, 99 insertions(+)
+ create mode 100644 arch/arm/boards/rana/env/boot/nand
+ create mode 100644 arch/arm/boards/rana/env/init/mtdparts-nand
+
+diff --git a/arch/arm/boards/rana/board.c b/arch/arm/boards/rana/board.c
+index 5c841c6..1b031f9 100644
+--- a/arch/arm/boards/rana/board.c
++++ b/arch/arm/boards/rana/board.c
+@@ -20,6 +20,7 @@
+ #include <common.h>
+ #include <init.h>
+ #include <io.h>
++#include <nand.h>
+ #include <sizes.h>
+ #include <ns16550.h>
+ #include <asm/armlinux.h>
+@@ -29,6 +30,8 @@
+ #include <mach/am33xx-mux.h>
+ #include <mach/am33xx-silicon.h>
+ #include <mach/generic.h>
++#include <mach/gpmc.h>
++#include <mach/gpmc_nand.h>
+ #include <mach/bbu.h>
+ 
+ #include "mux.h"
+@@ -61,11 +64,56 @@ static int rana_am335x_mem_init(void)
+ }
+ mem_initcall(rana_am335x_mem_init);
+ 
++static struct gpmc_config rana_am335x_nand_cfg = {
++	.cfg = {
++		0x00000800,     /* CONF1 */
++		0x00030300,     /* CONF2 */
++		0x00030300,     /* CONF3 */
++		0x02000311,     /* CONF4 */
++		0x00030303,     /* CONF5 */
++		0x03000540,     /* CONF6 */
++	},
++	.base = 0x08000000,
++	.size = GPMC_SIZE_16M,
++};
++
++static struct gpmc_nand_platform_data nand_plat = {
++	.wait_mon_pin	= 1,
++	.ecc_mode	= OMAP_ECC_BCH8_CODE_HW,
++	.nand_cfg	= &rana_am335x_nand_cfg,
++	.is_elm_used	= 1,
++};
++
++static struct omap_barebox_part rana_am335x_barebox_part = {
++	.nand_offset	= SZ_512K,
++	.nand_size	= SZ_512K,
++};
++
++static void rana_am335x_nand_init(void)
++{
++	rana_am335x_enable_nand_pin_mux();
++	gpmc_generic_init(0x12);
++	add_generic_device("elm", 0, NULL, 0x48080000, SZ_64K,
++						IORESOURCE_MEM, NULL);
++	omap_add_gpmc_nand_device(&nand_plat);
++}
++
+ /* Devices initialization */
+ static int rana_am335x_devices_init(void)
+ {
+ 	rana_am335x_enable_mmc0_pin_mux();
+ 	am33xx_add_mmc0(NULL);
++	rana_am335x_nand_init();
++	devfs_add_partition("nand0", 0x00000, SZ_128K,
++					DEVFS_PARTITION_FIXED, "xload_raw");
++	dev_add_bb_dev("xload_raw", "xload");
++	devfs_add_partition("nand0", SZ_512K, SZ_512K,
++					DEVFS_PARTITION_FIXED, "self_raw");
++	dev_add_bb_dev("self_raw", "self0");
++	devfs_add_partition("nand0", SZ_512K + SZ_512K, SZ_128K,
++					DEVFS_PARTITION_FIXED, "env_raw");
++	dev_add_bb_dev("env_raw", "env0");
++	omap_set_barebox_part(&rana_am335x_barebox_part);
+ 	armlinux_set_bootparams((void *)(AM33XX_DRAM_ADDR_SPACE_START + 0x100));
+ 	armlinux_set_architecture(MACH_TYPE_RANA);
+ 
+diff --git a/arch/arm/boards/rana/env/boot/nand b/arch/arm/boards/rana/env/boot/nand
+new file mode 100644
+index 0000000..22d657e
+--- /dev/null
++++ b/arch/arm/boards/rana/env/boot/nand
+@@ -0,0 +1,10 @@
++#!/bin/sh
++
++if [ "$1" = menu ]; then
++	boot-menu-add-entry "$0" "nand (UBI)"
++	exit
++fi
++
++global.bootm.image="/dev/nand0.kernel.bb"
++#global.bootm.oftree="/env/oftree"
++global.linux.bootargs.dyn.root="root=ubi0:root ubi.mtd=nand0.root,2048 rootfstype=ubifs"
+diff --git a/arch/arm/boards/rana/env/init/mtdparts-nand b/arch/arm/boards/rana/env/init/mtdparts-nand
+new file mode 100644
+index 0000000..12f0ffd
+--- /dev/null
++++ b/arch/arm/boards/rana/env/init/mtdparts-nand
+@@ -0,0 +1,11 @@
++#!/bin/sh
++
++if [ "$1" = menu ]; then
++	init-menu-add-entry "$0" "NAND partitions"
++	exit
++fi
++
++mtdparts="128k(nand0.xload),128k(nand0.xload_backup1),128k(nand0.xload_backup2),128k(nand0.xload_backup3),512k(nand0.barebox)ro,128k(nand0.bareboxenv),8M(nand0.kernel),-(nand0.root)"
++kernelname="omap2-nand.0"
++
++mtdparts-add -b -d nand0 -k ${kernelname} -p ${mtdparts}
+diff --git a/arch/arm/boards/rana/mux.c b/arch/arm/boards/rana/mux.c
+index d0160c8..7321026 100644
+--- a/arch/arm/boards/rana/mux.c
++++ b/arch/arm/boards/rana/mux.c
+@@ -14,7 +14,30 @@ static const struct module_pin_mux mmc0_pin_mux[] = {
+ 	{-1},
+ };
+ 
++static const struct module_pin_mux nand_pin_mux[] = {
++	{OFFSET(gpmc_ad0), (MODE(0) | PULLUP_EN | RXACTIVE)},   /* NAND AD0 */
++	{OFFSET(gpmc_ad1), (MODE(0) | PULLUP_EN | RXACTIVE)},   /* NAND AD1 */
++	{OFFSET(gpmc_ad2), (MODE(0) | PULLUP_EN | RXACTIVE)},   /* NAND AD2 */
++	{OFFSET(gpmc_ad3), (MODE(0) | PULLUP_EN | RXACTIVE)},   /* NAND AD3 */
++	{OFFSET(gpmc_ad4), (MODE(0) | PULLUP_EN | RXACTIVE)},   /* NAND AD4 */
++	{OFFSET(gpmc_ad5), (MODE(0) | PULLUP_EN | RXACTIVE)},   /* NAND AD5 */
++	{OFFSET(gpmc_ad6), (MODE(0) | PULLUP_EN | RXACTIVE)},   /* NAND AD6 */
++	{OFFSET(gpmc_ad7), (MODE(0) | PULLUP_EN | RXACTIVE)},   /* NAND AD7 */
++	{OFFSET(gpmc_wait0), (MODE(0) | RXACTIVE | PULLUP_EN)}, /* NAND WAIT */
++	{OFFSET(gpmc_csn0), (MODE(0) | PULLUDEN)},      /* NAND_CS0 */
++	{OFFSET(gpmc_advn_ale), (MODE(0) | PULLUDEN)},  /* NAND_ADV_ALE */
++	{OFFSET(gpmc_oen_ren), (MODE(0) | PULLUDEN)},   /* NAND_OE */
++	{OFFSET(gpmc_wen), (MODE(0) | PULLUDEN)},       /* NAND_WEN */
++	{OFFSET(gpmc_be0n_cle), (MODE(0) | PULLUDEN)},  /* NAND_BE_CLE */
++	{-1},
++};
++
+ void rana_am335x_enable_mmc0_pin_mux(void)
+ {
+ 	configure_module_pin_mux(mmc0_pin_mux);
+ }
++
++void rana_am335x_enable_nand_pin_mux(void)
++{
++	configure_module_pin_mux(nand_pin_mux);
++}
+diff --git a/arch/arm/boards/rana/mux.h b/arch/arm/boards/rana/mux.h
+index b2d7edb..d7b0b2e 100644
+--- a/arch/arm/boards/rana/mux.h
++++ b/arch/arm/boards/rana/mux.h
+@@ -1 +1,2 @@
+ extern void rana_am335x_enable_mmc0_pin_mux(void);
++extern void rana_am335x_enable_nand_pin_mux(void);
+diff --git a/arch/arm/configs/rana_am335x_defconfig b/arch/arm/configs/rana_am335x_defconfig
+index 17d77b0..e3908e1 100644
+--- a/arch/arm/configs/rana_am335x_defconfig
++++ b/arch/arm/configs/rana_am335x_defconfig
+@@ -40,6 +40,7 @@ CONFIG_CMD_CRC=y
+ CONFIG_CMD_CRC_CMP=y
+ CONFIG_CMD_MD5SUM=y
+ CONFIG_CMD_FLASH=y
++CONFIG_CMD_UBIFORMAT=y
+ CONFIG_CMD_BOOTM_SHOW_TYPE=y
+ CONFIG_CMD_UIMAGE=y
+ CONFIG_CMD_BOOTZ=y
+@@ -54,6 +55,11 @@ CONFIG_CMD_SPI=y
+ CONFIG_DRIVER_SERIAL_NS16550=y
+ CONFIG_DRIVER_SERIAL_NS16550_OMAP_EXTENSIONS=y
+ CONFIG_DRIVER_SPI_OMAP3=y
++CONFIG_MTD=y
++CONFIG_MTD_M25P80=y
++CONFIG_NAND=y
++CONFIG_NAND_OMAP_GPMC=y
++CONFIG_UBI=y
+ CONFIG_MCI=y
+ CONFIG_MCI_STARTUP=y
+ CONFIG_MCI_OMAP_HSMMC=y
+-- 
+1.7.9.5
+

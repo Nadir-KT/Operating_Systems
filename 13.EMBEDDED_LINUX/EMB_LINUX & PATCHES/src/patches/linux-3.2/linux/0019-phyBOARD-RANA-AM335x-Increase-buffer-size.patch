@@ -1,0 +1,28 @@
+From 9867260b5b1a283e89d04636ab10cea2b184b159 Mon Sep 17 00:00:00 2001
+From: Ashutosh singh <ashutosh.s@phytec.in>
+Date: Fri, 20 Dec 2013 14:49:16 +0530
+Subject: [PATCH 19/24] phyBOARD-RANA-AM335x: Increase buffer size.
+
+Increased Bootargs buffer size.
+
+Signed-off-by: Ashutosh singh <ashutosh.s@phytec.in>
+---
+ .../mach-omap2/include/mach/board-rana-am335x.h    |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/arm/mach-omap2/include/mach/board-rana-am335x.h b/arch/arm/mach-omap2/include/mach/board-rana-am335x.h
+index 898ac9a..33cb01b 100644
+--- a/arch/arm/mach-omap2/include/mach/board-rana-am335x.h
++++ b/arch/arm/mach-omap2/include/mach/board-rana-am335x.h
+@@ -37,7 +37,7 @@
+ /* convert GPIO signal to GPIO pin number */
+ #define GPIO_TO_PIN(bank, gpio) (32 * (bank) + (gpio))
+ 
+-#define DEVICE_LEN 10
++#define DEVICE_LEN 80
+ #define DEVICE 7
+ 
+ static char rana_board_devices_str[DEVICE_LEN] __initdata = "none";
+-- 
+1.7.9.5
+

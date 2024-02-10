@@ -1,0 +1,138 @@
+From a2a2bd1246d79c01281abcf269acfb8da09af4a0 Mon Sep 17 00:00:00 2001
+From: Ashutosh singh <ashutosh.s@phytec.in>
+Date: Mon, 4 Nov 2013 17:24:03 +0530
+Subject: [PATCH 03/24] phyBOARD-RANA-AM335x: Added PMIC-TPS65910 Support.
+
+This patch adds support for PMIC TPS65910A3 & RTC.
+
+Signed-off-by: Ashutosh singh <ashutosh.s@phytec.in>
+---
+ arch/arm/configs/rana_am335x_defconfig |    2 +
+ arch/arm/mach-omap2/board-rana.c       |   75 ++++++++++++++++++++++++++++++++
+ 2 files changed, 77 insertions(+)
+
+diff --git a/arch/arm/configs/rana_am335x_defconfig b/arch/arm/configs/rana_am335x_defconfig
+index dea43d5..e8de87d 100644
+--- a/arch/arm/configs/rana_am335x_defconfig
++++ b/arch/arm/configs/rana_am335x_defconfig
+@@ -117,6 +117,8 @@ CONFIG_MMC=y
+ CONFIG_MMC_UNSAFE_RESUME=y
+ CONFIG_SDIO_UART=y
+ CONFIG_MMC_OMAP_HS=y
++CONFIG_RTC_CLASS=y
++CONFIG_RTC_DRV_TPS65910=y
+ # CONFIG_IOMMU_SUPPORT is not set
+ CONFIG_EXT2_FS=y
+ CONFIG_EXT3_FS=y
+diff --git a/arch/arm/mach-omap2/board-rana.c b/arch/arm/mach-omap2/board-rana.c
+index b3b625f..d6d6167 100644
+--- a/arch/arm/mach-omap2/board-rana.c
++++ b/arch/arm/mach-omap2/board-rana.c
+@@ -29,6 +29,7 @@
+ #include <linux/clk.h>
+ #include <linux/err.h>
+ #include <linux/export.h>
++#include <linux/mfd/tps65910.h>
+ #include <linux/reboot.h>
+ #include <linux/opp.h>
+ 
+@@ -56,8 +57,80 @@
+ 
+ #include <mach/board-rana-am335x.h>
+ 
++#define GPIO_RTC_PMIC_IRQ  GPIO_TO_PIN(3, 4)
++
++#ifdef CONFIG_OMAP_MUX
++static struct omap_board_mux board_mux[] __initdata = {
++	AM33XX_MUX(I2C0_SDA, OMAP_MUX_MODE0 | AM33XX_SLEWCTRL_SLOW |
++					AM33XX_INPUT_EN | AM33XX_PIN_OUTPUT),
++	AM33XX_MUX(I2C0_SCL, OMAP_MUX_MODE0 | AM33XX_SLEWCTRL_SLOW |
++					AM33XX_INPUT_EN | AM33XX_PIN_OUTPUT),
++	{ .reg_offset = OMAP_MUX_TERMINATOR },
++};
++#else
++#define board_mux	NULL
++#endif
++
++static struct regulator_init_data am335x_dummy = {
++	.constraints.always_on	= true,
++};
++
++static struct regulator_consumer_supply am335x_vdd1_supply[] = {
++	REGULATOR_SUPPLY("vdd_mpu", NULL),
++};
++
++static struct regulator_init_data am335x_vdd1 = {
++	.constraints = {
++		.min_uV			= 600000,
++		.max_uV			= 1500000,
++		.valid_modes_mask	= REGULATOR_MODE_NORMAL,
++		.valid_ops_mask		= REGULATOR_CHANGE_VOLTAGE,
++		.always_on		= 1,
++	},
++	.num_consumer_supplies	= ARRAY_SIZE(am335x_vdd1_supply),
++	.consumer_supplies	= am335x_vdd1_supply,
++};
++
++static struct tps65910_board am335x_tps65910_info = {
++	.tps65910_pmic_init_data[TPS65910_REG_VRTC]	= &am335x_dummy,
++	.tps65910_pmic_init_data[TPS65910_REG_VIO]	= &am335x_dummy,
++	.tps65910_pmic_init_data[TPS65910_REG_VDD1]	= &am335x_vdd1,
++	.tps65910_pmic_init_data[TPS65910_REG_VDD2]	= &am335x_dummy,
++	.tps65910_pmic_init_data[TPS65910_REG_VDD3]	= &am335x_dummy,
++	.tps65910_pmic_init_data[TPS65910_REG_VDIG1]	= &am335x_dummy,
++	.tps65910_pmic_init_data[TPS65910_REG_VDIG2]	= &am335x_dummy,
++	.tps65910_pmic_init_data[TPS65910_REG_VPLL]	= &am335x_dummy,
++	.tps65910_pmic_init_data[TPS65910_REG_VDAC]	= &am335x_dummy,
++	.tps65910_pmic_init_data[TPS65910_REG_VAUX1]	= &am335x_dummy,
++	.tps65910_pmic_init_data[TPS65910_REG_VAUX2]	= &am335x_dummy,
++	.tps65910_pmic_init_data[TPS65910_REG_VAUX33]	= &am335x_dummy,
++	.tps65910_pmic_init_data[TPS65910_REG_VMMC]	= &am335x_dummy,
++	.irq	= OMAP_GPIO_IRQ(GPIO_RTC_PMIC_IRQ),
++};
++
++
++static struct pinmux_config rtc_pin_mux[] = {
++	{"mii1_rxdv.gpio3_4", OMAP_MUX_MODE7 | AM33XX_PIN_INPUT_PULLUP},
++	{NULL, 0},
++};
++
++static void __init rtc_irq_init(void)
++{
++	setup_pin_mux(rtc_pin_mux);
++
++	if (omap_mux_init_signal("mii1_rxdv.gpio3_4", AM33XX_PIN_INPUT_PULLUP))
++			printk(KERN_WARNING "Failed to mux PMIC IRQ\n");
++	else if (gpio_request_one(GPIO_RTC_PMIC_IRQ,
++					GPIOF_IN, "rtc-tps65910-irq") < 0)
++			printk(KERN_WARNING "failed to request GPIO%d\n",
++							GPIO_RTC_PMIC_IRQ);
++}
++
+ static struct i2c_board_info __initdata rana_am335x_i2c_boardinfo[] = {
+ 	{
++		/* TPS65910 PMIC */
++		I2C_BOARD_INFO("tps65910", TPS65910_I2C_ID1),
++		.platform_data  = &am335x_tps65910_info,
+ 	},
+ };
+ 
+@@ -71,6 +144,7 @@ static void __init rana_am335x_i2c_init(void)
+ static void rana_am335x_mux_init(void)
+ {
+ 	mmc0_init();
++	am33xx_mux_init(board_mux);
+ 	rana_am335x_i2c_init();
+ 	return;
+ }
+@@ -114,6 +188,7 @@ static void __init rana_am335x_init(void)
+ 	omap_serial_init();
+ 	omap_sdrc_init(NULL, NULL);
+ 	rana_am335x_mux_init();
++	rtc_irq_init();
+ }
+ 
+ static void __init am335x_map_io(void)
+-- 
+1.7.9.5
+

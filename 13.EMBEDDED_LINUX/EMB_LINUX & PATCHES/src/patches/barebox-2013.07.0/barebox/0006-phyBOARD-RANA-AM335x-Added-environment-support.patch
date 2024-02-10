@@ -1,0 +1,230 @@
+From d81ccbe235762790d380287e6fec12e998397d55 Mon Sep 17 00:00:00 2001
+From: Ashutosh singh <ashutosh.s@phytec.in>
+Date: Fri, 13 Dec 2013 17:08:50 +0530
+Subject: [PATCH 6/6] phyBOARD-RANA-AM335x: Added environment support.
+
+Added Expansion & Display support for Barebox.
+
+Signed-off-by: Ashutosh singh <ashutosh.s@phytec.in>
+---
+ arch/arm/boards/rana/env/boot/mmc        |    4 ++++
+ arch/arm/boards/rana/env/boot/nand       |    4 ++++
+ arch/arm/boards/rana/env/config-board    |    3 +++
+ defaultenv-2/base/bin/bootargs-display   |    7 +++++++
+ defaultenv-2/base/bin/bootargs-expansion |    7 +++++++
+ defaultenv-2/base/boot/net               |    2 ++
+ defaultenv-2/base/config                 |    6 +++---
+ defaultenv-2/base/expansion/expansion    |   21 +++++++++++++++++++++
+ defaultenv-2/base/network/eth0           |   10 +++++-----
+ defaultenv-2/base/video/display          |   23 +++++++++++++++++++++++
+ defaultenv-2/menu/menu/settings          |    2 ++
+ 11 files changed, 81 insertions(+), 8 deletions(-)
+ create mode 100644 defaultenv-2/base/bin/bootargs-display
+ create mode 100644 defaultenv-2/base/bin/bootargs-expansion
+ create mode 100644 defaultenv-2/base/expansion/expansion
+ create mode 100644 defaultenv-2/base/video/display
+
+diff --git a/arch/arm/boards/rana/env/boot/mmc b/arch/arm/boards/rana/env/boot/mmc
+index 93a2357..38c0d3f 100644
+--- a/arch/arm/boards/rana/env/boot/mmc
++++ b/arch/arm/boards/rana/env/boot/mmc
+@@ -5,6 +5,10 @@ if [ "$1" = menu ]; then
+ 	exit
+ fi
+ 
++bootargs-ip
++bootargs-display
++bootargs-expansion
++
+ global.bootm.image=/boot/uImage
+ #global.bootm.oftree=/boot/oftree
+ global.linux.bootargs.dyn.root="root=/dev/mmcblk0p2 rootfstype=ext3 rootwait"
+diff --git a/arch/arm/boards/rana/env/boot/nand b/arch/arm/boards/rana/env/boot/nand
+index 22d657e..4309489 100644
+--- a/arch/arm/boards/rana/env/boot/nand
++++ b/arch/arm/boards/rana/env/boot/nand
+@@ -5,6 +5,10 @@ if [ "$1" = menu ]; then
+ 	exit
+ fi
+ 
++bootargs-ip
++bootargs-display
++bootargs-expansion
++
+ global.bootm.image="/dev/nand0.kernel.bb"
+ #global.bootm.oftree="/env/oftree"
+ global.linux.bootargs.dyn.root="root=ubi0:root ubi.mtd=nand0.root,2048 rootfstype=ubifs"
+diff --git a/arch/arm/boards/rana/env/config-board b/arch/arm/boards/rana/env/config-board
+index e2deac4..895c7e8 100644
+--- a/arch/arm/boards/rana/env/config-board
++++ b/arch/arm/boards/rana/env/config-board
+@@ -3,5 +3,8 @@
+ # board defaults, do not change in running system. Change /env/config
+ # instead
+ 
++global linux.bootargs.dyn.display
++global linux.bootargs.dyn.expansion
++
+ global.hostname=rana-am335x
+ global.linux.bootargs.base="console=ttyO0,115200"
+diff --git a/defaultenv-2/base/bin/bootargs-display b/defaultenv-2/base/bin/bootargs-display
+new file mode 100644
+index 0000000..8d22df8
+--- /dev/null
++++ b/defaultenv-2/base/bin/bootargs-display
+@@ -0,0 +1,7 @@
++#!/bin/sh
++
++. /env/video/display
++
++if [ -n $display ]; then
++	global.linux.bootargs.dyn.display="da8xx_fb.panel_name=$display"
++fi
+diff --git a/defaultenv-2/base/bin/bootargs-expansion b/defaultenv-2/base/bin/bootargs-expansion
+new file mode 100644
+index 0000000..399b407
+--- /dev/null
++++ b/defaultenv-2/base/bin/bootargs-expansion
+@@ -0,0 +1,7 @@
++#!/bin/sh
++
++. /env/expansion/expansion
++
++if [ -n $expansion ]; then
++	global.linux.bootargs.dyn.expansion="Devices=$expansion"
++fi
+diff --git a/defaultenv-2/base/boot/net b/defaultenv-2/base/boot/net
+index 05bb728..2a1c098 100644
+--- a/defaultenv-2/base/boot/net
++++ b/defaultenv-2/base/boot/net
+@@ -16,4 +16,6 @@ fi
+ 
+ nfsroot="/home/${global.user}/nfsroot/${global.hostname}"
+ bootargs-ip
++bootargs-display
++bootargs-expansion
+ global.linux.bootargs.dyn.root="root=/dev/nfs nfsroot=$nfsroot,v3,tcp"
+diff --git a/defaultenv-2/base/config b/defaultenv-2/base/config
+index 784ae52..369a46b 100644
+--- a/defaultenv-2/base/config
++++ b/defaultenv-2/base/config
+@@ -6,20 +6,20 @@
+ #global.hostname=
+ 
+ # set to false if you do not want to have colors
+-#global.allow_color=true
++global.allow_color=true
+ 
+ # user (used for network filenames)
+ #global.user=none
+ 
+ # timeout in seconds before the default boot entry is started
+-#global.autoboot_timeout=3
++global.autoboot_timeout=3
+ 
+ # list of boot entries. These are executed in order until one
+ # succeeds. An entry can be:
+ # - a filename in /env/boot/
+ # - a full path to a directory. All files in this directory are
+ #   treated as boot files and executed in alphabetical order
+-#global.boot.default=net
++global.boot.default=$bootsource
+ 
+ # base bootargs
+ #global.linux.bootargs.base="console=ttyS0,115200"
+diff --git a/defaultenv-2/base/expansion/expansion b/defaultenv-2/base/expansion/expansion
+new file mode 100644
+index 0000000..f3bf7bd
+--- /dev/null
++++ b/defaultenv-2/base/expansion/expansion
+@@ -0,0 +1,21 @@
++#!/bin/sh
++
++#expansion
++
++expansion=LCD,SPI0,UART1,UART2,UART3,CAN0,CAN1,GPIO
++
++#You can modify the above value depending upon your usage.
++#Eg. For maximum number of Gpio's pass expansion=ALLGPIO
++
++#LCD	:	It will provide LCD support on Expansion.
++#SPI0	:	It will configure spi0.
++#UART1	:	It will configure uart 1 tx, rx.
++#UART2	:	It will configure uart 2 tx, rx.
++#UART3	:	It will configure uart 3 tx, rx.
++#UART4	:	It will configure uart 4 tx, rx (You can not use CAN1).
++#CAN0	:	It Will Provide CAN0 tx, rx.
++#CAN1	:	It Will Provide CAN1 tx, rx (You can not use UART4).
++#GPIO	:	27 Gpio's will be configured.
++#ALLGPIO:	70 Gpio's (But no other devices will work except NAND, 10/100 Ethernet,
++#		uart0, I2c0, usb0, usb1).
++#UART1FULL:	uart1 will work as full modem i.e, tx, rx, cts, rts
+diff --git a/defaultenv-2/base/network/eth0 b/defaultenv-2/base/network/eth0
+index 7e731ca..13c3d96 100644
+--- a/defaultenv-2/base/network/eth0
++++ b/defaultenv-2/base/network/eth0
+@@ -1,14 +1,14 @@
+ #!/bin/sh
+ 
+ # ip setting (static/dhcp)
+-ip=dhcp
++ip=static
+ global.dhcp.vendor_id=barebox-${global.hostname}
+ 
+ # static setup used if ip=static
+-ipaddr=
+-netmask=
+-gateway=
+-serverip=
++ipaddr=192.168.1.111
++netmask=255.255.255.0
++gateway=192.168.1.1
++serverip=192.168.1.12
+ 
+ # MAC address if needed
+ #ethaddr=xx:xx:xx:xx:xx:xx
+diff --git a/defaultenv-2/base/video/display b/defaultenv-2/base/video/display
+new file mode 100644
+index 0000000..19c03fb
+--- /dev/null
++++ b/defaultenv-2/base/video/display
+@@ -0,0 +1,23 @@
++#!/bin/sh
++
++#Displays
++
++#display=PV_PD050VL1
++#display=PV_PM070WL4
++#display=PV_PD104SLF
++#display=ETM0700G0DH6
++
++#display=PV_PD035VL1
++
++#For 3.5 Inch Display
++display=ZQ_ZQ3506
++
++#For 4.3 Inch Display
++#display=NL4827HC19
++
++
++#for 4.3 Inch HannStar Display
++#display=HSD043I9W1-A
++
++#For 7 Inch Display
++#display=HT_HT800070I
+diff --git a/defaultenv-2/menu/menu/settings b/defaultenv-2/menu/menu/settings
+index db619af..0a490cb 100644
+--- a/defaultenv-2/menu/menu/settings
++++ b/defaultenv-2/menu/menu/settings
+@@ -7,6 +7,8 @@ while true; do
+ 
+ 	menu -e -a -R -m settings -c "$global.editcmd /env/network/eth0" -d "Network settings"
+ 	menu -e -a -R -m settings -c "$global.editcmd /env/config" -d "Config settings"
++	menu -e -a -R -m settings -c "$global.editcmd /env/expansion/expansion" -d "Expansion settings"
++	menu -e -a -R -m settings -c "$global.editcmd /env/video/display" -d "Display settings"
+ 	menu -e -a -m settings -c "boot-entries-edit" -d "Edit boot entries"
+ 	menu -e -a -m settings -c "init-entries-edit" -d "Edit init entries"
+ 	menu -e -a -R -m settings -c "saveenv || echo \"failed to save environment\" && sleep 2" -d "Save settings"
+-- 
+1.7.9.5
+

@@ -1,0 +1,136 @@
+From c79eef28bbb5007e574c7542a47ad4666cc4e292 Mon Sep 17 00:00:00 2001
+From: Ashutosh singh <ashutosh.s@phytec.in>
+Date: Fri, 20 Dec 2013 11:42:55 +0530
+Subject: [PATCH 07/24] phyBOARD-RANA-AM335x: Added 10/100 Ethernet Support.
+
+Added Ethernet interfaces support for RMII1.
+
+Signed-off-by: Ashutosh singh <ashutosh.s@phytec.in>
+---
+ arch/arm/configs/rana_am335x_defconfig |   39 +++++++++++++++++++++++++++++++-
+ arch/arm/mach-omap2/board-rana.c       |   24 ++++++++++++++++++++
+ 2 files changed, 62 insertions(+), 1 deletion(-)
+
+diff --git a/arch/arm/configs/rana_am335x_defconfig b/arch/arm/configs/rana_am335x_defconfig
+index b933aa3..dfeb05a 100644
+--- a/arch/arm/configs/rana_am335x_defconfig
++++ b/arch/arm/configs/rana_am335x_defconfig
+@@ -66,6 +66,24 @@ CONFIG_CPU_IDLE=y
+ CONFIG_FPE_NWFPE=y
+ CONFIG_BINFMT_MISC=y
+ # CONFIG_SUSPEND is not set
++CONFIG_NET=y
++CONFIG_PACKET=y
++CONFIG_UNIX=y
++CONFIG_INET=y
++CONFIG_IP_MULTICAST=y
++CONFIG_IP_PNP=y
++CONFIG_IP_PNP_DHCP=y
++CONFIG_IP_PNP_BOOTP=y
++CONFIG_IP_PNP_RARP=y
++# CONFIG_IPV6 is not set
++CONFIG_NETFILTER=y
++CONFIG_NF_CONNTRACK=y
++CONFIG_NF_CONNTRACK_IPV4=y
++CONFIG_IP_NF_IPTABLES=y
++CONFIG_IP_NF_FILTER=y
++CONFIG_IP_NF_TARGET_LOG=y
++CONFIG_NF_NAT=y
++CONFIG_IP_NF_TARGET_MASQUERADE=y
+ CONFIG_UEVENT_HELPER_PATH="/sbin/hotplug"
+ CONFIG_DEVTMPFS=y
+ CONFIG_DEVTMPFS_MOUNT=y
+@@ -89,6 +107,21 @@ CONFIG_SCSI=y
+ CONFIG_BLK_DEV_SD=y
+ CONFIG_SCSI_MULTI_LUN=y
+ CONFIG_SCSI_SCAN_ASYNC=y
++CONFIG_NETDEVICES=y
++# CONFIG_NET_VENDOR_BROADCOM is not set
++# CONFIG_NET_VENDOR_CHELSIO is not set
++# CONFIG_NET_VENDOR_FARADAY is not set
++# CONFIG_NET_VENDOR_INTEL is not set
++# CONFIG_NET_VENDOR_MARVELL is not set
++# CONFIG_NET_VENDOR_MICREL is not set
++# CONFIG_NET_VENDOR_NATSEMI is not set
++# CONFIG_NET_VENDOR_SEEQ is not set
++# CONFIG_NET_VENDOR_SMSC is not set
++# CONFIG_NET_VENDOR_STMICRO is not set
++CONFIG_TI_CPSW=y
++CONFIG_TI_CPTS=y
++CONFIG_TI_CPSW_DUAL_EMAC=y
++CONFIG_SMSC_PHY=y
+ CONFIG_INPUT_POLLDEV=y
+ CONFIG_INPUT_EVDEV=y
+ # CONFIG_KEYBOARD_ATKBD is not set
+@@ -157,6 +190,11 @@ CONFIG_VFAT_FS=y
+ CONFIG_TMPFS=y
+ CONFIG_UBIFS_FS=y
+ CONFIG_CRAMFS=y
++CONFIG_NFS_FS=y
++CONFIG_NFS_V3=y
++CONFIG_NFS_V3_ACL=y
++CONFIG_NFS_V4=y
++CONFIG_ROOT_NFS=y
+ CONFIG_PARTITION_ADVANCED=y
+ CONFIG_NLS_CODEPAGE_437=y
+ CONFIG_NLS_ISO8859_1=y
+@@ -165,7 +203,6 @@ CONFIG_MAGIC_SYSRQ=y
+ CONFIG_DEBUG_FS=y
+ # CONFIG_ARM_UNWIND is not set
+ CONFIG_DEBUG_JTAG_ENABLE=y
+-CONFIG_KEYS=y
+ CONFIG_SECURITY=y
+ CONFIG_CRYPTO_ECB=y
+ CONFIG_CRYPTO_MICHAEL_MIC=y
+diff --git a/arch/arm/mach-omap2/board-rana.c b/arch/arm/mach-omap2/board-rana.c
+index a004f39..7ef511d 100644
+--- a/arch/arm/mach-omap2/board-rana.c
++++ b/arch/arm/mach-omap2/board-rana.c
+@@ -109,6 +109,22 @@ static struct pinmux_config usb1_pin_mux[] = {
+ 	{NULL, 0},
+ };
+ 
++/* Module pin mux for rmii1 */
++static struct pinmux_config rmii1_pin_mux[] = {
++	{"mii1_crs.rmii1_crs_dv", OMAP_MUX_MODE1 | AM33XX_PIN_INPUT_PULLDOWN},
++	{"mii1_rxerr.mii1_rxerr", OMAP_MUX_MODE1 | AM33XX_PIN_INPUT_PULLDOWN},
++	{"mii1_txen.mii1_txen", OMAP_MUX_MODE1 | AM33XX_PIN_OUTPUT},
++	{"mii1_txd1.mii1_txd1", OMAP_MUX_MODE1 | AM33XX_PIN_OUTPUT},
++	{"mii1_txd0.mii1_txd0", OMAP_MUX_MODE1 | AM33XX_PIN_OUTPUT},
++	{"mii1_rxd1.mii1_rxd1", OMAP_MUX_MODE1 | AM33XX_PIN_INPUT_PULLDOWN},
++	{"mii1_rxd0.mii1_rxd0", OMAP_MUX_MODE1 | AM33XX_PIN_INPUT_PULLDOWN},
++	{"rmii1_refclk.rmii1_refclk", OMAP_MUX_MODE0 |
++				AM33XX_PIN_INPUT_PULLDOWN},
++	{"mdio_data.mdio_data", OMAP_MUX_MODE0 | AM33XX_PIN_INPUT_PULLUP},
++	{"mdio_clk.mdio_clk", OMAP_MUX_MODE0 | AM33XX_PIN_OUTPUT_PULLUP},
++	{NULL, 0},
++};
++
+ static struct gpmc_timings am335x_nand_timings = {
+ 	/* granularity of 10 is sufficient because of calculations */
+ 	.sync_clk	= 0,
+@@ -244,6 +260,13 @@ static void am335x_nand_init(void)
+ 	omap_init_elm();
+ }
+ 
++static void rana_am335x_rmii1_init(void)
++{
++	setup_pin_mux(rmii1_pin_mux);
++	am33xx_cpsw_init(AM33XX_CPSW_MODE_RMII, NULL, NULL);
++	return;
++}
++
+ static void rana_am335x_mux_init(void)
+ {
+ 	mmc0_init();
+@@ -294,6 +317,7 @@ static void __init rana_am335x_init(void)
+ 	rtc_irq_init();
+ 	am335x_nand_init();
+ 	rana_am335x_usb_init();
++	rana_am335x_rmii1_init();
+ }
+ 
+ static void __init am335x_map_io(void)
+-- 
+1.7.9.5
+

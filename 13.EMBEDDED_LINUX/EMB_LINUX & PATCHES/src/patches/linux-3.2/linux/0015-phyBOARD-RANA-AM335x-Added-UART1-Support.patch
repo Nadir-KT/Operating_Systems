@@ -1,0 +1,67 @@
+From 01d20b4ca3c01c9df13ae08c6e03f0b16c1ca3d5 Mon Sep 17 00:00:00 2001
+From: Ashutosh singh <ashutosh.s@phytec.in>
+Date: Fri, 20 Dec 2013 14:38:58 +0530
+Subject: [PATCH 15/24] phyBOARD-RANA-AM335x: Added UART1 Support
+
+Signed-off-by: Ashutosh singh <ashutosh.s@phytec.in>
+---
+ .../mach-omap2/include/mach/board-rana-am335x.h    |   17 ++++++++++++++++-
+ 1 file changed, 16 insertions(+), 1 deletion(-)
+
+diff --git a/arch/arm/mach-omap2/include/mach/board-rana-am335x.h b/arch/arm/mach-omap2/include/mach/board-rana-am335x.h
+index 095e9af..2df7b25 100644
+--- a/arch/arm/mach-omap2/include/mach/board-rana-am335x.h
++++ b/arch/arm/mach-omap2/include/mach/board-rana-am335x.h
+@@ -38,7 +38,7 @@
+ #define GPIO_TO_PIN(bank, gpio) (32 * (bank) + (gpio))
+ 
+ #define DEVICE_LEN 10
+-#define DEVICE 3
++#define DEVICE 4
+ 
+ static char rana_board_devices_str[DEVICE_LEN] __initdata = "none";
+ static int i;
+@@ -144,6 +144,11 @@ static struct pinmux_config spi0_pin_mux[] = {
+ static struct pinmux_config uart1_full_pin_mux[] = {
+ 	{"uart1_ctsn.uart1_ctsn", OMAP_MUX_MODE0 | AM33XX_PIN_OUTPUT},
+ 	{"uart1_rtsn.uart1_rtsn", OMAP_MUX_MODE0 | AM33XX_PIN_INPUT},
++	{NULL, 0},
++};
++
++/* pin-mux for UART1 support */
++static struct pinmux_config uart1_pin_mux[] = {
+ 	{"uart1_rxd.uart1_rxd", OMAP_MUX_MODE0 | AM33XX_PIN_INPUT_PULLUP},
+ 	{"uart1_txd.uart1_txd", OMAP_MUX_MODE0 | AM33XX_PULL_ENBL},
+ 	{NULL, 0},
+@@ -366,11 +371,20 @@ static void rana_am335x_spi0_init(void)
+ 
+ static void rana_am335x_uart1_full_init(void)
+ {
++	setup_pin_mux(uart1_pin_mux);
+ 	setup_pin_mux(uart1_full_pin_mux);
+ 	printk(KERN_INFO"Phytec AM335X : UART1 FUll Modem Init\n");
+ 	return;
+ }
+ 
++static void rana_am335x_uart1_init(void)
++{
++	setup_pin_mux(uart1_pin_mux);
++	printk(KERN_INFO"Phytec AM335X : UART1 Init\n");
++	return;
++}
++
++
+ struct devices {
+ 	char *device_name;
+ 	void (*device_init) (void);
+@@ -380,6 +394,7 @@ struct devices rana_am335x_device[] = {
+ 	{"LCD", rana_am335x_lcd_init},
+ 	{"SPI0", rana_am335x_spi0_init},
+ 	{"UART1FULL", rana_am335x_uart1_full_init},
++	{"UART1", rana_am335x_uart1_init},
+ 	{"NULL", NULL },
+ };
+ 
+-- 
+1.7.9.5
+

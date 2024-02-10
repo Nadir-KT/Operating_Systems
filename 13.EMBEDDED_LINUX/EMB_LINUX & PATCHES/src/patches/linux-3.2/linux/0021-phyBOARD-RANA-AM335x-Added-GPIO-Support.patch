@@ -1,0 +1,117 @@
+From 76341a650a05a1b29b13c4e0ae2eae54dab131a5 Mon Sep 17 00:00:00 2001
+From: Ashutosh singh <ashutosh.s@phytec.in>
+Date: Fri, 20 Dec 2013 14:58:54 +0530
+Subject: [PATCH 21/24] phyBOARD-RANA-AM335x: Added GPIO Support
+
+Signed-off-by: Ashutosh singh <ashutosh.s@phytec.in>
+---
+ .../mach-omap2/include/mach/board-rana-am335x.h    |   72 +++++++++++++++++++-
+ 1 file changed, 71 insertions(+), 1 deletion(-)
+
+diff --git a/arch/arm/mach-omap2/include/mach/board-rana-am335x.h b/arch/arm/mach-omap2/include/mach/board-rana-am335x.h
+index 143d923..99d38b2 100644
+--- a/arch/arm/mach-omap2/include/mach/board-rana-am335x.h
++++ b/arch/arm/mach-omap2/include/mach/board-rana-am335x.h
+@@ -38,7 +38,7 @@
+ #define GPIO_TO_PIN(bank, gpio) (32 * (bank) + (gpio))
+ 
+ #define DEVICE_LEN 80
+-#define DEVICE 8
++#define DEVICE 9
+ 
+ static char rana_board_devices_str[DEVICE_LEN] __initdata = "none";
+ static int i;
+@@ -182,6 +182,67 @@ static struct pinmux_config can0_pin_mux[] = {
+ 	{NULL, 0},
+ };
+ 
++/* Pin-Mux for GPIO's */
++static struct pinmux_config gpio_pin_mux[] = {
++	{"gpmc_csn2.gpio1_31", OMAP_MUX_MODE7 | AM33XX_PIN_INPUT |
++							AM33XX_PIN_OUTPUT},
++	{"gpmc_csn1.gpio1_30", OMAP_MUX_MODE7 | AM33XX_PIN_INPUT |
++							AM33XX_PIN_OUTPUT},
++	{"gpmc_clk.gpio2_1", OMAP_MUX_MODE7 | AM33XX_PIN_INPUT |
++							AM33XX_PIN_OUTPUT},
++	{"gpmc_csn3.gpio2_0", OMAP_MUX_MODE7 | AM33XX_PIN_INPUT |
++							AM33XX_PIN_OUTPUT},
++	{"xdma_event_intr0.gpio0_19", OMAP_MUX_MODE7 | AM33XX_PIN_INPUT |
++							AM33XX_PIN_OUTPUT},
++	{"gpmc_a11.gpio1_27", OMAP_MUX_MODE7 | AM33XX_PIN_INPUT |
++							AM33XX_PIN_OUTPUT},
++	{"gpmc_a10.gpio1_26", OMAP_MUX_MODE7 | AM33XX_PIN_INPUT |
++							AM33XX_PIN_OUTPUT},
++	{"gpmc_a9.gpio1_25", OMAP_MUX_MODE7 | AM33XX_PIN_INPUT |
++							AM33XX_PIN_OUTPUT},
++	{"gpmc_a7.gpio1_23", OMAP_MUX_MODE7 | AM33XX_PIN_INPUT |
++							AM33XX_PIN_OUTPUT},
++	{"gpmc_a6.gpio1_22", OMAP_MUX_MODE7 | AM33XX_PIN_INPUT |
++							AM33XX_PIN_OUTPUT},
++	{"gpmc_a0.gpio1_16", OMAP_MUX_MODE7 | AM33XX_PIN_INPUT |
++							AM33XX_PIN_OUTPUT},
++	{"gpmc_a4.gpio1_20", OMAP_MUX_MODE7 | AM33XX_PIN_INPUT |
++							AM33XX_PIN_OUTPUT},
++	{"gpmc_a8.gpio1_24", OMAP_MUX_MODE7 | AM33XX_PIN_INPUT |
++							AM33XX_PIN_OUTPUT},
++	{"gpmc_ben1.gpio1_28", OMAP_MUX_MODE7 | AM33XX_PIN_INPUT |
++							AM33XX_PIN_OUTPUT},
++	{"gpmc_a5.gpio1_21", OMAP_MUX_MODE7 | AM33XX_PIN_INPUT |
++							AM33XX_PIN_OUTPUT},
++	{"gpmc_a3.gpio1_19", OMAP_MUX_MODE7 | AM33XX_PIN_INPUT |
++							AM33XX_PIN_OUTPUT},
++	{"gpmc_a2.gpio1_18", OMAP_MUX_MODE7 | AM33XX_PIN_INPUT |
++							AM33XX_PIN_OUTPUT},
++	{"gpmc_a1.gpio1_17", OMAP_MUX_MODE7 | AM33XX_PIN_INPUT |
++							AM33XX_PIN_OUTPUT},
++	{"mcasp0_aclkr.gpio3_18", OMAP_MUX_MODE7 | AM33XX_PIN_INPUT |
++							AM33XX_PIN_OUTPUT},
++	{"xdma_event_intr1.gpio0_20", OMAP_MUX_MODE7 | AM33XX_PIN_INPUT |
++							AM33XX_PIN_OUTPUT},
++	{"mii1_rxdv.gpio3_4", OMAP_MUX_MODE7 | AM33XX_PIN_INPUT |
++							AM33XX_PIN_OUTPUT},
++	{"mcasp0_axr1.gpio3_20", OMAP_MUX_MODE7 | AM33XX_PIN_INPUT |
++							AM33XX_PIN_OUTPUT},
++	{"mcasp0_fsx.gpio3_15", OMAP_MUX_MODE7 | AM33XX_PIN_INPUT |
++							AM33XX_PIN_OUTPUT},
++	{"mcasp0_ahclkr.gpio3_17", OMAP_MUX_MODE7 | AM33XX_PIN_INPUT |
++							AM33XX_PIN_OUTPUT},
++	{"mcasp0_ahclkx.gpio3_21", OMAP_MUX_MODE7 | AM33XX_PIN_INPUT |
++							AM33XX_PIN_OUTPUT},
++	{"mcasp0_aclkx.gpio3_14", OMAP_MUX_MODE7 | AM33XX_PIN_INPUT |
++							AM33XX_PIN_OUTPUT},
++	{"mcasp0_axr0.gpio3_16", OMAP_MUX_MODE7 | AM33XX_PIN_INPUT |
++							AM33XX_PIN_OUTPUT},
++	{"mcasp0_fsr.gpio3_19", OMAP_MUX_MODE7 | AM33XX_PIN_INPUT |
++							AM33XX_PIN_OUTPUT},
++	{NULL, 0},
++};
++
+ /* MMC0 Platform Data*/
+ static struct omap2_hsmmc_info am335x_mmc[] __initdata = {
+ 	{
+@@ -442,6 +503,14 @@ static void rana_am335x_can0_init(void)
+ 	return;
+ }
+ 
++/* GPIO initialization */
++static void rana_am335x_gpio_init(void)
++{
++	setup_pin_mux(gpio_pin_mux);
++	printk(KERN_INFO"Phytec AM335X : GPIO Init\n");
++	return;
++}
++
+ struct devices {
+ 	char *device_name;
+ 	void (*device_init) (void);
+@@ -456,6 +525,7 @@ struct devices rana_am335x_device[] = {
+ 	{"UART3", rana_am335x_uart3_init},
+ 	{"UART4", rana_am335x_uart4_init},
+ 	{"CAN0", rana_am335x_can0_init},
++	{"GPIO", rana_am335x_gpio_init},
+ 	{"NULL", NULL },
+ };
+ 
+-- 
+1.7.9.5
+

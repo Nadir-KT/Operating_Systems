@@ -1,0 +1,315 @@
+From 5ee75d15bcb7343d1021210d055cd10850c3e8ea Mon Sep 17 00:00:00 2001
+From: Ashutosh singh <ashutosh.s@phytec.in>
+Date: Fri, 20 Dec 2013 14:18:03 +0530
+Subject: [PATCH 10/24] phyBOARD-RANA-AM335x: Added LCD Support.
+
+Signed-off-by: Ashutosh singh <ashutosh.s@phytec.in>
+---
+ arch/arm/configs/rana_am335x_defconfig             |   13 +-
+ arch/arm/mach-omap2/board-rana.c                   |    1 +
+ .../mach-omap2/include/mach/board-rana-am335x.h    |  157 +++++++++++++++++++-
+ drivers/video/Kconfig                              |    2 +-
+ drivers/video/da8xx-fb.c                           |   28 ++++
+ 5 files changed, 191 insertions(+), 10 deletions(-)
+
+diff --git a/arch/arm/configs/rana_am335x_defconfig b/arch/arm/configs/rana_am335x_defconfig
+index dfeb05a..3ae34a0 100644
+--- a/arch/arm/configs/rana_am335x_defconfig
++++ b/arch/arm/configs/rana_am335x_defconfig
+@@ -127,7 +127,6 @@ CONFIG_INPUT_EVDEV=y
+ # CONFIG_KEYBOARD_ATKBD is not set
+ CONFIG_KEYBOARD_GPIO=y
+ CONFIG_KEYBOARD_MATRIX=y
+-CONFIG_INPUT_TOUCHSCREEN=y
+ CONFIG_INPUT_MISC=y
+ # CONFIG_SERIO_SERPORT is not set
+ CONFIG_VT_HW_CONSOLE_BINDING=y
+@@ -142,16 +141,16 @@ CONFIG_REGULATOR_DUMMY=y
+ CONFIG_REGULATOR_FIXED_VOLTAGE=y
+ CONFIG_REGULATOR_TPS65217=y
+ CONFIG_REGULATOR_TPS65910=y
++CONFIG_MEDIA_SUPPORT=y
++CONFIG_MEDIA_CONTROLLER=y
++CONFIG_VIDEO_DEV=y
++CONFIG_VIDEO_V4L2_SUBDEV_API=y
++CONFIG_USB_VIDEO_CLASS=y
+ CONFIG_FB=y
++CONFIG_FB_FOREIGN_ENDIAN=y
+ CONFIG_FB_MODE_HELPERS=y
+ CONFIG_FB_TILEBLITTING=y
+ CONFIG_FB_DA8XX=y
+-CONFIG_BACKLIGHT_LCD_SUPPORT=y
+-CONFIG_LCD_CLASS_DEVICE=y
+-CONFIG_LCD_PLATFORM=y
+-CONFIG_BACKLIGHT_CLASS_DEVICE=y
+-# CONFIG_BACKLIGHT_GENERIC is not set
+-CONFIG_BACKLIGHT_TLC59108=y
+ CONFIG_DISPLAY_SUPPORT=y
+ CONFIG_FRAMEBUFFER_CONSOLE=y
+ CONFIG_FRAMEBUFFER_CONSOLE_ROTATION=y
+diff --git a/arch/arm/mach-omap2/board-rana.c b/arch/arm/mach-omap2/board-rana.c
+index 8aeb8e4..d2c4e81 100644
+--- a/arch/arm/mach-omap2/board-rana.c
++++ b/arch/arm/mach-omap2/board-rana.c
+@@ -387,6 +387,7 @@ static void __init rana_am335x_init(void)
+ 	rana_am335x_usb_init();
+ 	rana_am335x_rmii1_init();
+ 	am335x_rtc_init();
++	expansion_init();
+ }
+ 
+ static void __init am335x_map_io(void)
+diff --git a/arch/arm/mach-omap2/include/mach/board-rana-am335x.h b/arch/arm/mach-omap2/include/mach/board-rana-am335x.h
+index 72ad082..a3801c8 100644
+--- a/arch/arm/mach-omap2/include/mach/board-rana-am335x.h
++++ b/arch/arm/mach-omap2/include/mach/board-rana-am335x.h
+@@ -18,11 +18,16 @@
+ #ifndef _BOARD_RANA_AM335X_H
+ #define _BOARD_RANA_AM335X_H
+ 
++#include <plat/lcdc.h>
++
++/* LCD controller is similar to DA850 */
++#include <video/da8xx-fb.h>
++
+ /* convert GPIO signal to GPIO pin number */
+ #define GPIO_TO_PIN(bank, gpio) (32 * (bank) + (gpio))
+ 
+ #define DEVICE_LEN 10
+-#define DEVICE 0
++#define DEVICE 1
+ 
+ static char rana_board_devices_str[DEVICE_LEN] __initdata = "none";
+ static int i;
+@@ -55,7 +60,56 @@ static struct pinmux_config mmc0_pin_mux[] = {
+ 	{NULL, 0},
+ };
+ 
+-/* MMC0 Platform data*/
++/* Module pin mux for LCDC */
++static struct pinmux_config lcdc_pin_mux[] = {
++	{"lcd_data0.lcd_data0",	OMAP_MUX_MODE0 | AM33XX_PIN_OUTPUT |
++							AM33XX_PULL_DISA},
++	{"lcd_data1.lcd_data1",	OMAP_MUX_MODE0 | AM33XX_PIN_OUTPUT |
++							AM33XX_PULL_DISA},
++	{"lcd_data2.lcd_data2",	OMAP_MUX_MODE0 | AM33XX_PIN_OUTPUT |
++							AM33XX_PULL_DISA},
++	{"lcd_data3.lcd_data3",	OMAP_MUX_MODE0 | AM33XX_PIN_OUTPUT |
++							AM33XX_PULL_DISA},
++	{"lcd_data4.lcd_data4",	OMAP_MUX_MODE0 | AM33XX_PIN_OUTPUT |
++							AM33XX_PULL_DISA},
++	{"lcd_data5.lcd_data5",	OMAP_MUX_MODE0 | AM33XX_PIN_OUTPUT |
++							AM33XX_PULL_DISA},
++	{"lcd_data6.lcd_data6",	OMAP_MUX_MODE0 | AM33XX_PIN_OUTPUT |
++							AM33XX_PULL_DISA},
++	{"lcd_data7.lcd_data7",	OMAP_MUX_MODE0 | AM33XX_PIN_OUTPUT |
++							AM33XX_PULL_DISA},
++	{"lcd_data8.lcd_data8",	OMAP_MUX_MODE0 | AM33XX_PIN_OUTPUT |
++							AM33XX_PULL_DISA},
++	{"lcd_data9.lcd_data9",	OMAP_MUX_MODE0 | AM33XX_PIN_OUTPUT |
++							AM33XX_PULL_DISA},
++	{"lcd_data10.lcd_data10", OMAP_MUX_MODE0 | AM33XX_PIN_OUTPUT |
++							AM33XX_PULL_DISA},
++	{"lcd_data11.lcd_data11", OMAP_MUX_MODE0 | AM33XX_PIN_OUTPUT |
++							AM33XX_PULL_DISA},
++	{"lcd_data12.lcd_data12", OMAP_MUX_MODE0 | AM33XX_PIN_OUTPUT |
++							AM33XX_PULL_DISA},
++	{"lcd_data13.lcd_data13", OMAP_MUX_MODE0 | AM33XX_PIN_OUTPUT |
++							AM33XX_PULL_DISA},
++	{"lcd_data14.lcd_data14", OMAP_MUX_MODE0 | AM33XX_PIN_OUTPUT |
++							AM33XX_PULL_DISA},
++	{"lcd_data15.lcd_data15", OMAP_MUX_MODE0 | AM33XX_PIN_OUTPUT |
++							AM33XX_PULL_DISA},
++	{"gpmc_ad8.lcd_data16", OMAP_MUX_MODE1 | AM33XX_PIN_OUTPUT},
++	{"gpmc_ad9.lcd_data17",	OMAP_MUX_MODE1 | AM33XX_PIN_OUTPUT},
++	{"gpmc_ad10.lcd_data18", OMAP_MUX_MODE1 | AM33XX_PIN_OUTPUT},
++	{"gpmc_ad11.lcd_data19", OMAP_MUX_MODE1 | AM33XX_PIN_OUTPUT},
++	{"gpmc_ad12.lcd_data20", OMAP_MUX_MODE1 | AM33XX_PIN_OUTPUT},
++	{"gpmc_ad13.lcd_data21", OMAP_MUX_MODE1 | AM33XX_PIN_OUTPUT},
++	{"gpmc_ad14.lcd_data22", OMAP_MUX_MODE1 | AM33XX_PIN_OUTPUT},
++	{"gpmc_ad15.lcd_data23", OMAP_MUX_MODE1 | AM33XX_PIN_OUTPUT},
++	{"lcd_vsync.lcd_vsync", OMAP_MUX_MODE0 | AM33XX_PIN_OUTPUT},
++	{"lcd_hsync.lcd_hsync", OMAP_MUX_MODE0 | AM33XX_PIN_OUTPUT},
++	{"lcd_pclk.lcd_pclk", OMAP_MUX_MODE0 | AM33XX_PIN_OUTPUT},
++	{"lcd_ac_bias_en.lcd_ac_bias_en", OMAP_MUX_MODE0 | AM33XX_PIN_OUTPUT},
++	{NULL, 0},
++};
++
++/* MMC0 Platform Data*/
+ static struct omap2_hsmmc_info am335x_mmc[] __initdata = {
+ 	{
+ 		.mmc		= 1,
+@@ -73,6 +127,64 @@ static struct omap2_hsmmc_info am335x_mmc[] __initdata = {
+ 	{}	/* Terminator */
+ };
+ 
++/* LCD Platform Data */
++static const struct display_panel disp_panel = {
++	VGA,
++	32,
++	32,
++	COLOR_ACTIVE,
++};
++
++static struct lcd_ctrl_config lcd_cfg = {
++	&disp_panel,
++	.ac_bias                = 40,
++	.ac_bias_intrpt         = 0,
++	.dma_burst_sz           = 16,
++	.bpp                    = 32,
++	.fdd                    = 0x80,
++	.tft_alt_mode           = 0,
++	.stn_565_mode           = 0,
++	.mono_8bit_mode         = 0,
++	.invert_line_clock      = 1,
++	.invert_frm_clock       = 1,
++	.sync_edge              = 0,
++	.sync_ctrl              = 1,
++	.raster_order           = 0,
++};
++
++static struct da8xx_lcdc_platform_data lcdc_pdata[] = {
++	{
++		.manu_name              = "PrimeView",
++		.controller_data        = &lcd_cfg,
++		.type                   = "PV_PM070WL4",
++	}, {
++		.manu_name              = "PrimeView",
++		.controller_data        = &lcd_cfg,
++		.type                   = "PV_PD035VL1",
++	}, {
++		.manu_name              = "PrimeView",
++		.controller_data        = &lcd_cfg,
++		.type                   = "PV_PD050VL1",
++	}, {
++		.manu_name              = "PrimeView",
++		.controller_data        = &lcd_cfg,
++		.type                   = "PV_PD104SLF",
++	}, {
++		.manu_name              = "HTdisplay",
++		.controller_data        = &lcd_cfg,
++		.type                   = "HT_HT800070I",
++	}, {
++		.manu_name              = "ZQdisplay",
++		.controller_data        = &lcd_cfg,
++		.type                   = "ZQ_ZQ3506",
++	},
++};
++
++static struct da8xx_lcdc_selection_platform_data lcdc_selection_pdata = {
++	.entries_ptr = lcdc_pdata,
++	.entries_cnt = ARRAY_SIZE(lcdc_pdata)
++};
++
+ /* MMC0 Initialization */
+ static void mmc0_init(void)
+ {
+@@ -81,12 +193,53 @@ static void mmc0_init(void)
+ 	return;
+ }
+ 
++/* LCD initialization */
++static int __init conf_disp_pll(int rate)
++{
++	struct clk *disp_pll;
++	int ret = -EINVAL;
++	disp_pll = clk_get(NULL, "dpll_disp_ck");
++	if (IS_ERR(disp_pll)) {
++		pr_err("Cannot clk_get disp_pll\n");
++		goto out;
++	}
++	ret = clk_set_rate(disp_pll, rate);
++	clk_put(disp_pll);
++out:
++	return ret;
++}
++
++static void lcd_init(void)
++{
++	setup_pin_mux(lcdc_pin_mux);
++
++	if (conf_disp_pll(300000000)) {
++		pr_info("Failed configure display PLL, not attempting"
++						"to register LCDC\n");
++	return;
++	}
++
++	if (am33xx_register_lcdc(&lcdc_selection_pdata))
++		pr_info("Failed to register LCDC device\n");
++	return;
++}
++
++/* RANA-AM335x LCD initialization */
++static void rana_am335x_lcd_init(void)
++{
++	printk(KERN_INFO"Phytec AM335X : LCD Init\n");
++	lcd_init();
++	return;
++}
++
++
+ struct devices {
+ 	char *device_name;
+ 	void (*device_init) (void);
+ };
+ 
+ struct devices rana_am335x_device[] = {
++	{"LCD", rana_am335x_lcd_init},
+ 	{"NULL", NULL },
+ };
+ 
+diff --git a/drivers/video/Kconfig b/drivers/video/Kconfig
+index d770174..d37bb6e 100644
+--- a/drivers/video/Kconfig
++++ b/drivers/video/Kconfig
+@@ -2240,7 +2240,7 @@ config FB_DA8XX
+ 
+ config FB_DA8XX_CONSISTENT_DMA_SIZE
+ 	int "Consistent DMA memory size (MB)"
+-	depends on FB_DA8XX && (MACH_PCM051 || MACH_AM335XEVM || MACH_PCAAXS1 || MACH_PFLA03)
++	depends on FB_DA8XX && (MACH_PCM051 || MACH_AM335XEVM || MACH_PCAAXS1 || MACH_PFLA03 || MACH_RANA)
+ 	range 1 14
+ 	default 4
+ 	help
+diff --git a/drivers/video/da8xx-fb.c b/drivers/video/da8xx-fb.c
+index 673b2bd2..fc53565 100644
+--- a/drivers/video/da8xx-fb.c
++++ b/drivers/video/da8xx-fb.c
+@@ -361,6 +361,34 @@ static struct da8xx_panel known_lcd_panels[] = {
+ 		.pxl_clk = 40000000,
+ 		.invert_pxl_clk = 1,
+ 	},
++	/* HTdisplay HT800070i */
++	[9] = {
++		.name = "HT_HT800070I",
++		.width = 800,
++		.height = 480,
++		.hfp = 210,
++		.hbp = 25,
++		.hsw = 19,
++		.vfp = 21,
++		.vbp = 14,
++		.vsw = 9,
++		.pxl_clk = 30000000,
++		.invert_pxl_clk = 0,
++	},
++	/* display ZQ3506 */
++	[10] = {
++		.name = "ZQ_ZQ3506",
++		.width = 320,
++		.height = 240,
++		.hfp = 20,
++		.hbp = 68,
++		.hsw = 1,
++		.vfp = 4,
++		.vbp = 13,
++		.vsw = 0,
++		.pxl_clk = 4608000,
++		.invert_pxl_clk = 0,
++	},
+ };
+ 
+ static inline bool is_raster_enabled(void)
+-- 
+1.7.9.5
+

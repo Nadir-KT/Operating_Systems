@@ -1,0 +1,124 @@
+From b9547f0709c000d5972e702fc87121a43c4babb3 Mon Sep 17 00:00:00 2001
+From: Ashutosh singh <ashutosh.s@phytec.in>
+Date: Fri, 20 Dec 2013 11:38:18 +0530
+Subject: [PATCH 06/24] phyBOARD-RANA-AM335x: Added USB0 & USB1 Support.
+
+Signed-off-by: Ashutosh singh <ashutosh.s@phytec.in>
+---
+ arch/arm/configs/rana_am335x_defconfig |   16 +++++++++++--
+ arch/arm/mach-omap2/board-rana.c       |   39 ++++++++++++++++++++++++++++++++
+ 2 files changed, 53 insertions(+), 2 deletions(-)
+
+diff --git a/arch/arm/configs/rana_am335x_defconfig b/arch/arm/configs/rana_am335x_defconfig
+index 2936ee4..b933aa3 100644
+--- a/arch/arm/configs/rana_am335x_defconfig
++++ b/arch/arm/configs/rana_am335x_defconfig
+@@ -126,13 +126,25 @@ CONFIG_FONTS=y
+ CONFIG_FONT_8x8=y
+ CONFIG_FONT_8x16=y
+ CONFIG_LOGO=y
+-# CONFIG_HID_SUPPORT is not set
+-# CONFIG_USB_SUPPORT is not set
++CONFIG_USB=y
++CONFIG_USB_ANNOUNCE_NEW_DEVICES=y
++CONFIG_USB_SUSPEND=y
++CONFIG_USB_OTG=y
++# CONFIG_USB_OTG_WHITELIST is not set
++CONFIG_USB_C67X00_HCD=y
++CONFIG_USB_MUSB_HDRC=y
++CONFIG_USB_MUSB_TI81XX_GLUE=y
++CONFIG_USB_TI_CPPI41_DMA_HW=y
++CONFIG_USB_STORAGE=y
++CONFIG_USB_STORAGE_DEBUG=y
++CONFIG_USB_GADGET=y
+ CONFIG_MMC=y
+ CONFIG_MMC_UNSAFE_RESUME=y
+ CONFIG_SDIO_UART=y
+ CONFIG_MMC_OMAP_HS=y
+ CONFIG_RTC_CLASS=y
++CONFIG_RTC_DRV_M41T80=y
++CONFIG_RTC_DRV_TPS65910=y
+ CONFIG_RTC_DRV_OMAP=y
+ # CONFIG_IOMMU_SUPPORT is not set
+ CONFIG_EXT2_FS=y
+diff --git a/arch/arm/mach-omap2/board-rana.c b/arch/arm/mach-omap2/board-rana.c
+index 49af121..a004f39 100644
+--- a/arch/arm/mach-omap2/board-rana.c
++++ b/arch/arm/mach-omap2/board-rana.c
+@@ -47,6 +47,7 @@
+ #include <plat/emif.h>
+ #include <plat/mmc.h>
+ #include <plat/nand.h>
++#include <plat/usb.h>
+ 
+ #include "cpuidle33xx.h"
+ #include "mux.h"
+@@ -92,6 +93,22 @@ static struct pinmux_config nand_pin_mux[] = {
+ 	{NULL, 0},
+ };
+ 
++/* pinmux for usb0 drvvbus */
++static struct pinmux_config usb0_pin_mux[] = {
++	{"usb0_drvvbus.usb0_drvvbus",   OMAP_MUX_MODE0 | AM33XX_PIN_OUTPUT},
++	{"mcasp0_ahclkr.gpio3_17",  OMAP_MUX_MODE7 | AM33XX_PULL_ENBL |
++						AM33XX_PIN_INPUT_PULLUP},
++	{NULL, 0},
++};
++
++/* pinmux for usb1 drvvbus */
++static struct pinmux_config usb1_pin_mux[] = {
++	{"usb1_drvvbus.usb1_drvvbus",   OMAP_MUX_MODE0 | AM33XX_PIN_OUTPUT},
++	{"mcasp0_aclkr.gpio3_18",  OMAP_MUX_MODE7 | AM33XX_PULL_ENBL |
++						AM33XX_PIN_INPUT_PULLUP},
++	{NULL, 0},
++};
++
+ static struct gpmc_timings am335x_nand_timings = {
+ 	/* granularity of 10 is sufficient because of calculations */
+ 	.sync_clk	= 0,
+@@ -113,6 +130,19 @@ static struct gpmc_timings am335x_nand_timings = {
+ 	.wr_data_mux_bus = 0,
+ };
+ 
++/* USB Platform data */
++static struct omap_musb_board_data rana_am335x_musb_board_data = {
++	.interface_type = MUSB_INTERFACE_ULPI,
++	/*
++	* mode[0:3] = USB0PORT's mode
++	* mode[4:7] = USB1PORT's mode
++	* RANA AM335X  has USB0 & USB1 in host mode.
++	*/
++	.mode		= (MUSB_HOST << 4) | (MUSB_HOST << 0),
++	.power		= 500,
++	.instances	= 1,
++};
++
+ static struct regulator_init_data am335x_dummy = {
+ 	.constraints.always_on	= true,
+ };
+@@ -150,6 +180,14 @@ static struct tps65910_board am335x_tps65910_info = {
+ 	.irq	= OMAP_GPIO_IRQ(GPIO_RTC_PMIC_IRQ),
+ };
+ 
++/* USB initialisation */
++static void rana_am335x_usb_init(void)
++{
++	setup_pin_mux(usb0_pin_mux);
++	setup_pin_mux(usb1_pin_mux);
++	usb_musb_init(&rana_am335x_musb_board_data);
++	return;
++}
+ 
+ static struct pinmux_config rtc_pin_mux[] = {
+ 	{"mii1_rxdv.gpio3_4", OMAP_MUX_MODE7 | AM33XX_PIN_INPUT_PULLUP},
+@@ -255,6 +293,7 @@ static void __init rana_am335x_init(void)
+ 	rana_am335x_mux_init();
+ 	rtc_irq_init();
+ 	am335x_nand_init();
++	rana_am335x_usb_init();
+ }
+ 
+ static void __init am335x_map_io(void)
+-- 
+1.7.9.5
+

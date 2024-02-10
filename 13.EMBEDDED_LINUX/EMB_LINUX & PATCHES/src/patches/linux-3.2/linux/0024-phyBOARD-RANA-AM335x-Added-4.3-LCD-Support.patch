@@ -1,0 +1,76 @@
+From 26aa7aee12ed4d024c3e54bc8cceae35cf92fa3b Mon Sep 17 00:00:00 2001
+From: Ashutosh singh <ashutosh.s@phytec.in>
+Date: Fri, 20 Dec 2013 15:12:10 +0530
+Subject: [PATCH 24/24] phyBOARD-RANA-AM335x: Added 4.3 LCD Support
+
+Signed-off-by: Ashutosh singh <ashutosh.s@phytec.in>
+---
+ .../mach-omap2/include/mach/board-rana-am335x.h    |    9 ++++++
+ drivers/video/da8xx-fb.c                           |   30 ++++++++++++++++++++
+ 2 files changed, 39 insertions(+)
+
+diff --git a/arch/arm/mach-omap2/include/mach/board-rana-am335x.h b/arch/arm/mach-omap2/include/mach/board-rana-am335x.h
+index 56f0515..81c12f5 100644
+--- a/arch/arm/mach-omap2/include/mach/board-rana-am335x.h
++++ b/arch/arm/mach-omap2/include/mach/board-rana-am335x.h
+@@ -422,7 +422,16 @@ static struct da8xx_lcdc_platform_data lcdc_pdata[] = {
+ 		.manu_name              = "ZQdisplay",
+ 		.controller_data        = &lcd_cfg,
+ 		.type                   = "ZQ_ZQ3506",
++	}, {
++		.manu_name              = "HannStar Display model",
++		.controller_data        = &lcd_cfg,
++		.type                   = "HSD043I9W1-A",
++	}, {
++		.manu_name              = "NEC Display model",
++		.controller_data        = &lcd_cfg,
++		.type                   = "NL4827HC19",
+ 	},
++
+ };
+ 
+ static struct da8xx_lcdc_selection_platform_data lcdc_selection_pdata = {
+diff --git a/drivers/video/da8xx-fb.c b/drivers/video/da8xx-fb.c
+index fc53565..2746ee9 100644
+--- a/drivers/video/da8xx-fb.c
++++ b/drivers/video/da8xx-fb.c
+@@ -389,6 +389,36 @@ static struct da8xx_panel known_lcd_panels[] = {
+ 		.pxl_clk = 4608000,
+ 		.invert_pxl_clk = 0,
+ 	},
++
++	/*HannStar Display model HSD043I9W1-A*/
++	[11] = {
++		.name = "HSD043I9W1-A",
++		.width = 480,
++		.height = 272,
++		.hfp = 5,
++		.hbp = 40,
++		.hsw = 40,
++		.vfp = 8,
++		.vbp = 8,
++		.vsw = 1,
++		.pxl_clk = 9000000,
++		.invert_pxl_clk = 0,
++	},
++
++	/*NEC Display model NL4827HC19*/
++	[12] = {
++		.name = "NL4827HC19",
++		.width = 480,
++		.height = 272,
++		.hfp = 2,
++		.hbp = 3,
++		.hsw = 40,
++		.vfp = 1,
++		.vbp = 1,
++		.vsw = 1,
++		.pxl_clk = 8690000,
++		.invert_pxl_clk = 0,
++	},
+ };
+ 
+ static inline bool is_raster_enabled(void)
+-- 
+1.7.9.5
+

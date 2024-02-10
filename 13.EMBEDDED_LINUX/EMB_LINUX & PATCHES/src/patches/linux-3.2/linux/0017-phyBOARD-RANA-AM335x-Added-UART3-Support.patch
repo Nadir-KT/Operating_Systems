@@ -1,0 +1,62 @@
+From ffbab1d15a2fb24e7757198962938d4d46c7b129 Mon Sep 17 00:00:00 2001
+From: Ashutosh singh <ashutosh.s@phytec.in>
+Date: Fri, 20 Dec 2013 14:46:16 +0530
+Subject: [PATCH 17/24] phyBOARD-RANA-AM335x: Added UART3 Support
+
+Signed-off-by: Ashutosh singh <ashutosh.s@phytec.in>
+---
+ .../mach-omap2/include/mach/board-rana-am335x.h    |   17 ++++++++++++++++-
+ 1 file changed, 16 insertions(+), 1 deletion(-)
+
+diff --git a/arch/arm/mach-omap2/include/mach/board-rana-am335x.h b/arch/arm/mach-omap2/include/mach/board-rana-am335x.h
+index 2beee89..d4ffb5e 100644
+--- a/arch/arm/mach-omap2/include/mach/board-rana-am335x.h
++++ b/arch/arm/mach-omap2/include/mach/board-rana-am335x.h
+@@ -38,7 +38,7 @@
+ #define GPIO_TO_PIN(bank, gpio) (32 * (bank) + (gpio))
+ 
+ #define DEVICE_LEN 10
+-#define DEVICE 5
++#define DEVICE 6
+ 
+ static char rana_board_devices_str[DEVICE_LEN] __initdata = "none";
+ static int i;
+@@ -161,6 +161,13 @@ static struct pinmux_config uart2_pin_mux[] = {
+ 	{NULL, 0},
+ };
+ 
++/* pin-mux for UART3 support */
++static struct pinmux_config uart3_pin_mux[] = {
++	{"mii1_rxd3.uart3_rxd_mux0", OMAP_MUX_MODE1 | AM33XX_PIN_INPUT_PULLUP},
++	{"mii1_rxd2.uart3_txd_mux0", OMAP_MUX_MODE1 | AM33XX_PULL_ENBL},
++	{NULL, 0},
++};
++
+ /* MMC0 Platform Data*/
+ static struct omap2_hsmmc_info am335x_mmc[] __initdata = {
+ 	{
+@@ -398,6 +405,13 @@ static void rana_am335x_uart2_init(void)
+ 	return;
+ }
+ 
++static void rana_am335x_uart3_init(void)
++{
++	setup_pin_mux(uart3_pin_mux);
++	printk(KERN_INFO"Phytec AM335X : UART3 Init\n");
++	return;
++}
++
+ struct devices {
+ 	char *device_name;
+ 	void (*device_init) (void);
+@@ -409,6 +423,7 @@ struct devices rana_am335x_device[] = {
+ 	{"UART1FULL", rana_am335x_uart1_full_init},
+ 	{"UART1", rana_am335x_uart1_init},
+ 	{"UART2", rana_am335x_uart2_init},
++	{"UART3", rana_am335x_uart3_init},
+ 	{"NULL", NULL },
+ };
+ 
+-- 
+1.7.9.5
+

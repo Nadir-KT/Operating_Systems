@@ -1,0 +1,103 @@
+From de871c426e9cc53afd55c8189c01ac2a6187232e Mon Sep 17 00:00:00 2001
+From: Ashutosh singh <ashutosh.s@phytec.in>
+Date: Fri, 20 Dec 2013 15:10:43 +0530
+Subject: [PATCH 23/24] phyBOARD-RANA-AM335x: Added CAN1 Support
+
+Signed-off-by: Ashutosh singh <ashutosh.s@phytec.in>
+---
+ .../mach-omap2/include/mach/board-rana-am335x.h    |   49 +++++++++++++++++++-
+ 1 file changed, 47 insertions(+), 2 deletions(-)
+
+diff --git a/arch/arm/mach-omap2/include/mach/board-rana-am335x.h b/arch/arm/mach-omap2/include/mach/board-rana-am335x.h
+index c8d0004..56f0515 100644
+--- a/arch/arm/mach-omap2/include/mach/board-rana-am335x.h
++++ b/arch/arm/mach-omap2/include/mach/board-rana-am335x.h
+@@ -38,10 +38,13 @@
+ #define GPIO_TO_PIN(bank, gpio) (32 * (bank) + (gpio))
+ 
+ #define DEVICE_LEN 80
+-#define DEVICE 10
++#define DEVICE 11
+ 
+ static char rana_board_devices_str[DEVICE_LEN] __initdata = "none";
+ static int i;
++
++static void rana_am335x_can1_uart4_init(void);
++
+ /* module pin mux structure */
+ struct pinmux_config {
+ 	const char *string_name;	/* signal name format */
+@@ -182,6 +185,13 @@ static struct pinmux_config can0_pin_mux[] = {
+ 	{NULL, 0},
+ };
+ 
++/* Pin-Mux for CAN1 */
++static struct pinmux_config can1_pin_mux[] = {
++	{"uart0_rtsn.d_can1_rx", OMAP_MUX_MODE2 | AM33XX_PIN_INPUT_PULLUP},
++	{"uart0_ctsn.d_can1_tx", OMAP_MUX_MODE2 | AM33XX_PULL_ENBL},
++	{NULL, 0},
++};
++
+ /* Pin-Mux for GPIO's */
+ static struct pinmux_config gpio_pin_mux[] = {
+ 	{"gpmc_csn2.gpio1_31", OMAP_MUX_MODE7 | AM33XX_PIN_INPUT |
+@@ -598,6 +608,14 @@ static void rana_am335x_can0_init(void)
+ 	return;
+ }
+ 
++/* CAN1 initialization */
++static void rana_am335x_can1_init(void)
++{
++	setup_pin_mux(can1_pin_mux);
++	printk(KERN_INFO"Phytec AM335X : CAN1 Init\n");
++	return;
++}
++
+ /* GPIO initialization */
+ static void rana_am335x_gpio_init(void)
+ {
+@@ -627,13 +645,40 @@ struct devices rana_am335x_device[] = {
+ 	{"UART1", rana_am335x_uart1_init},
+ 	{"UART2", rana_am335x_uart2_init},
+ 	{"UART3", rana_am335x_uart3_init},
+-	{"UART4", rana_am335x_uart4_init},
++	{"UART4", rana_am335x_can1_uart4_init},
+ 	{"CAN0", rana_am335x_can0_init},
+ 	{"GPIO", rana_am335x_gpio_init},
+ 	{"ALLGPIO", rana_am335x_all_gpio_init},
++	{"CAN1", rana_am335x_can1_uart4_init},
+ 	{"NULL", NULL },
+ };
+ 
++/* Configuration function for UART4 & CAN1 */
++static void rana_am335x_can1_uart4_init(void)
++{
++	static int count;
++	static int mux_val;
++
++	if (strcmp("UART4", rana_am335x_device[i].device_name) == 0)
++			mux_val = 1;
++	if (strcmp("CAN1", rana_am335x_device[i].device_name) == 0)
++			mux_val = 2;
++	if (count < 1) {
++		switch (mux_val) {
++		case 1:
++			rana_am335x_uart4_init();
++			count++;
++			break;
++		case 2:
++			rana_am335x_can1_init();
++			count++;
++			break;
++		}
++	} else
++	printk(KERN_INFO"\nYou can use either UART4 or CAN1 at a time\n");
++	return;
++}
++
+ /* 
+  * device_parser
+  * Compare and Initialize the specific Devices.
+-- 
+1.7.9.5
+

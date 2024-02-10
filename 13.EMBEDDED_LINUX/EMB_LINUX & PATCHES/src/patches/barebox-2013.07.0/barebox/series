@@ -1,0 +1,7 @@
+diff_v2013.07.0_to_vphyCORE-AM335x-PD13.1.0.patch
+0001-phyBOARD-RANA-AM335x-Added-Initial-Support.patch
+0002-phyBOARD-RANA-AM335x-Added-NAND-Support.patch
+0003-phyBOARD-RANA-AM335x-Added-Ethernet-Support.patch
+0004-phyBOARD-RANA-AM335x-Fixed-TEXT_BASE-Address.patch
+0005-phyBOARD-RANA-AM335x-Added-NAND-Test-Support.patch
+0006-phyBOARD-RANA-AM335x-Added-environment-support.patch

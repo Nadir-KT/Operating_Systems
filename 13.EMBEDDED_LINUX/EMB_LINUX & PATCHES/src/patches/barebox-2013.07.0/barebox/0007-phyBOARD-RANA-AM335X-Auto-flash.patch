@@ -1,0 +1,242 @@
+From 0883435a07f3ba8ec8fe11921b255f4248130626 Mon Sep 17 00:00:00 2001
+From: Nagamahesh <nagamahesh.g@easyarm.com>
+Date: Wed, 14 May 2014 19:24:04 +0530
+Subject: [PATCH] rana : Added AM335X Auto flash
+
+Signed-off-by: Nagamahesh <nagamahesh.g@easyarm.com>
+---
+ arch/arm/configs/pcm051_defconfig                 |   13 +++---
+ defaultenv-2/base/bin/bootargs-mmc_nand_flash     |   14 ++++++
+ defaultenv-2/base/bin/bootargs-mmc_nand_flash_all |   22 ++++++++++
+ defaultenv-2/base/bin/bootargs-net_nand_flash     |   25 +++++++++++
+ defaultenv-2/base/bin/bootargs-net_nand_flash_all |   48 +++++++++++++++++++++
+ defaultenv-2/base/boot/net                        |    8 ++--
+ defaultenv-2/menu/menu/settings                   |    6 ++-
+ 7 files changed, 124 insertions(+), 12 deletions(-)
+ create mode 100644 defaultenv-2/base/bin/bootargs-mmc_nand_flash
+ create mode 100644 defaultenv-2/base/bin/bootargs-mmc_nand_flash_all
+ create mode 100644 defaultenv-2/base/bin/bootargs-net_nand_flash
+ create mode 100644 defaultenv-2/base/bin/bootargs-net_nand_flash_all
+
+diff --git a/arch/arm/configs/pcm051_defconfig b/arch/arm/configs/pcm051_defconfig
+index 97e0940..09c448d 100644
+--- a/arch/arm/configs/pcm051_defconfig
++++ b/arch/arm/configs/pcm051_defconfig
+@@ -10,7 +10,8 @@ CONFIG_ARM_OPTIMZED_STRING_FUNCTIONS=y
+ CONFIG_ARM_UNWIND=y
+ CONFIG_MMU=y
+ CONFIG_TEXT_BASE=0x8f000000
+-CONFIG_MALLOC_SIZE=0x2000000
++#CONFIG_MALLOC_SIZE=0x2000000
++CONFIG_MALLOC_SIZE=0x4000000
+ CONFIG_PROMPT="barebox@pcm051>"
+ CONFIG_LONGHELP=y
+ CONFIG_HUSH_FANCY_PROMPT=y
+@@ -21,9 +22,9 @@ CONFIG_MENU=y
+ CONFIG_DEFAULT_ENVIRONMENT_GENERIC_NEW=y
+ CONFIG_DEFAULT_ENVIRONMENT_PATH="arch/arm/boards/pcm051/env"
+ CONFIG_DEBUG_INFO=y
+-CONFIG_ENABLE_FLASH_NOISE=y
+-CONFIG_ENABLE_PARTITION_NOISE=y
+-CONFIG_ENABLE_DEVICE_NOISE=y
++#CONFIG_ENABLE_FLASH_NOISE=y
++#CONFIG_ENABLE_PARTITION_NOISE=y
++#CONFIG_ENABLE_DEVICE_NOISE=y
+ CONFIG_CMD_EDIT=y
+ CONFIG_CMD_SLEEP=y
+ CONFIG_CMD_SAVEENV=y
+@@ -41,7 +42,7 @@ CONFIG_CMD_CRC_CMP=y
+ CONFIG_CMD_MD5SUM=y
+ CONFIG_CMD_FLASH=y
+ CONFIG_CMD_UBIFORMAT=y
+-CONFIG_CMD_BOOTM_SHOW_TYPE=y
++#CONFIG_CMD_BOOTM_SHOW_TYPE=y
+ CONFIG_CMD_UIMAGE=y
+ CONFIG_CMD_BOOTZ=y
+ CONFIG_CMD_RESET=y
+@@ -68,7 +69,7 @@ CONFIG_MTD_M25P80=y
+ CONFIG_NAND=y
+ CONFIG_NAND_OMAP_GPMC=y
+ CONFIG_UBI=y
+-CONFIG_USB=y
++#CONFIG_USB=y
+ CONFIG_MCI=y
+ CONFIG_MCI_STARTUP=y
+ CONFIG_MCI_OMAP_HSMMC=y
+diff --git a/defaultenv-2/base/bin/bootargs-mmc_nand_flash b/defaultenv-2/base/bin/bootargs-mmc_nand_flash
+new file mode 100644
+index 0000000..b1568d3
+--- /dev/null
++++ b/defaultenv-2/base/bin/bootargs-mmc_nand_flash
+@@ -0,0 +1,14 @@
++#!/bin/sh
++#Mount disk
++mkdir -p /mnt/fat
++mount /dev/disk0.0 /mnt/fat
++
++echo -e -n "\nErasing Kernel & RFS from NAND \n"
++erase /dev/nand0.kernel.bb
++erase /dev/nand0.root.bb
++
++echo -e -n "\nFlashing Linux kernel\n"
++cp /mnt/fat/uImage /dev/nand0.kernel.bb -v
++
++echo -e -n "\nFlashing RFS\n"
++cp /mnt/fat/root.ubi /dev/nand0.root.bb -v
+diff --git a/defaultenv-2/base/bin/bootargs-mmc_nand_flash_all b/defaultenv-2/base/bin/bootargs-mmc_nand_flash_all
+new file mode 100644
+index 0000000..d0e7b34
+--- /dev/null
++++ b/defaultenv-2/base/bin/bootargs-mmc_nand_flash_all
+@@ -0,0 +1,22 @@
++#!/bin/sh
++#Mount disk
++mkdir -p /mnt/fat
++mount /dev/disk0.0 /mnt/fat
++
++echo -e -n "\nErasing NAND \n"
++erase /dev/nand0
++
++echo -e -n "\nFlashing MLO\n"
++cp /mnt/fat/MLO /dev/nand0.xload.bb -v
++
++echo -e -n "\nFlashing Barebox.bin\n"
++cp /mnt/fat/barebox.bin /dev/nand0.barebox.bb -v
++
++echo -e -n "\nFlashing Barebox.env\n"
++cp /mnt/fat/barebox.env /dev/nand0.bareboxenv.bb -v
++
++echo -e -n "\nFlashing Linux kernel\n"
++cp /mnt/fat/uImage /dev/nand0.kernel.bb -v
++
++echo -e -n "\nFlashing RFS\n"
++cp /mnt/fat/root.ubi /dev/nand0.root.bb -v
+diff --git a/defaultenv-2/base/bin/bootargs-net_nand_flash b/defaultenv-2/base/bin/bootargs-net_nand_flash
+new file mode 100644
+index 0000000..af85a42
+--- /dev/null
++++ b/defaultenv-2/base/bin/bootargs-net_nand_flash
+@@ -0,0 +1,25 @@
++#!/bin/sh
++
++mkdir /mnt/server
++
++ifup eth0
++
++echo -e -n "\nErasing Kernel & RFS from NAND \n"
++erase /dev/nand0.kernel.bb
++erase /dev/nand0.root.bb
++
++echo -e -n "\nLoad uImage from Server\n"
++tftp uImage
++cp /uImage /mnt/server
++rm /uImage
++
++echo -e -n "\nLoad root.ubi from Server\n"
++tftp root.ubi
++cp /root.ubi /mnt/server
++rm /root.ubi
++
++echo -e -n "\nFlashing Linux kernel\n"
++cp /mnt/server/uImage /dev/nand0.kernel.bb -v
++
++echo -e -n "\nFlashing RFS\n"
++cp /mnt/server/root.ubi /dev/nand0.root.bb -v
+diff --git a/defaultenv-2/base/bin/bootargs-net_nand_flash_all b/defaultenv-2/base/bin/bootargs-net_nand_flash_all
+new file mode 100644
+index 0000000..a16039c
+--- /dev/null
++++ b/defaultenv-2/base/bin/bootargs-net_nand_flash_all
+@@ -0,0 +1,48 @@
++#!/bin/sh
++
++mkdir /mnt/server
++
++ifup eth0
++
++echo -e -n "\nErasing NAND \n"
++erase /dev/nand0
++
++echo -e -n "\nLoad MLO from Server\n"
++tftp MLO
++cp /MLO /mnt/server
++rm /MLO
++
++echo -e -n "\nLoad barebox.bin from Server\n"
++tftp barebox.bin
++cp /barebox.bin /mnt/server
++rm /barebox.bin
++
++echo -e -n "\nLoad barebox.env from Server\n"
++tftp barebox.env
++cp /barebox.env /mnt/server
++rm /barebox.env
++
++echo -e -n "\nLoad uImage from Server\n"
++tftp uImage
++cp /uImage /mnt/server
++rm /uImage
++
++echo -e -n "\nLoad root.ubi from Server\n"
++tftp root.ubi
++cp /root.ubi /mnt/server
++rm /root.ubi
++
++echo -e -n "\nFlashing MLO\n"
++cp /mnt/server/MLO /dev/nand0.xload.bb -v
++
++echo -e -n "\nFlashing Barebox.bin\n"
++cp /mnt/server/barebox.bin /dev/nand0.barebox.bb -v
++
++echo -e -n "\nFlashing Barebox.env\n"
++cp /mnt/server/barebox.env /dev/nand0.bareboxenv.bb -v
++
++echo -e -n "\nFlashing Linux kernel\n"
++cp /mnt/server/uImage /dev/nand0.kernel.bb -v
++
++echo -e -n "\nFlashing RFS\n"
++cp /mnt/server/root.ubi /dev/nand0.root.bb -v
+diff --git a/defaultenv-2/base/boot/net b/defaultenv-2/base/boot/net
+index 2a1c098..b58f356 100644
+--- a/defaultenv-2/base/boot/net
++++ b/defaultenv-2/base/boot/net
+@@ -6,15 +6,15 @@ if [ "$1" = menu ]; then
+ fi
+ 
+ path="/mnt/tftp"
+-
+-global.bootm.image="${path}/${global.user}-linux-${global.hostname}"
++#global.bootm.image="${path}/${global.user}-linux-${global.hostname}"
++global.bootm.image="${path}/uImage}"
+ 
+ oftree="${path}/${global.user}-oftree-${global.hostname}"
+ if [ -f "${oftree}" ]; then
+ 	global.bootm.oftree="$oftree"
+ fi
+-
+-nfsroot="/home/${global.user}/nfsroot/${global.hostname}"
++#nfsroot="/home/${global.user}/nfsroot/${global.hostname}"
++nfsroot="/nfsroot"
+ bootargs-ip
+ bootargs-display
+ bootargs-expansion
+diff --git a/defaultenv-2/menu/menu/settings b/defaultenv-2/menu/menu/settings
+index 0a490cb..e3d35e4 100644
+--- a/defaultenv-2/menu/menu/settings
++++ b/defaultenv-2/menu/menu/settings
+@@ -9,8 +9,10 @@ while true; do
+ 	menu -e -a -R -m settings -c "$global.editcmd /env/config" -d "Config settings"
+ 	menu -e -a -R -m settings -c "$global.editcmd /env/expansion/expansion" -d "Expansion settings"
+ 	menu -e -a -R -m settings -c "$global.editcmd /env/video/display" -d "Display settings"
+-	menu -e -a -m settings -c "boot-entries-edit" -d "Edit boot entries"
+-	menu -e -a -m settings -c "init-entries-edit" -d "Edit init entries"
++	menu -e -a -R -m settings -c "./env/bin/bootargs-mmc_nand_flash" -d "Flash uImage & RFS from MMC"
++	menu -e -a -R -m settings -c "./env/bin/bootargs-mmc_nand_flash_all" -d "Flash ALL images from MMC"
++	menu -e -a -R -m settings -c "./env/bin/bootargs-net_nand_flash" -d "Flash uImage & RFS from NET"
++	menu -e -a -R -m settings -c "./env/bin/bootargs-net_nand_flash_all" -d "Flash ALL images from NET"
+ 	menu -e -a -R -m settings -c "saveenv || echo \"failed to save environment\" && sleep 2" -d "Save settings"
+ 	menu -e -a -m settings -c "menu_exit=true" -d "back"
+ 
+-- 
+1.7.9.5
+

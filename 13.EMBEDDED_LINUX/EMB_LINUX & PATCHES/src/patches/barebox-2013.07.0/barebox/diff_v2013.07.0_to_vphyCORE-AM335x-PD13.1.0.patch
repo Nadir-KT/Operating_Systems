@@ -1,0 +1,4071 @@
+diff --git a/arch/arm/Makefile b/arch/arm/Makefile
+index 32bdd65..5ad7408 100644
+--- a/arch/arm/Makefile
++++ b/arch/arm/Makefile
+@@ -245,7 +245,7 @@ KBUILD_IMAGE := barebox.ubl
+ endif
+ 
+ quiet_cmd_am35xx_spi_image = SPI-IMG $@
+-      cmd_am35xx_spi_image = scripts/mk-am35xx-spi-image $< > $@
++      cmd_am35xx_spi_image = scripts/mk-am35xx-spi-image -a $(TEXT_BASE) $< > $@
+ 
+ barebox.spi: $(KBUILD_BINARY) FORCE
+ 	$(call if_changed,am35xx_spi_image)
+diff --git a/arch/arm/boards/archosg9/lowlevel.c b/arch/arm/boards/archosg9/lowlevel.c
+index 0334693..368d456 100644
+--- a/arch/arm/boards/archosg9/lowlevel.c
++++ b/arch/arm/boards/archosg9/lowlevel.c
+@@ -14,8 +14,10 @@
+ #include <io.h>
+ #include <init.h>
+ #include <sizes.h>
++#include <mach/generic.h>
+ #include <mach/omap4-mux.h>
+ #include <mach/omap4-silicon.h>
++#include <mach/omap4-generic.h>
+ #include <mach/omap4-clock.h>
+ #include <mach/syslib.h>
+ #include <asm/barebox-arm.h>
+@@ -65,8 +67,10 @@ static noinline void archosg9_init_lowlevel(void)
+ 	omap4_ddr_init(&ddr_regs_400_mhz_2cs, &core);
+ }
+ 
+-void __naked __bare_init barebox_arm_reset_vector(void)
++void __naked __bare_init barebox_arm_reset_vector(uint32_t *data)
+ {
++	omap4_save_bootinfo(data);
++
+ 	arm_cpu_lowlevel_init();
+ 
+ 	if (get_pc() > 0x80000000)
+diff --git a/arch/arm/boards/beagle/lowlevel.c b/arch/arm/boards/beagle/lowlevel.c
+index d0fd066..ad46386 100644
+--- a/arch/arm/boards/beagle/lowlevel.c
++++ b/arch/arm/boards/beagle/lowlevel.c
+@@ -1,9 +1,12 @@
++#include <init.h>
+ #include <io.h>
+ #include <sizes.h>
+ #include <asm/barebox-arm-head.h>
+ #include <asm/barebox-arm.h>
+ #include <mach/control.h>
++#include <mach/generic.h>
+ #include <mach/omap3-silicon.h>
++#include <mach/omap3-generic.h>
+ #include <mach/omap3-mux.h>
+ #include <mach/sdrc.h>
+ #include <mach/syslib.h>
+@@ -178,8 +181,10 @@ static int beagle_board_init(void)
+ 	return 0;
+ }
+ 
+-void __naked barebox_arm_reset_vector(void)
++void __naked  __bare_init barebox_arm_reset_vector(uint32_t *data)
+ {
++	omap3_save_bootinfo(data);
++
+ 	arm_cpu_lowlevel_init();
+ 
+ 	beagle_board_init();
+diff --git a/arch/arm/boards/beaglebone/lowlevel.c b/arch/arm/boards/beaglebone/lowlevel.c
+index 28959ff..0a32d3b 100644
+--- a/arch/arm/boards/beaglebone/lowlevel.c
++++ b/arch/arm/boards/beaglebone/lowlevel.c
+@@ -5,217 +5,67 @@
+ #include <asm/barebox-arm.h>
+ #include <mach/am33xx-silicon.h>
+ #include <mach/am33xx-clock.h>
++#include <mach/generic.h>
+ #include <mach/sdrc.h>
+ #include <mach/sys_info.h>
+ #include <mach/syslib.h>
+ #include <mach/am33xx-mux.h>
++#include <mach/am33xx-generic.h>
+ #include <mach/wdt.h>
+ 
+-/* UART Defines */
+-#define UART_SYSCFG_OFFSET  (0x54)
+-#define UART_SYSSTS_OFFSET  (0x58)
+-
+-#define UART_RESET      (0x1 << 1)
+-#define UART_CLK_RUNNING_MASK   0x1
+-#define UART_SMART_IDLE_EN  (0x1 << 0x3)
+-
+-/* AM335X EMIF Register values */
+-#define EMIF_SDMGT		0x80000000
+-#define EMIF_SDRAM		0x00004650
+-#define EMIF_PHYCFG		0x2
+-#define DDR_PHY_RESET		(0x1 << 10)
+-#define DDR_FUNCTIONAL_MODE_EN	0x1
+-#define DDR_PHY_READY		(0x1 << 2)
+-#define	VTP_CTRL_READY		(0x1 << 5)
+-#define VTP_CTRL_ENABLE		(0x1 << 6)
+-#define VTP_CTRL_LOCK_EN	(0x1 << 4)
+-#define VTP_CTRL_START_EN	(0x1)
+-#define DDR2_RATIO		0x80	/* for mDDR */
+-#define CMD_FORCE		0x00	/* common #def */
+-#define CMD_DELAY		0x00
+-
+-#define EMIF_READ_LATENCY	0x05
+-#define EMIF_TIM1		0x0666B3D6
+-#define EMIF_TIM2		0x143731DA
+-#define	EMIF_TIM3		0x00000347
+-#define EMIF_SDCFG		0x43805332
+-#define EMIF_SDREF		0x0000081a
+-#define DDR2_DLL_LOCK_DIFF	0x0
+ #define DDR2_RD_DQS		0x12
+ #define DDR2_PHY_FIFO_WE	0x80
+-
+-#define	DDR2_INVERT_CLKOUT	0x00
+ #define	DDR2_WR_DQS		0x00
+ #define	DDR2_PHY_WRLVL		0x00
+ #define	DDR2_PHY_GATELVL	0x00
+ #define	DDR2_PHY_WR_DATA	0x40
+-#define	PHY_RANK0_DELAY		0x01
+-#define PHY_DLL_LOCK_DIFF	0x0
+-#define DDR_IOCTRL_VALUE	0x18B
+-
+-static void beaglebone_data_macro_config(int dataMacroNum)
+-{
+-	u32 BaseAddrOffset = 0x00;
+-
+-	if (dataMacroNum == 1)
+-		BaseAddrOffset = 0xA4;
+-
+-	__raw_writel(((DDR2_RD_DQS<<30)|(DDR2_RD_DQS<<20)
+-		|(DDR2_RD_DQS<<10)|(DDR2_RD_DQS<<0)),
+-		(AM33XX_DATA0_RD_DQS_SLAVE_RATIO_0 + BaseAddrOffset));
+-	__raw_writel(DDR2_RD_DQS>>2,
+-		(AM33XX_DATA0_RD_DQS_SLAVE_RATIO_1 + BaseAddrOffset));
+-	__raw_writel(((DDR2_WR_DQS<<30)|(DDR2_WR_DQS<<20)
+-		|(DDR2_WR_DQS<<10)|(DDR2_WR_DQS<<0)),
+-		(AM33XX_DATA0_WR_DQS_SLAVE_RATIO_0 + BaseAddrOffset));
+-	__raw_writel(DDR2_WR_DQS>>2,
+-		(AM33XX_DATA0_WR_DQS_SLAVE_RATIO_1 + BaseAddrOffset));
+-	__raw_writel(((DDR2_PHY_WRLVL<<30)|(DDR2_PHY_WRLVL<<20)
+-		|(DDR2_PHY_WRLVL<<10)|(DDR2_PHY_WRLVL<<0)),
+-		(AM33XX_DATA0_WRLVL_INIT_RATIO_0 + BaseAddrOffset));
+-	__raw_writel(DDR2_PHY_WRLVL>>2,
+-		(AM33XX_DATA0_WRLVL_INIT_RATIO_1 + BaseAddrOffset));
+-	__raw_writel(((DDR2_PHY_GATELVL<<30)|(DDR2_PHY_GATELVL<<20)
+-		|(DDR2_PHY_GATELVL<<10)|(DDR2_PHY_GATELVL<<0)),
+-		(AM33XX_DATA0_GATELVL_INIT_RATIO_0 + BaseAddrOffset));
+-	__raw_writel(DDR2_PHY_GATELVL>>2,
+-		(AM33XX_DATA0_GATELVL_INIT_RATIO_1 + BaseAddrOffset));
+-	__raw_writel(((DDR2_PHY_FIFO_WE<<30)|(DDR2_PHY_FIFO_WE<<20)
+-		|(DDR2_PHY_FIFO_WE<<10)|(DDR2_PHY_FIFO_WE<<0)),
+-		(AM33XX_DATA0_FIFO_WE_SLAVE_RATIO_0 + BaseAddrOffset));
+-	__raw_writel(DDR2_PHY_FIFO_WE>>2,
+-		(AM33XX_DATA0_FIFO_WE_SLAVE_RATIO_1 + BaseAddrOffset));
+-	__raw_writel(((DDR2_PHY_WR_DATA<<30)|(DDR2_PHY_WR_DATA<<20)
+-		|(DDR2_PHY_WR_DATA<<10)|(DDR2_PHY_WR_DATA<<0)),
+-		(AM33XX_DATA0_WR_DATA_SLAVE_RATIO_0 + BaseAddrOffset));
+-	__raw_writel(DDR2_PHY_WR_DATA>>2,
+-		(AM33XX_DATA0_WR_DATA_SLAVE_RATIO_1 + BaseAddrOffset));
+-	__raw_writel(PHY_DLL_LOCK_DIFF,
+-		(AM33XX_DATA0_DLL_LOCK_DIFF_0 + BaseAddrOffset));
+-}
+-
+-static void beaglebone_cmd_macro_config(void)
+-{
+-	__raw_writel(DDR2_RATIO, AM33XX_CMD0_CTRL_SLAVE_RATIO_0);
+-	__raw_writel(CMD_FORCE, AM33XX_CMD0_CTRL_SLAVE_FORCE_0);
+-	__raw_writel(CMD_DELAY, AM33XX_CMD0_CTRL_SLAVE_DELAY_0);
+-	__raw_writel(DDR2_DLL_LOCK_DIFF, AM33XX_CMD0_DLL_LOCK_DIFF_0);
+-	__raw_writel(DDR2_INVERT_CLKOUT, AM33XX_CMD0_INVERT_CLKOUT_0);
+-
+-	__raw_writel(DDR2_RATIO, AM33XX_CMD1_CTRL_SLAVE_RATIO_0);
+-	__raw_writel(CMD_FORCE, AM33XX_CMD1_CTRL_SLAVE_FORCE_0);
+-	__raw_writel(CMD_DELAY, AM33XX_CMD1_CTRL_SLAVE_DELAY_0);
+-	__raw_writel(DDR2_DLL_LOCK_DIFF, AM33XX_CMD1_DLL_LOCK_DIFF_0);
+-	__raw_writel(DDR2_INVERT_CLKOUT, AM33XX_CMD1_INVERT_CLKOUT_0);
+-
+-	__raw_writel(DDR2_RATIO, AM33XX_CMD2_CTRL_SLAVE_RATIO_0);
+-	__raw_writel(CMD_FORCE, AM33XX_CMD2_CTRL_SLAVE_FORCE_0);
+-	__raw_writel(CMD_DELAY, AM33XX_CMD2_CTRL_SLAVE_DELAY_0);
+-	__raw_writel(DDR2_DLL_LOCK_DIFF, AM33XX_CMD2_DLL_LOCK_DIFF_0);
+-	__raw_writel(DDR2_INVERT_CLKOUT, AM33XX_CMD2_INVERT_CLKOUT_0);
+-}
+-
+-static void beaglebone_config_vtp(void)
+-{
+-	__raw_writel(__raw_readl(AM33XX_VTP0_CTRL_REG) | VTP_CTRL_ENABLE,
+-		AM33XX_VTP0_CTRL_REG);
+-	__raw_writel(__raw_readl(AM33XX_VTP0_CTRL_REG) & (~VTP_CTRL_START_EN),
+-		AM33XX_VTP0_CTRL_REG);
+-	__raw_writel(__raw_readl(AM33XX_VTP0_CTRL_REG) | VTP_CTRL_START_EN,
+-		AM33XX_VTP0_CTRL_REG);
+-
+-	/* Poll for READY */
+-	while ((__raw_readl(AM33XX_VTP0_CTRL_REG) & VTP_CTRL_READY) != VTP_CTRL_READY);
+-}
+-
+-static void beaglebone_config_emif_ddr2(void)
+-{
+-	u32 i;
+-
+-	/*Program EMIF0 CFG Registers*/
+-	__raw_writel(EMIF_READ_LATENCY, AM33XX_EMIF4_0_REG(DDR_PHY_CTRL_1));
+-	__raw_writel(EMIF_READ_LATENCY, AM33XX_EMIF4_0_REG(DDR_PHY_CTRL_1_SHADOW));
+-	__raw_writel(EMIF_READ_LATENCY, AM33XX_EMIF4_0_REG(DDR_PHY_CTRL_2));
+-	__raw_writel(EMIF_TIM1, AM33XX_EMIF4_0_REG(SDRAM_TIM_1));
+-	__raw_writel(EMIF_TIM1, AM33XX_EMIF4_0_REG(SDRAM_TIM_1_SHADOW));
+-	__raw_writel(EMIF_TIM2, AM33XX_EMIF4_0_REG(SDRAM_TIM_2));
+-	__raw_writel(EMIF_TIM2, AM33XX_EMIF4_0_REG(SDRAM_TIM_2_SHADOW));
+-	__raw_writel(EMIF_TIM3, AM33XX_EMIF4_0_REG(SDRAM_TIM_3));
+-	__raw_writel(EMIF_TIM3, AM33XX_EMIF4_0_REG(SDRAM_TIM_3_SHADOW));
+-
+-	__raw_writel(EMIF_SDCFG, AM33XX_EMIF4_0_REG(SDRAM_CONFIG));
+-	__raw_writel(EMIF_SDCFG, AM33XX_EMIF4_0_REG(SDRAM_CONFIG2));
+-
+-	/* __raw_writel(EMIF_SDMGT, EMIF0_0_SDRAM_MGMT_CTRL);
+-	__raw_writel(EMIF_SDMGT, EMIF0_0_SDRAM_MGMT_CTRL_SHD); */
+-	__raw_writel(0x00004650, AM33XX_EMIF4_0_REG(SDRAM_REF_CTRL));
+-	__raw_writel(0x00004650, AM33XX_EMIF4_0_REG(SDRAM_REF_CTRL_SHADOW));
+-
+-	for (i = 0; i < 5000; i++) {
+-
+-	}
+-
+-	/* __raw_writel(EMIF_SDMGT, EMIF0_0_SDRAM_MGMT_CTRL);
+-	__raw_writel(EMIF_SDMGT, EMIF0_0_SDRAM_MGMT_CTRL_SHD); */
+-	__raw_writel(EMIF_SDREF, AM33XX_EMIF4_0_REG(SDRAM_REF_CTRL));
+-	__raw_writel(EMIF_SDREF, AM33XX_EMIF4_0_REG(SDRAM_REF_CTRL_SHADOW));
+-
+-	__raw_writel(EMIF_SDCFG, AM33XX_EMIF4_0_REG(SDRAM_CONFIG));
+-	__raw_writel(EMIF_SDCFG, AM33XX_EMIF4_0_REG(SDRAM_CONFIG2));
+-}
+-
+-static void beaglebone_config_ddr(void)
+-{
+-	enable_ddr_clocks();
+-
+-	beaglebone_config_vtp();
+-
+-	beaglebone_cmd_macro_config();
+-	beaglebone_data_macro_config(0);
+-	beaglebone_data_macro_config(1);
+-
+-	__raw_writel(PHY_RANK0_DELAY, AM33XX_DATA0_RANK0_DELAYS_0);
+-	__raw_writel(PHY_RANK0_DELAY, AM33XX_DATA1_RANK0_DELAYS_0);
+-
+-	__raw_writel(DDR_IOCTRL_VALUE, AM33XX_DDR_CMD0_IOCTRL);
+-	__raw_writel(DDR_IOCTRL_VALUE, AM33XX_DDR_CMD1_IOCTRL);
+-	__raw_writel(DDR_IOCTRL_VALUE, AM33XX_DDR_CMD2_IOCTRL);
+-	__raw_writel(DDR_IOCTRL_VALUE, AM33XX_DDR_DATA0_IOCTRL);
+-	__raw_writel(DDR_IOCTRL_VALUE, AM33XX_DDR_DATA1_IOCTRL);
+-
+-	__raw_writel(__raw_readl(AM33XX_DDR_IO_CTRL) & 0xefffffff, AM33XX_DDR_IO_CTRL);
+-	__raw_writel(__raw_readl(AM33XX_DDR_CKE_CTRL) | 0x00000001, AM33XX_DDR_CKE_CTRL);
+-
+-	beaglebone_config_emif_ddr2();
+-}
+-
+-/*
+- * early system init of muxing and clocks.
+- */
+-void beaglebone_sram_init(void)
+-{
+-	u32 regVal, uart_base;
+-
+-	/* Setup the PLLs and the clocks for the peripherals */
+-	pll_init();
+-
+-	beaglebone_config_ddr();
+-
+-	/* UART softreset */
+-	uart_base = AM33XX_UART0_BASE;
+-
+-	regVal = __raw_readl(uart_base + UART_SYSCFG_OFFSET);
+-	regVal |= UART_RESET;
+-	__raw_writel(regVal, (uart_base + UART_SYSCFG_OFFSET) );
+-	while ((__raw_readl(uart_base + UART_SYSSTS_OFFSET) &
+-		UART_CLK_RUNNING_MASK) != UART_CLK_RUNNING_MASK);
+-
+-	/* Disable smart idle */
+-	regVal = __raw_readl((uart_base + UART_SYSCFG_OFFSET));
+-	regVal |= UART_SMART_IDLE_EN;
+-	__raw_writel(regVal, (uart_base + UART_SYSCFG_OFFSET));
+-}
+ 
++static const struct am33xx_cmd_control ddr2_cmd_ctrl = {
++	.slave_ratio0	= 0x80,
++	.dll_lock_diff0	= 0x0,
++	.invert_clkout0	= 0x0,
++	.slave_ratio1	= 0x80,
++	.dll_lock_diff1	= 0x0,
++	.invert_clkout1	= 0x0,
++	.slave_ratio2	= 0x80,
++	.dll_lock_diff2	= 0x0,
++	.invert_clkout2	= 0x0,
++};
++
++static const struct am33xx_emif_regs ddr2_regs = {
++	.emif_read_latency	= 0x5,
++	.emif_tim1		= 0x0666B3D6,
++	.emif_tim2		= 0x143731DA,
++	.emif_tim3		= 0x00000347,
++	.sdram_config		= 0x43805332,
++	.sdram_config2		= 0x43805332,
++	.sdram_ref_ctrl		= 0x0000081a,
++};
++
++static const struct am33xx_ddr_data ddr2_data = {
++	.rd_slave_ratio0        = (DDR2_RD_DQS << 30) | (DDR2_RD_DQS << 20) |
++				(DDR2_RD_DQS << 10) | (DDR2_RD_DQS << 0),
++	.wr_dqs_slave_ratio0    = (DDR2_WR_DQS << 30) | (DDR2_WR_DQS << 20) |
++				(DDR2_WR_DQS << 10) | (DDR2_WR_DQS << 0),
++	.wrlvl_init_ratio0	= (DDR2_PHY_WRLVL << 30) |
++				(DDR2_PHY_WRLVL << 20) |
++				(DDR2_PHY_WRLVL << 10) |
++				(DDR2_PHY_WRLVL << 0),
++	.gatelvl_init_ratio0	= (DDR2_PHY_GATELVL << 30) |
++				(DDR2_PHY_GATELVL << 20) |
++				(DDR2_PHY_GATELVL << 10) |
++				(DDR2_PHY_GATELVL << 0),
++	.fifo_we_slave_ratio0	= (DDR2_PHY_FIFO_WE << 30) |
++				(DDR2_PHY_FIFO_WE << 20) |
++				(DDR2_PHY_FIFO_WE << 10) |
++				(DDR2_PHY_FIFO_WE << 0),
++	.wr_slave_ratio0        = (DDR2_PHY_WR_DATA << 30) |
++				(DDR2_PHY_WR_DATA << 20) |
++				(DDR2_PHY_WR_DATA << 10) |
++				(DDR2_PHY_WR_DATA << 0),
++	.use_rank0_delay	= 0x01,
++	.dll_lock_diff0		= 0x0,
++};
+ 
+ /**
+  * @brief The basic entry point for board initialization.
+@@ -228,8 +78,6 @@ void beaglebone_sram_init(void)
+  */
+ static int beaglebone_board_init(void)
+ {
+-	int in_sdram = running_in_sdram();
+-
+ 	/* WDT1 is already running when the bootloader gets control
+ 	 * Disable it to avoid "random" resets
+ 	 */
+@@ -238,18 +86,22 @@ static int beaglebone_board_init(void)
+ 	__raw_writel(WDT_DISABLE_CODE2, AM33XX_WDT_REG(WSPR));
+ 	while(__raw_readl(AM33XX_WDT_REG(WWPS)) != 0x0);
+ 
+-	/* Dont reconfigure SDRAM while running in SDRAM! */
+-	if (!in_sdram)
+-		beaglebone_sram_init();
++	if (running_in_sdram())
++		return 0;
++
++	pll_init(MPUPLL_M_500, 24, DDRPLL_M_266);
++
++	am335x_sdram_init(0x18B, &ddr2_cmd_ctrl, &ddr2_regs, &ddr2_data);
+ 
+-	/* Enable pin mux */
+ 	am33xx_enable_uart0_pin_mux();
+ 
+ 	return 0;
+ }
+ 
+-void __naked barebox_arm_reset_vector(void)
++void __bare_init __naked barebox_arm_reset_vector(uint32_t *data)
+ {
++	am33xx_save_bootinfo(data);
++
+ 	arm_cpu_lowlevel_init();
+ 
+ 	beaglebone_board_init();
+diff --git a/arch/arm/boards/omap343xdsp/lowlevel.c b/arch/arm/boards/omap343xdsp/lowlevel.c
+index ed675ad..fcb9571 100644
+--- a/arch/arm/boards/omap343xdsp/lowlevel.c
++++ b/arch/arm/boards/omap343xdsp/lowlevel.c
+@@ -1,13 +1,16 @@
+ #include <common.h>
++#include <init.h>
+ #include <io.h>
+ #include <sizes.h>
+ #include <asm/barebox-arm-head.h>
+ #include <asm/barebox-arm.h>
++#include <mach/generic.h>
+ #include <mach/omap3-mux.h>
+ #include <mach/sdrc.h>
+ #include <mach/control.h>
+ #include <mach/syslib.h>
+ #include <mach/omap3-silicon.h>
++#include <mach/omap3-generic.h>
+ #include <mach/sys_info.h>
+ 
+ /**
+@@ -545,8 +548,10 @@ static int sdp343x_board_init(void)
+ 	return 0;
+ }
+ 
+-void __naked barebox_arm_reset_vector(void)
++void __naked __bare_init barebox_arm_reset_vector(uint32_t *data)
+ {
++	omap3_save_bootinfo(data);
++
+ 	arm_cpu_lowlevel_init();
+ 
+ 	sdp343x_board_init();
+diff --git a/arch/arm/boards/omap3evm/lowlevel.c b/arch/arm/boards/omap3evm/lowlevel.c
+index 2d9e130..98f1476 100644
+--- a/arch/arm/boards/omap3evm/lowlevel.c
++++ b/arch/arm/boards/omap3evm/lowlevel.c
+@@ -3,11 +3,13 @@
+ #include <sizes.h>
+ #include <asm/barebox-arm-head.h>
+ #include <asm/barebox-arm.h>
++#include <mach/generic.h>
+ #include <mach/omap3-mux.h>
+ #include <mach/sdrc.h>
+ #include <mach/control.h>
+ #include <mach/syslib.h>
+ #include <mach/omap3-silicon.h>
++#include <mach/omap3-generic.h>
+ #include <mach/sys_info.h>
+ 
+ 
+@@ -159,8 +161,10 @@ static int omap3_evm_board_init(void)
+ 	return 0;
+ }
+ 
+-void __naked barebox_arm_reset_vector(void)
++void __naked __bare_init barebox_arm_reset_vector(uint32_t *data)
+ {
++	omap3_save_bootinfo(data);
++
+ 	arm_cpu_lowlevel_init();
+ 
+ 	omap3_evm_board_init();
+diff --git a/arch/arm/boards/panda/lowlevel.c b/arch/arm/boards/panda/lowlevel.c
+index ed1dc6f..59d3490 100644
+--- a/arch/arm/boards/panda/lowlevel.c
++++ b/arch/arm/boards/panda/lowlevel.c
+@@ -17,10 +17,13 @@
+  *
+  */
+ #include <common.h>
++#include <init.h>
+ #include <io.h>
+ #include <sizes.h>
++#include <mach/generic.h>
+ #include <mach/omap4-mux.h>
+ #include <mach/omap4-silicon.h>
++#include <mach/omap4-generic.h>
+ #include <mach/omap4-clock.h>
+ #include <mach/syslib.h>
+ #include <asm/barebox-arm.h>
+@@ -73,8 +76,10 @@ static void noinline panda_init_lowlevel(void)
+ 	omap4_scale_vcores(TPS62361_VSEL0_GPIO);
+ }
+ 
+-void barebox_arm_reset_vector(void)
++void __bare_init __naked barebox_arm_reset_vector(uint32_t *data)
+ {
++	omap4_save_bootinfo(data);
++
+ 	arm_cpu_lowlevel_init();
+ 
+ 	if (get_pc() > 0x80000000)
+diff --git a/arch/arm/boards/pcm049/lowlevel.c b/arch/arm/boards/pcm049/lowlevel.c
+index 8bcecb1..c7c33cd 100644
+--- a/arch/arm/boards/pcm049/lowlevel.c
++++ b/arch/arm/boards/pcm049/lowlevel.c
+@@ -17,10 +17,13 @@
+  *
+  */
+ #include <common.h>
++#include <init.h>
+ #include <io.h>
+ #include <sizes.h>
++#include <mach/generic.h>
+ #include <mach/omap4-mux.h>
+ #include <mach/omap4-silicon.h>
++#include <mach/omap4-generic.h>
+ #include <mach/omap4-clock.h>
+ #include <mach/syslib.h>
+ #include <asm/barebox-arm.h>
+@@ -102,8 +105,10 @@ static void noinline pcm049_init_lowlevel(void)
+ 	sr32(OMAP44XX_SCRM_ALTCLKSRC, 2, 2, 0x3);  /* enable clocks */
+ }
+ 
+-void barebox_arm_reset_vector(void)
++void __bare_init __naked barebox_arm_reset_vector(uint32_t *data)
+ {
++	omap4_save_bootinfo(data);
++
+ 	arm_cpu_lowlevel_init();
+ 
+ 	if (get_pc() > 0x80000000)
+diff --git a/arch/arm/boards/pcm051/board.c b/arch/arm/boards/pcm051/board.c
+index 8754ba5..492d877 100644
+--- a/arch/arm/boards/pcm051/board.c
++++ b/arch/arm/boards/pcm051/board.c
+@@ -17,15 +17,29 @@
+  *
+  */
+ 
++#include <bootsource.h>
+ #include <common.h>
+ #include <init.h>
++#include <io.h>
++#include <nand.h>
+ #include <sizes.h>
+ #include <ns16550.h>
+ #include <asm/armlinux.h>
+ #include <generated/mach-types.h>
++#include <linux/phy.h>
+ #include <mach/am33xx-devices.h>
++#include <mach/am33xx-generic.h>
+ #include <mach/am33xx-mux.h>
+ #include <mach/am33xx-silicon.h>
++#include <mach/cpsw.h>
++#include <mach/generic.h>
++#include <mach/gpmc.h>
++#include <mach/gpmc_nand.h>
++#include <spi/spi.h>
++#include <spi/flash.h>
++#include <i2c/i2c.h>
++#include <i2c/at24.h>
++#include <mach/bbu.h>
+ 
+ #include "mux.h"
+ 
+@@ -37,6 +51,7 @@
+  */
+ static int pcm051_console_init(void)
+ {
++	am33xx_enable_uart0_pin_mux();
+ 	/* Register the serial port */
+ 	am33xx_add_uart0();
+ 
+@@ -46,21 +61,170 @@ console_initcall(pcm051_console_init);
+ 
+ static int pcm051_mem_init(void)
+ {
+-	omap_add_ram0(SZ_512M);
++	if (IS_ENABLED(CONFIG_512MB_MT41J256M8HX15E_2x256M8) ||
++		IS_ENABLED(CONFIG_512MB_MT41J128M16_1x512M16))
++		omap_add_ram0(SZ_512M);
++	else if (IS_ENABLED(CONFIG_128MB_MT41J64M1615IT_1x128M16))
++		omap_add_ram0(SZ_128M);
++	else if (IS_ENABLED(CONFIG_256MB_MT41J128M16125IT_1x256M16))
++		omap_add_ram0(SZ_256M);
++	else if (IS_ENABLED(CONFIG_1024MB_MT41J512M8125IT_2x512M8))
++		omap_add_ram0(SZ_1G);
+ 
+ 	return 0;
+ }
+ mem_initcall(pcm051_mem_init);
+ 
++/*
++* SPI Flash works at 80Mhz however the SPI controller runs with 48MHz.
++* So setup Max speed to be less than the controller speed.
++*/
++static struct spi_board_info pcm051_spi_board_info[] = {
++	{
++		.name		= "m25p80",
++		.max_speed_hz	= 24000000,
++		.bus_num	= 0,
++		.chip_select	= 0,
++	},
++};
++
++static struct cpsw_slave_data cpsw_slaves[] = {
++	{
++		.phy_id		= 0,
++		.phy_if		= PHY_INTERFACE_MODE_RMII,
++	},
++};
++
++static struct cpsw_platform_data cpsw_data = {
++	.slave_data	= cpsw_slaves,
++	.num_slaves	= ARRAY_SIZE(cpsw_slaves),
++};
++
++static struct at24_platform_data eeprom_pdata = {
++	.byte_len	= 4096,
++	.page_size	= 32,
++	.flags		= AT24_FLAG_ADDR16,
++};
++
++static struct i2c_board_info i2c0_devices[] = {
++	{
++		I2C_BOARD_INFO("24c32", 0x52),
++		.platform_data	= &eeprom_pdata,
++	},
++};
++
++static struct gpmc_config pcm051_nand_cfg = {
++	.cfg = {
++		0x00000800,	/* CONF1 */
++		0x00030300,	/* CONF2 */
++		0x00030300,	/* CONF3 */
++		0x02000311,	/* CONF4 */
++		0x00030303,	/* CONF5 */
++		0x03000540,	/* CONF6 */
++	},
++	.base = 0x08000000,
++	.size = GPMC_SIZE_16M,
++};
++
++static struct gpmc_nand_platform_data nand_plat = {
++	.wait_mon_pin = 1,
++	.ecc_mode = OMAP_ECC_BCH8_CODE_HW,
++	.nand_cfg = &pcm051_nand_cfg,
++	.is_elm_used = 1,
++};
++
++static struct omap_barebox_part pcm051_barebox_part = {
++	.nand_offset = SZ_512K,
++	.nand_size = SZ_512K,
++	.nor_offset = SZ_128K,
++	.nor_size = SZ_512K,
++};
++
++static void pcm051_spi_init(void)
++{
++	int ret;
++
++	am33xx_enable_spi0_pin_mux();
++
++	ret = spi_register_board_info(pcm051_spi_board_info,
++					ARRAY_SIZE(pcm051_spi_board_info));
++	am33xx_add_spi0();
++}
++
++static void pcm051_eth_init(void)
++{
++	am33xx_register_ethaddr(0, 0);
++
++	writel(0x49, AM33XX_MAC_MII_SEL);
++
++	am33xx_enable_rmii1_pin_mux();
++
++	am33xx_add_cpsw(&cpsw_data);
++}
++
++static void pcm051_i2c_init(void)
++{
++	am33xx_enable_i2c0_pin_mux();
++
++	i2c_register_board_info(0, i2c0_devices, ARRAY_SIZE(i2c0_devices));
++
++	am33xx_add_i2c0(NULL);
++}
++
++static void pcm051_nand_init(void)
++{
++	pcm051_enable_nand_pin_mux();
++
++	gpmc_generic_init(0x12);
++
++	add_generic_device("elm", 0, NULL, 0x48080000, SZ_64K,
++						IORESOURCE_MEM, NULL);
++
++	omap_add_gpmc_nand_device(&nand_plat);
++}
++
+ static int pcm051_devices_init(void)
+ {
+ 	pcm051_enable_mmc0_pin_mux();
+ 
+ 	am33xx_add_mmc0(NULL);
+ 
++	pcm051_spi_init();
++	pcm051_eth_init();
++	pcm051_i2c_init();
++	pcm051_nand_init();
++
++	pcm051_enable_user_led_pin_mux();
++	pcm051_enable_user_btn_pin_mux();
++
++	switch (bootsource_get()) {
++	case BOOTSOURCE_SPI:
++		devfs_add_partition("m25p0", 0x00000, SZ_128K,
++					DEVFS_PARTITION_FIXED, "xload");
++		devfs_add_partition("m25p0", SZ_128K, SZ_512K,
++					DEVFS_PARTITION_FIXED, "self0");
++		devfs_add_partition("m25p0", SZ_128K + SZ_512K, SZ_128K,
++					DEVFS_PARTITION_FIXED, "env0");
++		break;
++	default:
++		devfs_add_partition("nand0", 0x00000, SZ_128K,
++					DEVFS_PARTITION_FIXED, "xload_raw");
++		dev_add_bb_dev("xload_raw", "xload");
++		devfs_add_partition("nand0", SZ_512K, SZ_512K,
++					DEVFS_PARTITION_FIXED, "self_raw");
++		dev_add_bb_dev("self_raw", "self0");
++		devfs_add_partition("nand0", SZ_512K + SZ_512K, SZ_128K,
++					DEVFS_PARTITION_FIXED, "env_raw");
++		dev_add_bb_dev("env_raw", "env0");
++		break;
++	}
++
++	omap_set_barebox_part(&pcm051_barebox_part);
+ 	armlinux_set_bootparams((void *)(AM33XX_DRAM_ADDR_SPACE_START + 0x100));
+ 	armlinux_set_architecture(MACH_TYPE_PCM051);
+ 
++	am33xx_bbu_spi_nor_mlo_register_handler("MLO.spi", "/dev/m25p0.xload");
++
+ 	return 0;
+ }
+ device_initcall(pcm051_devices_init);
+diff --git a/arch/arm/boards/pcm051/env/boot/mmc b/arch/arm/boards/pcm051/env/boot/mmc
+new file mode 100644
+index 0000000..93a2357
+--- /dev/null
++++ b/arch/arm/boards/pcm051/env/boot/mmc
+@@ -0,0 +1,10 @@
++#!/bin/sh
++
++if [ "$1" = menu ]; then
++	boot-menu-add-entry "$0" "kernel & rootfs on SD card"
++	exit
++fi
++
++global.bootm.image=/boot/uImage
++#global.bootm.oftree=/boot/oftree
++global.linux.bootargs.dyn.root="root=/dev/mmcblk0p2 rootfstype=ext3 rootwait"
+diff --git a/arch/arm/boards/pcm051/env/boot/nand b/arch/arm/boards/pcm051/env/boot/nand
+new file mode 100644
+index 0000000..22d657e
+--- /dev/null
++++ b/arch/arm/boards/pcm051/env/boot/nand
+@@ -0,0 +1,10 @@
++#!/bin/sh
++
++if [ "$1" = menu ]; then
++	boot-menu-add-entry "$0" "nand (UBI)"
++	exit
++fi
++
++global.bootm.image="/dev/nand0.kernel.bb"
++#global.bootm.oftree="/env/oftree"
++global.linux.bootargs.dyn.root="root=ubi0:root ubi.mtd=nand0.root,2048 rootfstype=ubifs"
+diff --git a/arch/arm/boards/pcm051/env/boot/sd b/arch/arm/boards/pcm051/env/boot/sd
+deleted file mode 100644
+index f303c10..0000000
+--- a/arch/arm/boards/pcm051/env/boot/sd
++++ /dev/null
+@@ -1,10 +0,0 @@
+-#!/bin/sh
+-
+-if [ "$1" = menu ]; then
+-	boot-menu-add-entry "$0" "kernel & rootfs on SD card"
+-	exit
+-fi
+-
+-global.bootm.image=/boot/uImage
+-global.bootm.oftree=/boot/oftree
+-global.linux.bootargs.dyn.root="root=/dev/mmcblk0p2 rootfstype=ext3 rootwait"
+diff --git a/arch/arm/boards/pcm051/env/boot/spi b/arch/arm/boards/pcm051/env/boot/spi
+new file mode 100644
+index 0000000..2d10184
+--- /dev/null
++++ b/arch/arm/boards/pcm051/env/boot/spi
+@@ -0,0 +1,11 @@
++#!/bin/sh
++
++if [ "$1" = menu ]; then
++        boot-menu-add-entry "$0" "SPI NOR Flash"
++        exit
++fi
++
++global.bootm.image="/dev/m25p0.kernel"
++
++# Use rootfs form NAND for now as rootfs partition < 4MB
++global.linux.bootargs.dyn.root="root=ubi0:root ubi.mtd=nand0.root,2048 rootfstype=ubifs"
+diff --git a/arch/arm/boards/pcm051/env/config b/arch/arm/boards/pcm051/env/config
+deleted file mode 100644
+index dd35ff4..0000000
+--- a/arch/arm/boards/pcm051/env/config
++++ /dev/null
+@@ -1,22 +0,0 @@
+-#!/bin/sh
+-
+-# change network settings in /env/network/eth0
+-# change mtd partition settings and automountpoints in /env/init/*
+-
+-global.hostname=pcm051
+-
+-# set to false if you do not want to have colors
+-global.allow_color=true
+-
+-# user (used for network filenames)
+-global.user=none
+-
+-# timeout in seconds before the default boot entry is started
+-global.autoboot_timeout=3
+-
+-# default boot entry (one of /env/boot/*)
+-global.boot.default=sd
+-
+-# base bootargs
+-global.linux.bootargs.base="console=ttyO0,115200n8"
+-
+diff --git a/arch/arm/boards/pcm051/env/config-board b/arch/arm/boards/pcm051/env/config-board
+new file mode 100644
+index 0000000..7f0b2b7
+--- /dev/null
++++ b/arch/arm/boards/pcm051/env/config-board
+@@ -0,0 +1,7 @@
++#!/bin/sh
++
++# board defaults, do not change in running system. Change /env/config
++# instead
++
++global.hostname=pcm051
++global.linux.bootargs.base="console=ttyO0,115200"
+diff --git a/arch/arm/boards/pcm051/env/init/mtdparts-nand b/arch/arm/boards/pcm051/env/init/mtdparts-nand
+new file mode 100644
+index 0000000..12f0ffd
+--- /dev/null
++++ b/arch/arm/boards/pcm051/env/init/mtdparts-nand
+@@ -0,0 +1,11 @@
++#!/bin/sh
++
++if [ "$1" = menu ]; then
++	init-menu-add-entry "$0" "NAND partitions"
++	exit
++fi
++
++mtdparts="128k(nand0.xload),128k(nand0.xload_backup1),128k(nand0.xload_backup2),128k(nand0.xload_backup3),512k(nand0.barebox)ro,128k(nand0.bareboxenv),8M(nand0.kernel),-(nand0.root)"
++kernelname="omap2-nand.0"
++
++mtdparts-add -b -d nand0 -k ${kernelname} -p ${mtdparts}
+diff --git a/arch/arm/boards/pcm051/env/init/mtdparts-nor b/arch/arm/boards/pcm051/env/init/mtdparts-nor
+new file mode 100644
+index 0000000..5c762ad
+--- /dev/null
++++ b/arch/arm/boards/pcm051/env/init/mtdparts-nor
+@@ -0,0 +1,12 @@
++#!/bin/sh
++
++if [ "$1" = menu ]; then
++	init-menu-add-entry "$0" "NOR partitions"
++	exit
++fi
++
++mtdparts="128k(m25p0.xload),512k(m25p0.barebox),128k(m25p0.bareboxenv),4M(m25p0.kernel),-(m25p0.root)"
++kernelname="spi_flash"
++
++mtdparts-add -d m25p0 -k ${kernelname} -p ${mtdparts}
++
+diff --git a/arch/arm/boards/pcm051/lowlevel.c b/arch/arm/boards/pcm051/lowlevel.c
+index c2a367d..ce1976c 100644
+--- a/arch/arm/boards/pcm051/lowlevel.c
++++ b/arch/arm/boards/pcm051/lowlevel.c
+@@ -1,11 +1,180 @@
+ #include <common.h>
+ #include <sizes.h>
++#include <io.h>
++#include <init.h>
+ #include <asm/barebox-arm-head.h>
+ #include <asm/barebox-arm.h>
++#include <mach/am33xx-silicon.h>
++#include <mach/am33xx-clock.h>
++#include <mach/generic.h>
++#include <mach/sdrc.h>
++#include <mach/sys_info.h>
++#include <mach/syslib.h>
++#include <mach/am33xx-mux.h>
++#include <mach/am33xx-generic.h>
++#include <mach/wdt.h>
+ 
+-void __naked barebox_arm_reset_vector(void)
++static const struct am33xx_cmd_control pcm051_cmd = {
++	.slave_ratio0 = 0x40,
++	.dll_lock_diff0 = 0x0,
++	.invert_clkout0 = 0x1,
++	.slave_ratio1 = 0x40,
++	.dll_lock_diff1 = 0x0,
++	.invert_clkout1 = 0x1,
++	.slave_ratio2 = 0x40,
++	.dll_lock_diff2 = 0x0,
++	.invert_clkout2 = 0x1,
++};
++
++/* 1x512MB */
++static const struct am33xx_emif_regs MT41J256M16HA15EIT_1x512M16_regs = {
++	.emif_read_latency	= 0x6,
++	.emif_tim1		= 0x0888A39B,
++	.emif_tim2		= 0x26517FDA,
++	.emif_tim3		= 0x501F84EF,
++	.sdram_config		= 0x61C04B32,
++	.zq_config		= 0x50074BE4,
++	.sdram_ref_ctrl		= 0x0000093B,
++};
++
++static const struct am33xx_ddr_data MT41J256M16HA15EIT_1x512M16_data = {
++	.rd_slave_ratio0	= 0x3B,
++	.wr_dqs_slave_ratio0	= 0x3B,
++	.fifo_we_slave_ratio0	= 0x96,
++	.wr_slave_ratio0	= 0x76,
++};
++
++/* 2x256MB */
++static const struct am33xx_emif_regs MT41J256M8HX15E_2x256M8_regs = {
++	.emif_read_latency	= 0x6,
++	.emif_tim1		= 0x0668A39B,
++	.emif_tim2		= 0x26337FDA,
++	.emif_tim3		= 0x501F830F,
++	.sdram_config		= 0x61C04832,
++	.zq_config		= 0x50074BE4,
++	.sdram_ref_ctrl		= 0x0000093B,
++};
++
++static const struct am33xx_ddr_data MT41J256M8HX15E_2x256M8_data = {
++	.rd_slave_ratio0	= 0x3B,
++	.wr_dqs_slave_ratio0	= 0x85,
++	.fifo_we_slave_ratio0	= 0x100,
++	.wr_slave_ratio0	= 0xC1,
++};
++
++/* 1x128M16 */
++static const struct am33xx_emif_regs MT41J64M1615IT_1x128M16_regs = {
++	.emif_read_latency	= 0x6,
++	.emif_tim1		= 0x0888A39B,
++	.emif_tim2		= 0x26247FDA,
++	.emif_tim3		= 0x501F821F,
++	.sdram_config		= 0x61C04A32,
++	.zq_config		= 0x50074BE4,
++	.sdram_ref_ctrl		= 0x0000093B,
++};
++
++static const struct am33xx_ddr_data MT41J64M1615IT_1x128M16_data = {
++	.rd_slave_ratio0	= 0x3A,
++	.wr_dqs_slave_ratio0	= 0x36,
++	.fifo_we_slave_ratio0	= 0xA2,
++	.wr_slave_ratio0	= 0x74,
++};
++
++/* 1x256M16 */
++static const struct am33xx_emif_regs MT41J128M16125IT_1x256M16_regs = {
++	.emif_read_latency	= 0x6,
++	.emif_tim1		= 0x0888A39B,
++	.emif_tim2		= 0x26337FDA,
++	.emif_tim3		= 0x501F830F,
++	.sdram_config		= 0x61C04AB2,
++	.zq_config		= 0x50074BE4,
++	.sdram_ref_ctrl		= 0x0000093B,
++};
++
++static const struct am33xx_ddr_data MT41J128M16125IT_1x256M16_data = {
++	.rd_slave_ratio0	= 0x3B,
++	.wr_dqs_slave_ratio0	= 0x3B,
++	.fifo_we_slave_ratio0	= 0x97,
++	.wr_slave_ratio0	= 0x76,
++};
++
++/* 2x512M8 */
++static const struct am33xx_emif_regs MT41J512M8125IT_2x512M8_regs = {
++	.emif_read_latency	= 0x6,
++	.emif_tim1		= 0x0888A39B,
++	.emif_tim2		= 0x26517FDA,
++	.emif_tim3		= 0x501F84EF,
++	.sdram_config		= 0x61C04B32,
++	.zq_config		= 0x50074BE4,
++	.sdram_ref_ctrl		= 0x0000093B,
++};
++
++static const struct am33xx_ddr_data MT41J512M8125IT_2x512M8_data = {
++	.rd_slave_ratio0	= 0x39,
++	.wr_dqs_slave_ratio0	= 0x38,
++	.fifo_we_slave_ratio0	= 0x98,
++	.wr_slave_ratio0	= 0x76,
++};
++
++/**
++ * @brief The basic entry point for board initialization.
++ *
++ * This is called as part of machine init (after arch init).
++ * This is again called with stack in SRAM, so not too many
++ * constructs possible here.
++ *
++ * @return void
++ */
++static int pcm051_board_init(void)
+ {
++	/* WDT1 is already running when the bootloader gets control
++	 * Disable it to avoid "random" resets
++	 */
++	writel(WDT_DISABLE_CODE1, AM33XX_WDT_REG(WSPR));
++	while (readl(AM33XX_WDT_REG(WWPS)) != 0x0);
++
++	writel(WDT_DISABLE_CODE2, AM33XX_WDT_REG(WSPR));
++	while (readl(AM33XX_WDT_REG(WWPS)) != 0x0);
++
++	if (running_in_sdram())
++		return 0;
++
++	pll_init(MPUPLL_M_600, 25, DDRPLL_M_303);
++
++	if (IS_ENABLED(CONFIG_512MB_MT41J128M16_1x512M16))
++		am335x_sdram_init(0x18B, &pcm051_cmd,
++			&MT41J256M16HA15EIT_1x512M16_regs,
++			&MT41J256M16HA15EIT_1x512M16_data);
++	else if (IS_ENABLED(CONFIG_512MB_MT41J256M8HX15E_2x256M8))
++		am335x_sdram_init(0x18B, &pcm051_cmd,
++			&MT41J256M8HX15E_2x256M8_regs,
++			&MT41J256M8HX15E_2x256M8_data);
++	else if (IS_ENABLED(CONFIG_128MB_MT41J64M1615IT_1x128M16))
++		am335x_sdram_init(0x18B, &pcm051_cmd,
++			&MT41J64M1615IT_1x128M16_regs,
++			&MT41J64M1615IT_1x128M16_data);
++	else if (IS_ENABLED(CONFIG_256MB_MT41J128M16125IT_1x256M16))
++		am335x_sdram_init(0x18B, &pcm051_cmd,
++			&MT41J128M16125IT_1x256M16_regs,
++			&MT41J128M16125IT_1x256M16_data);
++	else if (IS_ENABLED(CONFIG_1024MB_MT41J512M8125IT_2x512M8))
++		am335x_sdram_init(0x18B, &pcm051_cmd,
++			&MT41J512M8125IT_2x512M8_regs,
++			&MT41J512M8125IT_2x512M8_data);
++
++	am33xx_uart0_soft_reset();
++	am33xx_enable_uart0_pin_mux();
++
++	return 0;
++}
++
++void __naked __bare_init barebox_arm_reset_vector(uint32_t *data)
++{
++	am33xx_save_bootinfo(data);
++
+ 	arm_cpu_lowlevel_init();
+ 
+-	barebox_arm_entry(0x80000000, SZ_512M, 0);
++	pcm051_board_init();
++
++	barebox_arm_entry(0x80000000, SZ_128M, 0);
+ }
+diff --git a/arch/arm/boards/pcm051/mux.c b/arch/arm/boards/pcm051/mux.c
+index b8fb669..e1127ac 100644
+--- a/arch/arm/boards/pcm051/mux.c
++++ b/arch/arm/boards/pcm051/mux.c
+@@ -10,7 +10,37 @@ static const struct module_pin_mux mmc0_pin_mux[] = {
+ 	{OFFSET(mmc0_dat0), (MODE(0) | RXACTIVE | PULLUP_EN)},	/* MMC0_DAT0 */
+ 	{OFFSET(mmc0_clk), (MODE(0) | RXACTIVE | PULLUP_EN)},	/* MMC0_CLK */
+ 	{OFFSET(mmc0_cmd), (MODE(0) | RXACTIVE | PULLUP_EN)},	/* MMC0_CMD */
+-	{OFFSET(spi0_cs1), (MODE(5) | RXACTIVE | PULLUP_EN)},	/* MMC0_CD */
++	{OFFSET(spi0_cs1), (MODE(7) | RXACTIVE | PULLUP_EN)},	/* MMC0_CD */
++	{-1},
++};
++
++static const struct module_pin_mux nand_pin_mux[] = {
++	{OFFSET(gpmc_ad0), (MODE(0) | PULLUP_EN | RXACTIVE)},	/* NAND AD0 */
++	{OFFSET(gpmc_ad1), (MODE(0) | PULLUP_EN | RXACTIVE)},	/* NAND AD1 */
++	{OFFSET(gpmc_ad2), (MODE(0) | PULLUP_EN | RXACTIVE)},	/* NAND AD2 */
++	{OFFSET(gpmc_ad3), (MODE(0) | PULLUP_EN | RXACTIVE)},	/* NAND AD3 */
++	{OFFSET(gpmc_ad4), (MODE(0) | PULLUP_EN | RXACTIVE)},	/* NAND AD4 */
++	{OFFSET(gpmc_ad5), (MODE(0) | PULLUP_EN | RXACTIVE)},	/* NAND AD5 */
++	{OFFSET(gpmc_ad6), (MODE(0) | PULLUP_EN | RXACTIVE)},	/* NAND AD6 */
++	{OFFSET(gpmc_ad7), (MODE(0) | PULLUP_EN | RXACTIVE)},	/* NAND AD7 */
++	{OFFSET(gpmc_wait0), (MODE(0) | RXACTIVE | PULLUP_EN)},	/* NAND WAIT */
++	{OFFSET(gpmc_csn0), (MODE(0) | PULLUDEN)},	/* NAND_CS0 */
++	{OFFSET(gpmc_advn_ale), (MODE(0) | PULLUDEN)},	/* NAND_ADV_ALE */
++	{OFFSET(gpmc_oen_ren), (MODE(0) | PULLUDEN)},	/* NAND_OE */
++	{OFFSET(gpmc_wen), (MODE(0) | PULLUDEN)},	/* NAND_WEN */
++	{OFFSET(gpmc_be0n_cle), (MODE(0) | PULLUDEN)},	/* NAND_BE_CLE */
++	{-1},
++};
++
++static const struct module_pin_mux user_led_pin_mux[] = {
++	{OFFSET(gpmc_csn1), MODE(7) | PULLUDEN}, /* USER LED1 */
++	{OFFSET(gpmc_csn2), MODE(7) | PULLUDEN}, /* USER LED2 */
++	{-1},
++};
++
++static const struct module_pin_mux user_btn_pin_mux[] = {
++	{OFFSET(emu0), MODE(7) | RXACTIVE | PULLUP_EN},
++	{OFFSET(emu1), MODE(7) | RXACTIVE | PULLUP_EN},
+ 	{-1},
+ };
+ 
+@@ -18,3 +48,18 @@ void pcm051_enable_mmc0_pin_mux(void)
+ {
+ 	configure_module_pin_mux(mmc0_pin_mux);
+ }
++
++void pcm051_enable_nand_pin_mux(void)
++{
++	configure_module_pin_mux(nand_pin_mux);
++}
++
++void pcm051_enable_user_led_pin_mux(void)
++{
++	configure_module_pin_mux(user_led_pin_mux);
++}
++
++void pcm051_enable_user_btn_pin_mux(void)
++{
++	configure_module_pin_mux(user_btn_pin_mux);
++}
+diff --git a/arch/arm/boards/pcm051/mux.h b/arch/arm/boards/pcm051/mux.h
+index f35bc9e..5cdbe0c 100644
+--- a/arch/arm/boards/pcm051/mux.h
++++ b/arch/arm/boards/pcm051/mux.h
+@@ -1 +1,4 @@
+ extern void pcm051_enable_mmc0_pin_mux(void);
++extern void pcm051_enable_nand_pin_mux(void);
++extern void pcm051_enable_user_led_pin_mux(void);
++extern void pcm051_enable_user_btn_pin_mux(void);
+diff --git a/arch/arm/boards/phycard-a-l1/lowlevel.c b/arch/arm/boards/phycard-a-l1/lowlevel.c
+index 30379d8..353b58f 100644
+--- a/arch/arm/boards/phycard-a-l1/lowlevel.c
++++ b/arch/arm/boards/phycard-a-l1/lowlevel.c
+@@ -5,10 +5,12 @@
+ #include <asm/barebox-arm-head.h>
+ #include <asm/barebox-arm.h>
+ #include <mach/omap3-mux.h>
++#include <mach/generic.h>
+ #include <mach/sdrc.h>
+ #include <mach/control.h>
+ #include <mach/syslib.h>
+ #include <mach/omap3-silicon.h>
++#include <mach/omap3-generic.h>
+ #include <mach/sys_info.h>
+ 
+ /* Slower full frequency range default timings for x32 operation */
+@@ -250,8 +252,10 @@ static int pcaal1_board_init(void)
+ 	return 0;
+ }
+ 
+-void __naked barebox_arm_reset_vector(void)
++void __bare_init __naked barebox_arm_reset_vector(uint32_t *data)
+ {
++	omap3_save_bootinfo(data);
++
+ 	arm_cpu_lowlevel_init();
+ 
+ 	pcaal1_board_init();
+diff --git a/arch/arm/boards/phycard-a-xl2/lowlevel.c b/arch/arm/boards/phycard-a-xl2/lowlevel.c
+index 07505ff..ed6b264 100644
+--- a/arch/arm/boards/phycard-a-xl2/lowlevel.c
++++ b/arch/arm/boards/phycard-a-xl2/lowlevel.c
+@@ -17,10 +17,13 @@
+  *
+  */
+ #include <common.h>
++#include <init.h>
+ #include <io.h>
+ #include <sizes.h>
++#include <mach/generic.h>
+ #include <mach/omap4-mux.h>
+ #include <mach/omap4-silicon.h>
++#include <mach/omap4-generic.h>
+ #include <mach/omap4-clock.h>
+ #include <mach/syslib.h>
+ #include <asm/barebox-arm.h>
+@@ -83,8 +86,10 @@ static noinline void pcaaxl2_init_lowlevel(void)
+ 	sr32(0x4A30a110, 2, 2, 0x3);  /* enable clocks */
+ }
+ 
+-void barebox_arm_reset_vector(void)
++void __bare_init __naked barebox_arm_reset_vector(uint32_t *data)
+ {
++	omap4_save_bootinfo(data);
++
+ 	arm_cpu_lowlevel_init();
+ 
+ 	if (get_pc() > 0x80000000)
+diff --git a/arch/arm/configs/pcm051_defconfig b/arch/arm/configs/pcm051_defconfig
+index 4da0ed4..97e0940 100644
+--- a/arch/arm/configs/pcm051_defconfig
++++ b/arch/arm/configs/pcm051_defconfig
+@@ -1,11 +1,16 @@
+ CONFIG_ARCH_OMAP=y
+ CONFIG_ARCH_AM33XX=y
+-CONFIG_OMAP_BUILD_IFT=y
++CONFIG_BAREBOX_UPDATE_AM33XX_SPI_NOR_MLO=y
+ CONFIG_MACH_PCM051=y
++CONFIG_OMAP_UART1=y
+ CONFIG_AEABI=y
++CONFIG_ARM_BOARD_APPEND_ATAG=y
++CONFIG_CMD_ARM_MMUINFO=y
+ CONFIG_ARM_OPTIMZED_STRING_FUNCTIONS=y
+ CONFIG_ARM_UNWIND=y
+-CONFIG_TEXT_BASE=0x81000000
++CONFIG_MMU=y
++CONFIG_TEXT_BASE=0x8f000000
++CONFIG_MALLOC_SIZE=0x2000000
+ CONFIG_PROMPT="barebox@pcm051>"
+ CONFIG_LONGHELP=y
+ CONFIG_HUSH_FANCY_PROMPT=y
+@@ -27,30 +32,50 @@ CONFIG_CMD_PRINTENV=y
+ CONFIG_CMD_READLINE=y
+ CONFIG_CMD_MENU=y
+ CONFIG_CMD_MENU_MANAGEMENT=y
++CONFIG_CMD_TIME=y
++CONFIG_CMD_TFTP=y
+ CONFIG_CMD_ECHO_E=y
+ CONFIG_CMD_LOADB=y
+ CONFIG_CMD_CRC=y
+ CONFIG_CMD_CRC_CMP=y
+ CONFIG_CMD_MD5SUM=y
+ CONFIG_CMD_FLASH=y
++CONFIG_CMD_UBIFORMAT=y
+ CONFIG_CMD_BOOTM_SHOW_TYPE=y
+ CONFIG_CMD_UIMAGE=y
+ CONFIG_CMD_BOOTZ=y
+ CONFIG_CMD_RESET=y
+ CONFIG_CMD_GO=y
++CONFIG_CMD_BAREBOX_UPDATE=y
+ CONFIG_CMD_TIMEOUT=y
+ CONFIG_CMD_PARTITION=y
+ CONFIG_CMD_GPIO=y
+ CONFIG_CMD_UNCOMPRESS=y
++CONFIG_CMD_I2C=y
++CONFIG_CMD_SPI=y
++CONFIG_NET=y
++CONFIG_NET_DHCP=y
++CONFIG_NET_NFS=y
++CONFIG_NET_PING=y
+ CONFIG_DRIVER_SERIAL_NS16550=y
+ CONFIG_DRIVER_SERIAL_NS16550_OMAP_EXTENSIONS=y
+-# CONFIG_SPI is not set
++CONFIG_DRIVER_NET_CPSW=y
++CONFIG_DRIVER_SPI_OMAP3=y
++CONFIG_I2C=y
++CONFIG_I2C_OMAP=y
+ CONFIG_MTD=y
++CONFIG_MTD_M25P80=y
+ CONFIG_NAND=y
++CONFIG_NAND_OMAP_GPMC=y
++CONFIG_UBI=y
+ CONFIG_USB=y
+ CONFIG_MCI=y
+ CONFIG_MCI_STARTUP=y
+ CONFIG_MCI_OMAP_HSMMC=y
++CONFIG_EEPROM_AT24=y
++CONFIG_GPIO_GENERIC_PLATFORM=y
++CONFIG_FS_TFTP=y
++CONFIG_FS_NFS=y
+ CONFIG_FS_FAT=y
+ CONFIG_FS_FAT_WRITE=y
+ CONFIG_FS_FAT_LFN=y
+diff --git a/arch/arm/configs/pcm051_mlo_defconfig b/arch/arm/configs/pcm051_mlo_defconfig
+new file mode 100644
+index 0000000..ea65979
+--- /dev/null
++++ b/arch/arm/configs/pcm051_mlo_defconfig
+@@ -0,0 +1,33 @@
++CONFIG_ARCH_OMAP=y
++CONFIG_ARCH_AM33XX=y
++CONFIG_OMAP_BUILD_IFT=y
++CONFIG_MACH_PCM051=y
++CONFIG_OMAP_UART1=y
++CONFIG_THUMB2_BAREBOX=y
++# CONFIG_CMD_ARM_CPUINFO is not set
++# CONFIG_MEMINFO is not set
++CONFIG_ENVIRONMENT_VARIABLES=y
++CONFIG_MMU=y
++CONFIG_TEXT_BASE=0x402F0400
++CONFIG_STACK_SIZE=0x1600
++CONFIG_MALLOC_SIZE=0x1000000
++CONFIG_PROMPT="MLO>"
++CONFIG_SHELL_NONE=y
++# CONFIG_ERRNO_MESSAGES is not set
++# CONFIG_TIMESTAMP is not set
++CONFIG_CONSOLE_SIMPLE=y
++# CONFIG_DEFAULT_ENVIRONMENT is not set
++CONFIG_DRIVER_SERIAL_NS16550=y
++CONFIG_DRIVER_SERIAL_NS16550_OMAP_EXTENSIONS=y
++CONFIG_DRIVER_SPI_OMAP3=y
++CONFIG_MTD=y
++CONFIG_MTD_M25P80=y
++CONFIG_NAND=y
++CONFIG_NAND_OMAP_GPMC=y
++CONFIG_MCI=y
++CONFIG_MCI_STARTUP=y
++CONFIG_MCI_OMAP_HSMMC=y
++# CONFIG_FS_RAMFS is not set
++# CONFIG_FS_DEVFS is not set
++CONFIG_FS_FAT=y
++CONFIG_FS_FAT_LFN=y
+diff --git a/arch/arm/cpu/cpuinfo.c b/arch/arm/cpu/cpuinfo.c
+index 8aea4b4..260d47b 100644
+--- a/arch/arm/cpu/cpuinfo.c
++++ b/arch/arm/cpu/cpuinfo.c
+@@ -31,6 +31,12 @@
+ #define CPU_ARCH_ARMv6		8
+ #define CPU_ARCH_ARMv7		9
+ 
++#define ARM_CPU_PART_CORTEX_A5      0xC050
++#define ARM_CPU_PART_CORTEX_A7      0xC070
++#define ARM_CPU_PART_CORTEX_A8      0xC080
++#define ARM_CPU_PART_CORTEX_A9      0xC090
++#define ARM_CPU_PART_CORTEX_A15     0xC0F0
++
+ static void decode_cache(unsigned long size)
+ {
+ 	int linelen = 1 << ((size & 0x3) + 3);
+@@ -154,6 +160,33 @@ static int do_cpuinfo(int argc, char *argv[])
+ 	printf("implementer: %s\narchitecture: %s\n",
+ 			implementer, architecture);
+ 
++	if (cpu_arch == CPU_ARCH_ARMv7) {
++		unsigned int major, minor;
++		char *part;
++		major = (mainid >> 20) & 0xf;
++		minor = mainid & 0xf;
++		switch (mainid & 0xfff0) {
++		case ARM_CPU_PART_CORTEX_A5:
++			part = "Cortex-A5";
++			break;
++		case ARM_CPU_PART_CORTEX_A7:
++			part = "Cortex-A7";
++			break;
++		case ARM_CPU_PART_CORTEX_A8:
++			part = "Cortex-A8";
++			break;
++		case ARM_CPU_PART_CORTEX_A9:
++			part = "Cortex-A9";
++			break;
++		case ARM_CPU_PART_CORTEX_A15:
++			part = "Cortex-A15";
++			break;
++		default:
++			part = "unknown";
++		}
++		printf("core: %s r%up%u\n", part, major, minor);
++	}
++
+ 	if (cache & (1 << 24)) {
+ 		/* separate I/D cache */
+ 		printf("I-cache: ");
+diff --git a/arch/arm/mach-omap/Kconfig b/arch/arm/mach-omap/Kconfig
+index 3ec18f0..5dec8c1 100644
+--- a/arch/arm/mach-omap/Kconfig
++++ b/arch/arm/mach-omap/Kconfig
+@@ -90,6 +90,14 @@ config OMAP_BUILD_SPI
+ 	  Say Y here if you want to build an barebox.spi image as used
+ 	  on the AM35xx chips when booting from SPI NOR flash.
+ 
++config BAREBOX_UPDATE_AM33XX_SPI_NOR_MLO
++	prompt "barebox update SPI NOR MLO handler"
++	bool
++	depends on BAREBOX_UPDATE
++	help
++          Say Y for barebox update SPI NOR MLO handler.
++          AM35xx, AM33xx chips use big endian MLO for SPI NOR flash.
++
+ config ARCH_TEXT_BASE
+ 	hex
+ 	default 0x80e80000 if MACH_OMAP343xSDP
+@@ -226,6 +234,23 @@ if MACH_PCM049
+ 	endchoice
+ endif
+ 
++if MACH_PCM051
++	choice
++	prompt "Select DDR3 RAM"
++
++	config 512MB_MT41J128M16_1x512M16
++		bool "512MB MT41J128M16 (1x512M16)"
++	config 512MB_MT41J256M8HX15E_2x256M8
++		bool "512MB MT41J256M8HX15E (2x256M8)"
++	config 128MB_MT41J64M1615IT_1x128M16
++		bool "128MB MT41J64M16-15IT (1x128M16)"
++	config 256MB_MT41J128M16125IT_1x256M16
++		bool "256MB MT41J128M16-125IT (1x256M16)"
++	config 1024MB_MT41J512M8125IT_2x512M8
++		bool "1024MB MT41J512M8-125IT (2x512M8)"
++	endchoice
++endif
++
+ config MACH_OMAP_ADVANCED_MUX
+ 	bool "Enable advanced pin muxing"
+ 	depends on MACH_OMAP343xSDP
+diff --git a/arch/arm/mach-omap/Makefile b/arch/arm/mach-omap/Makefile
+index 973068d..89944a9 100644
+--- a/arch/arm/mach-omap/Makefile
++++ b/arch/arm/mach-omap/Makefile
+@@ -15,8 +15,8 @@
+ # GNU General Public License for more details.
+ #
+ #
+-obj-$(CONFIG_ARCH_OMAP) += syslib.o omap_devices.o omap_generic.o
+-pbl-$(CONFIG_ARCH_OMAP) += syslib.o
++obj-$(CONFIG_ARCH_OMAP) += syslib.o omap_devices.o omap_generic.o omap_bootinfo.o
++pbl-$(CONFIG_ARCH_OMAP) += syslib.o omap_bootinfo.o
+ obj-$(CONFIG_OMAP_CLOCK_SOURCE_S32K) += s32k_clksource.o
+ obj-$(CONFIG_OMAP_CLOCK_SOURCE_DMTIMER0) += dmtimer0.o
+ obj-$(CONFIG_ARCH_OMAP3) += omap3_generic.o auxcr.o
+@@ -32,3 +32,4 @@ obj-$(CONFIG_MFD_TWL6030) += omap4_twl6030_mmc.o
+ obj-$(CONFIG_OMAP4_USBBOOT) += omap4_rom_usb.o
+ obj-$(CONFIG_CMD_BOOT_ORDER) += boot_order.o
+ obj-y += gpio.o
++obj-$(CONFIG_BAREBOX_UPDATE_AM33XX_SPI_NOR_MLO) += am33xx_bbu_spi_mlo.o
+diff --git a/arch/arm/mach-omap/am33xx_bbu_spi_mlo.c b/arch/arm/mach-omap/am33xx_bbu_spi_mlo.c
+new file mode 100644
+index 0000000..ff9f8a6
+--- /dev/null
++++ b/arch/arm/mach-omap/am33xx_bbu_spi_mlo.c
+@@ -0,0 +1,88 @@
++/*
++ * am33xx_bbu_spi_mlo.c - am35xx and am33xx specific MLO
++ *	update handler for SPI NOR flash
++ *
++ * Copyright (c) 2013 Sharavn kumar <shravan.k@phytec.in>, Phytec
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2
++ * as published by the Free Software Foundation.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ */
++
++#include <common.h>
++#include <malloc.h>
++#include <bbu.h>
++#include <fs.h>
++#include <fcntl.h>
++
++/*
++ * AM35xx, AM33xx chips use big endian MLO for SPI NOR flash
++ * This handler converting MLO to big endian and write to SPI NOR
++ */
++static int spi_nor_mlo_handler(struct bbu_handler *handler,
++					struct bbu_data *data)
++{
++	int dstfd = 0;
++	int ret = 0;
++	uint32_t readbuf;
++	int size = data->len;
++	void *image = data->image;
++
++	dstfd = open(data->devicefile, O_WRONLY);
++	if (dstfd < 0) {
++		printf("could not open %s: %s", data->devicefile, errno_str());
++		ret = dstfd;
++		goto out;
++	}
++
++	ret = erase(dstfd, ~0, 0);
++	if (ret < 0) {
++		printf("could not erase %s: %s", data->devicefile, errno_str());
++		goto out1;
++	}
++
++	for (; size >= 0; size -= 4) {
++		memcpy((char *)&readbuf, image, 4);
++
++		readbuf = cpu_to_be32(readbuf);
++		ret = write(dstfd, &readbuf, 4);
++		if (ret < 0) {
++			perror("write");
++			goto out1;
++		}
++
++		image = image + 4;
++	}
++
++	ret = 0;
++out1:
++	close(dstfd);
++out:
++	return ret;
++}
++
++/*
++ * Register a am33xx MLO update handler for SPI NOR
++ */
++int am33xx_bbu_spi_nor_mlo_register_handler(const char *name, char *devicefile)
++{
++	struct bbu_handler *handler;
++	int ret;
++
++	handler = xzalloc(sizeof(*handler));
++	handler->devicefile = devicefile;
++	handler->name = name;
++	handler->handler = spi_nor_mlo_handler;
++
++	ret = bbu_register_handler(handler);
++
++	if (ret)
++		free(handler);
++
++	return ret;
++}
+diff --git a/arch/arm/mach-omap/am33xx_clock.c b/arch/arm/mach-omap/am33xx_clock.c
+index 4451d62..692b0ec 100644
+--- a/arch/arm/mach-omap/am33xx_clock.c
++++ b/arch/arm/mach-omap/am33xx_clock.c
+@@ -53,6 +53,18 @@ static void interface_clocks_enable(void)
+ 	/* GPIO0 */
+ 	__raw_writel(PRCM_MOD_EN, CM_WKUP_GPIO0_CLKCTRL);
+ 	while (__raw_readl(CM_WKUP_GPIO0_CLKCTRL) != PRCM_MOD_EN);
++
++	/* GPIO1 */
++	__raw_writel(PRCM_MOD_EN, CM_PER_GPIO1_CLKCTRL);
++	while (__raw_readl(CM_PER_GPIO1_CLKCTRL) != PRCM_MOD_EN);
++
++	/* GPIO2 */
++	__raw_writel(PRCM_MOD_EN, CM_PER_GPIO2_CLKCTRL);
++	while (__raw_readl(CM_PER_GPIO2_CLKCTRL) != PRCM_MOD_EN);
++
++	/* GPIO3 */
++	__raw_writel(PRCM_MOD_EN, CM_PER_GPIO3_CLKCTRL);
++	while (__raw_readl(CM_PER_GPIO3_CLKCTRL) != PRCM_MOD_EN);
+ }
+ 
+ static void power_domain_transition_enable(void)
+@@ -144,7 +156,7 @@ static void per_clocks_enable(void)
+ 	while (__raw_readl(CM_PER_SPI1_CLKCTRL) != PRCM_MOD_EN);
+ }
+ 
+-static void mpu_pll_config(int mpupll_M)
++static void mpu_pll_config(int mpupll_M, int osc)
+ {
+ 	u32 clkmode, clksel, div_m2;
+ 
+@@ -158,7 +170,7 @@ static void mpu_pll_config(int mpupll_M)
+ 	while(__raw_readl(CM_IDLEST_DPLL_MPU) != 0x00000100);
+ 
+ 	clksel = clksel & (~0x7ffff);
+-	clksel = clksel | ((mpupll_M << 0x8) | MPUPLL_N);
++	clksel = clksel | ((mpupll_M << 0x8) | (osc - 1));
+ 	__raw_writel(clksel, CM_CLKSEL_DPLL_MPU);
+ 
+ 	div_m2 = div_m2 & ~0x1f;
+@@ -171,7 +183,7 @@ static void mpu_pll_config(int mpupll_M)
+ 	while(__raw_readl(CM_IDLEST_DPLL_MPU) != 0x1);
+ }
+ 
+-static void core_pll_config(void)
++static void core_pll_config(int osc)
+ {
+ 	u32 clkmode, clksel, div_m4, div_m5, div_m6;
+ 
+@@ -187,7 +199,7 @@ static void core_pll_config(void)
+ 	while(__raw_readl(CM_IDLEST_DPLL_CORE) != 0x00000100);
+ 
+ 	clksel = clksel & (~0x7ffff);
+-	clksel = clksel | ((COREPLL_M << 0x8) | COREPLL_N);
++	clksel = clksel | ((COREPLL_M << 0x8) | (osc - 1));
+ 	__raw_writel(clksel, CM_CLKSEL_DPLL_CORE);
+ 
+ 	div_m4 = div_m4 & ~0x1f;
+@@ -209,7 +221,7 @@ static void core_pll_config(void)
+ 	while(__raw_readl(CM_IDLEST_DPLL_CORE) != 0x1);
+ }
+ 
+-static void per_pll_config(void)
++static void per_pll_config(int osc)
+ {
+ 	u32 clkmode, clksel, div_m2;
+ 
+@@ -223,7 +235,7 @@ static void per_pll_config(void)
+ 	while(__raw_readl(CM_IDLEST_DPLL_PER) != 0x00000100);
+ 
+ 	clksel = clksel & (~0x7ffff);
+-	clksel = clksel | ((PERPLL_M << 0x8) | PERPLL_N);
++	clksel = clksel | ((PERPLL_M << 0x8) | (osc - 1));
+ 	__raw_writel(clksel, CM_CLKSEL_DPLL_PER);
+ 
+ 	div_m2 = div_m2 & ~0x7f;
+@@ -236,7 +248,7 @@ static void per_pll_config(void)
+ 	while(__raw_readl(CM_IDLEST_DPLL_PER) != 0x1);
+ }
+ 
+-static void ddr_pll_config(void)
++static void ddr_pll_config(int osc, int ddrpll_M)
+ {
+ 	u32 clkmode, clksel, div_m2;
+ 
+@@ -251,7 +263,7 @@ static void ddr_pll_config(void)
+ 	while ((__raw_readl(CM_IDLEST_DPLL_DDR) & 0x00000100) != 0x00000100);
+ 
+ 	clksel = clksel & (~0x7ffff);
+-	clksel = clksel | ((DDRPLL_M << 0x8) | DDRPLL_N);
++	clksel = clksel | ((ddrpll_M << 0x8) | (osc - 1));
+ 	__raw_writel(clksel, CM_CLKSEL_DPLL_DDR);
+ 
+ 	div_m2 = div_m2 & 0xFFFFFFE0;
+@@ -276,18 +288,18 @@ void enable_ddr_clocks(void)
+ 		PRCM_L3_GCLK_ACTIVITY));
+ 	/* Poll if module is functional */
+ 	while ((__raw_readl(CM_PER_EMIF_CLKCTRL)) != PRCM_MOD_EN);
+-
+ }
+ 
+ /*
+  * Configure the PLL/PRCM for necessary peripherals
+  */
+-void pll_init()
++void pll_init(int mpupll_M, int osc, int ddrpll_M)
+ {
+-	mpu_pll_config(MPUPLL_M_500);
+-	core_pll_config();
+-	per_pll_config();
+-	ddr_pll_config();
++	mpu_pll_config(mpupll_M, osc);
++	core_pll_config(osc);
++	per_pll_config(osc);
++	ddr_pll_config(osc, ddrpll_M);
++
+ 	/* Enable the required interconnect clocks */
+ 	interface_clocks_enable();
+ 	/* Enable power domain transition */
+diff --git a/arch/arm/mach-omap/am33xx_generic.c b/arch/arm/mach-omap/am33xx_generic.c
+index 96432c9..b028107 100644
+--- a/arch/arm/mach-omap/am33xx_generic.c
++++ b/arch/arm/mach-omap/am33xx_generic.c
+@@ -1,6 +1,6 @@
+ /*
+  * (C) Copyright 2012 Teresa Gámez, Phytec Messtechnik GmbH
+- * (C) Copyright 2012 Jan Luebbe <j.luebbe@pengutronix.de>
++ * (C) Copyright 2012-2013 Jan Luebbe <j.luebbe@pengutronix.de>
+  *
+  * This program is free software; you can redistribute it and/or
+  * modify it under the terms of the GNU General Public License as
+@@ -25,8 +25,10 @@
+ #include <net.h>
+ #include <mach/am33xx-silicon.h>
+ #include <mach/am33xx-clock.h>
++#include <mach/generic.h>
+ #include <mach/sys_info.h>
+ #include <mach/am33xx-generic.h>
++#include <mach/gpmc.h>
+ 
+ void __noreturn reset_cpu(unsigned long addr)
+ {
+@@ -36,6 +38,38 @@ void __noreturn reset_cpu(unsigned long addr)
+ }
+ 
+ /**
++ * @brief Extract the AM33xx ES revision
++ *
++ * The significance of the CPU revision depends upon the cpu type.
++ * Latest known revision is considered default.
++ *
++ * @return silicon version
++ */
++u32 am33xx_get_cpu_rev(void)
++{
++	u32 version, retval;
++
++	version = (readl(AM33XX_IDCODE_REG) >> 28) & 0xF;
++
++	switch (version) {
++	case 0:
++		retval = AM335X_ES1_0;
++		break;
++	case 1:
++		retval = AM335X_ES2_0;
++		break;
++	case 2:
++		/*
++		 * Fall through the default case.
++		 */
++	default:
++		retval = AM335X_ES2_1;
++	}
++
++	return retval;
++}
++
++/**
+  * @brief Get the upper address of current execution
+  *
+  * we can use this to figure out if we are running in SRAM /
+@@ -97,7 +131,22 @@ u32 running_in_sdram(void)
+ 
+ static int am33xx_bootsource(void)
+ {
+-	bootsource_set(BOOTSOURCE_MMC); /* only MMC for now */
++	enum bootsource src;
++
++	switch (omap_bootinfo[2] & 0xFF) {
++	case 0x05:
++		src = BOOTSOURCE_NAND;
++		break;
++	case 0x08:
++		src = BOOTSOURCE_MMC;
++		break;
++	case 0x0b:
++		src = BOOTSOURCE_SPI;
++		break;
++	default:
++		src = BOOTSOURCE_UNKNOWN;
++	}
++	bootsource_set(src);
+ 	bootsource_set_instance(0);
+ 	return 0;
+ }
+@@ -126,3 +175,188 @@ int am33xx_register_ethaddr(int eth_id, int mac_id)
+ 
+ 	return -ENODEV;
+ }
++
++/* GPMC timing for AM33XX nand device */
++const struct gpmc_config am33xx_nand_cfg = {
++	.cfg = {
++		0x00000800,	/* CONF1 */
++		0x001e1e00,	/* CONF2 */
++		0x001e1e00,	/* CONF3 */
++		0x16051807,	/* CONF4 */
++		0x00151e1e,	/* CONF5 */
++		0x16000f80,	/* CONF6 */
++	},
++	.base = 0x08000000,
++	.size = GPMC_SIZE_16M,
++};
++
++static int am33xx_gpio_init(void)
++{
++	add_generic_device("omap-gpio", 0, NULL, AM33XX_GPIO0_BASE,
++				0xf00, IORESOURCE_MEM, NULL);
++	add_generic_device("omap-gpio", 1, NULL, AM33XX_GPIO1_BASE,
++				0xf00, IORESOURCE_MEM, NULL);
++	add_generic_device("omap-gpio", 2, NULL, AM33XX_GPIO2_BASE,
++				0xf00, IORESOURCE_MEM, NULL);
++	add_generic_device("omap-gpio", 3, NULL, AM33XX_GPIO3_BASE,
++				0xf00, IORESOURCE_MEM, NULL);
++	return 0;
++}
++coredevice_initcall(am33xx_gpio_init);
++
++/* UART Defines */
++#define UART_SYSCFG_OFFSET	0x54
++#define UART_SYSSTS_OFFSET	0x58
++
++#define UART_CLK_RUNNING_MASK	0x1
++#define UART_RESET		(0x1 << 1)
++#define UART_SMART_IDLE_EN	(0x1 << 0x3)
++
++void am33xx_uart0_soft_reset(void)
++{
++	int reg;
++
++	reg = readl(AM33XX_UART0_BASE + UART_SYSCFG_OFFSET);
++	reg |= UART_RESET;
++	writel(reg, (AM33XX_UART0_BASE + UART_SYSCFG_OFFSET));
++
++	while ((readl(AM33XX_UART0_BASE + UART_SYSSTS_OFFSET) &
++		UART_CLK_RUNNING_MASK) != UART_CLK_RUNNING_MASK)
++		;
++
++	/* Disable smart idle */
++	reg = readl((AM33XX_UART0_BASE + UART_SYSCFG_OFFSET));
++	reg |= UART_SMART_IDLE_EN;
++	writel(reg, (AM33XX_UART0_BASE + UART_SYSCFG_OFFSET));
++}
++
++
++#define VTP_CTRL_READY		(0x1 << 5)
++#define VTP_CTRL_ENABLE		(0x1 << 6)
++#define VTP_CTRL_START_EN	(0x1)
++
++void am33xx_config_vtp(void)
++{
++	uint32_t val;
++
++	val = readl(AM33XX_VTP0_CTRL_REG);
++	val |= VTP_CTRL_ENABLE;
++	writel(val, AM33XX_VTP0_CTRL_REG);
++
++	val = readl(AM33XX_VTP0_CTRL_REG);
++	val &= ~VTP_CTRL_START_EN;
++	writel(val, AM33XX_VTP0_CTRL_REG);
++
++	val = readl(AM33XX_VTP0_CTRL_REG);
++	val |= VTP_CTRL_START_EN;
++	writel(val, AM33XX_VTP0_CTRL_REG);
++
++	/* Poll for READY */
++	while ((readl(AM33XX_VTP0_CTRL_REG) &
++				VTP_CTRL_READY) != VTP_CTRL_READY)
++		;
++}
++
++void am33xx_ddr_phydata_cmd_macro(const struct am33xx_cmd_control *cmd_ctrl)
++{
++	writel(cmd_ctrl->slave_ratio0, AM33XX_CMD0_CTRL_SLAVE_RATIO_0);
++	writel(cmd_ctrl->dll_lock_diff0, AM33XX_CMD0_DLL_LOCK_DIFF_0);
++	writel(cmd_ctrl->invert_clkout0, AM33XX_CMD0_INVERT_CLKOUT_0);
++
++	writel(cmd_ctrl->slave_ratio1, AM33XX_CMD1_CTRL_SLAVE_RATIO_0);
++	writel(cmd_ctrl->dll_lock_diff1, AM33XX_CMD1_DLL_LOCK_DIFF_0);
++	writel(cmd_ctrl->invert_clkout1, AM33XX_CMD1_INVERT_CLKOUT_0);
++
++	writel(cmd_ctrl->slave_ratio2, AM33XX_CMD2_CTRL_SLAVE_RATIO_0);
++	writel(cmd_ctrl->dll_lock_diff2, AM33XX_CMD2_DLL_LOCK_DIFF_0);
++	writel(cmd_ctrl->invert_clkout2, AM33XX_CMD2_INVERT_CLKOUT_0);
++}
++
++#define CM_EMIF_SDRAM_CONFIG	(AM33XX_CTRL_BASE + 0x110)
++
++void am33xx_config_sdram(const struct am33xx_emif_regs *regs)
++{
++	writel(regs->emif_read_latency, AM33XX_EMIF4_0_REG(DDR_PHY_CTRL_1));
++	writel(regs->emif_read_latency, AM33XX_EMIF4_0_REG(DDR_PHY_CTRL_1_SHADOW));
++	writel(regs->emif_read_latency, AM33XX_EMIF4_0_REG(DDR_PHY_CTRL_2));
++	writel(regs->emif_tim1, AM33XX_EMIF4_0_REG(SDRAM_TIM_1));
++	writel(regs->emif_tim1, AM33XX_EMIF4_0_REG(SDRAM_TIM_1_SHADOW));
++	writel(regs->emif_tim2, AM33XX_EMIF4_0_REG(SDRAM_TIM_2));
++	writel(regs->emif_tim2, AM33XX_EMIF4_0_REG(SDRAM_TIM_2_SHADOW));
++	writel(regs->emif_tim3, AM33XX_EMIF4_0_REG(SDRAM_TIM_3));
++	writel(regs->emif_tim3, AM33XX_EMIF4_0_REG(SDRAM_TIM_3_SHADOW));
++
++	if (regs->zq_config) {
++		/*
++		 * A value of 0x2800 for the REF CTRL will give us
++		 * about 570us for a delay, which will be long enough
++		 * to configure things.
++		 */
++		writel(0x2800, AM33XX_EMIF4_0_REG(SDRAM_REF_CTRL));
++		writel(regs->zq_config, AM33XX_EMIF4_0_REG(ZQ_CONFIG));
++		writel(regs->sdram_config, CM_EMIF_SDRAM_CONFIG);
++		writel(regs->sdram_config, AM33XX_EMIF4_0_REG(SDRAM_CONFIG));
++		writel(regs->sdram_ref_ctrl,
++				AM33XX_EMIF4_0_REG(SDRAM_REF_CTRL));
++		writel(regs->sdram_ref_ctrl,
++			AM33XX_EMIF4_0_REG(SDRAM_REF_CTRL_SHADOW));
++
++	}
++
++	writel(regs->sdram_ref_ctrl, AM33XX_EMIF4_0_REG(SDRAM_REF_CTRL));
++	writel(regs->sdram_ref_ctrl, AM33XX_EMIF4_0_REG(SDRAM_REF_CTRL_SHADOW));
++	writel(regs->sdram_config, CM_EMIF_SDRAM_CONFIG);
++}
++
++void am33xx_config_io_ctrl(int ioctrl)
++{
++	writel(ioctrl, AM33XX_DDR_CMD0_IOCTRL);
++	writel(ioctrl, AM33XX_DDR_CMD1_IOCTRL);
++	writel(ioctrl, AM33XX_DDR_CMD2_IOCTRL);
++	writel(ioctrl, AM33XX_DDR_DATA0_IOCTRL);
++	writel(ioctrl, AM33XX_DDR_DATA1_IOCTRL);
++}
++
++void am33xx_config_ddr_data(const struct am33xx_ddr_data *data, int macronr)
++{
++	u32 base = 0x0;
++
++	if (macronr)
++		base = 0xA4;
++
++	writel(data->rd_slave_ratio0, AM33XX_DATA0_RD_DQS_SLAVE_RATIO_0 + base);
++	writel(data->wr_dqs_slave_ratio0, AM33XX_DATA0_WR_DQS_SLAVE_RATIO_0 + base);
++	writel(data->wrlvl_init_ratio0, AM33XX_DATA0_WRLVL_INIT_RATIO_0 + base);
++	writel(data->gatelvl_init_ratio0, AM33XX_DATA0_GATELVL_INIT_RATIO_0 + base);
++	writel(data->fifo_we_slave_ratio0, AM33XX_DATA0_FIFO_WE_SLAVE_RATIO_0 + base);
++	writel(data->wr_slave_ratio0, AM33XX_DATA0_WR_DATA_SLAVE_RATIO_0 + base);
++	writel(data->use_rank0_delay, AM33XX_DATA0_RANK0_DELAYS_0 + base);
++	writel(data->dll_lock_diff0, AM33XX_DATA0_DLL_LOCK_DIFF_0 + base);
++}
++
++void am335x_sdram_init(int ioctrl, const struct am33xx_cmd_control *cmd_ctrl,
++		const struct am33xx_emif_regs *emif_regs,
++		const struct am33xx_ddr_data *ddr_data)
++{
++	uint32_t val;
++
++	enable_ddr_clocks();
++
++	am33xx_config_vtp();
++
++	am33xx_ddr_phydata_cmd_macro(cmd_ctrl);
++	am33xx_config_ddr_data(ddr_data, 0);
++	am33xx_config_ddr_data(ddr_data, 1);
++
++	am33xx_config_io_ctrl(ioctrl);
++
++	val = readl(AM33XX_DDR_IO_CTRL);
++	val &= 0xefffffff;
++	writel(val, AM33XX_DDR_IO_CTRL);
++
++	val = readl(AM33XX_DDR_CKE_CTRL);
++	val |= 0x00000001;
++	writel(val, AM33XX_DDR_CKE_CTRL);
++
++	am33xx_config_sdram(emif_regs);
++}
+diff --git a/arch/arm/mach-omap/am33xx_mux.c b/arch/arm/mach-omap/am33xx_mux.c
+index 424d120..8318713 100644
+--- a/arch/arm/mach-omap/am33xx_mux.c
++++ b/arch/arm/mach-omap/am33xx_mux.c
+@@ -39,8 +39,6 @@ static const __maybe_unused struct module_pin_mux uart3_pin_mux[] = {
+ 	{-1},
+ };
+ 
+-
+-#ifdef CONFIG_NAND
+ static const __maybe_unused struct module_pin_mux nand_pin_mux[] = {
+ 	{OFFSET(gpmc_ad0), (MODE(0) | PULLUP_EN | RXACTIVE)},	/* NAND AD0 */
+ 	{OFFSET(gpmc_ad1), (MODE(0) | PULLUP_EN | RXACTIVE)},	/* NAND AD1 */
+@@ -59,7 +57,6 @@ static const __maybe_unused struct module_pin_mux nand_pin_mux[] = {
+ 	{OFFSET(gpmc_be0n_cle), (MODE(0) | PULLUDEN)},	/* NAND_BE_CLE */
+ 	{-1},
+ };
+-#endif
+ 
+ static const __maybe_unused struct module_pin_mux i2c0_pin_mux[] = {
+ 	{OFFSET(i2c0_sda), (MODE(0) | RXACTIVE | PULLUDEN | SLEWCTRL)},	/* I2C_DATA */
+@@ -314,3 +311,13 @@ void am33xx_enable_mmc0_pin_mux(void)
+ {
+ 	configure_module_pin_mux(mmc0_pin_mux);
+ }
++
++void am33xx_enable_spi0_pin_mux(void)
++{
++	configure_module_pin_mux(spi0_pin_mux);
++}
++
++void am33xx_enable_nand_pin_mux(void)
++{
++	configure_module_pin_mux(nand_pin_mux);
++}
+diff --git a/arch/arm/mach-omap/gpmc.c b/arch/arm/mach-omap/gpmc.c
+index bb84b38..021e9a3 100644
+--- a/arch/arm/mach-omap/gpmc.c
++++ b/arch/arm/mach-omap/gpmc.c
+@@ -159,6 +159,9 @@ int gpmc_prefetch_enable(int cs, int fifo_th, int dma_mode,
+ 		return -EINVAL;
+ 	}
+ 
++	if (readl(GPMC_REG(PREFETCH_CONTROL)))
++		return -EBUSY;
++
+ 	/* Set the amount of bytes to be prefetched */
+ 	writel(u32_count, GPMC_REG(PREFETCH_CONFIG2));
+ 
+diff --git a/arch/arm/mach-omap/include/mach/am33xx-clock.h b/arch/arm/mach-omap/include/mach/am33xx-clock.h
+index 3d1f074..ecd90b2 100644
+--- a/arch/arm/mach-omap/include/mach/am33xx-clock.h
++++ b/arch/arm/mach-omap/include/mach/am33xx-clock.h
+@@ -23,20 +23,16 @@
+ 
+ /* Put the pll config values over here */
+ 
+-#define OSC	24
+-
+ /* MAIN PLL Fdll = 1 GHZ, */
+ #define MPUPLL_M_500	500	/* 125 * n */
+ #define MPUPLL_M_550	550	/* 125 * n */
+ #define MPUPLL_M_600	600	/* 125 * n */
+ #define MPUPLL_M_720	720	/* 125 * n */
+ 
+-#define MPUPLL_N	(OSC - 1)
+ #define MPUPLL_M2	1
+ 
+ /* Core PLL Fdll = 1 GHZ, */
+ #define COREPLL_M	1000	/* 125 * n */
+-#define COREPLL_N	(OSC - 1)
+ 
+ #define COREPLL_M4	10	/* CORE_CLKOUTM4 = 200 MHZ */
+ #define COREPLL_M5	8	/* CORE_CLKOUTM5 = 250 MHZ */
+@@ -48,12 +44,13 @@
+  * For clkout = 192 MHZ, Fdll = 960 MHZ, divider values are given below
+  */
+ #define PERPLL_M	960
+-#define PERPLL_N	(OSC - 1)
+ #define PERPLL_M2	5
+ 
+ /* DDR Freq is 266 MHZ for now*/
+ /* Set Fdll = 400 MHZ , Fdll = M * 2 * CLKINP/ N + 1; clkout = Fdll /(2 * M2) */
+-#define DDRPLL_M	266
++#define DDRPLL_M_266	266
++#define DDRPLL_M_303	303
++#define DDRPLL_M_400	400
+ #define DDRPLL_N	(OSC - 1)
+ #define DDRPLL_M2	1
+ 
+@@ -187,7 +184,7 @@
+ 
+ #define CM_ALWON_GPMC_CLKCTRL           CM_PER_GPMC_CLKCTRL
+ 
+-extern void pll_init(void);
++extern void pll_init(int mpupll_M, int osc, int ddrpll_M);
+ extern void enable_ddr_clocks(void);
+ 
+ #endif  /* endif _AM33XX_CLOCKS_H_ */
+diff --git a/arch/arm/mach-omap/include/mach/am33xx-devices.h b/arch/arm/mach-omap/include/mach/am33xx-devices.h
+index fe9fba9..6a4d901 100644
+--- a/arch/arm/mach-omap/include/mach/am33xx-devices.h
++++ b/arch/arm/mach-omap/include/mach/am33xx-devices.h
+@@ -37,4 +37,38 @@ static inline struct device_d *am33xx_add_cpsw(struct cpsw_platform_data *cpsw_d
+ 			AM335X_CPSW_BASE, SZ_32K, IORESOURCE_MEM, cpsw_data);
+ }
+ 
++static inline struct device_d *am33xx_add_spi(int id, resource_size_t start)
++{
++	return add_generic_device("omap3_spi", id, NULL, start + 0x100, SZ_4K - 0x100,
++				   IORESOURCE_MEM, NULL);
++}
++
++static inline struct device_d *am33xx_add_spi0(void)
++{
++	return am33xx_add_spi(0, AM33XX_MCSPI0_BASE);
++}
++
++static inline struct device_d *am33xx_add_spi1(void)
++{
++	return am33xx_add_spi(1, AM33XX_MCSPI1_BASE);
++}
++
++static inline struct device_d *am33xx_add_i2c0(void *pdata)
++{
++	return add_generic_device("i2c-am33xx", 0, NULL, AM33XX_I2C0_BASE,
++			SZ_4K, IORESOURCE_MEM, pdata);
++}
++
++static inline struct device_d *am33xx_add_i2c1(void *pdata)
++{
++	return add_generic_device("i2c-am33xx", 1, NULL, AM33XX_I2C1_BASE,
++			SZ_4K, IORESOURCE_MEM, pdata);
++}
++
++static inline struct device_d *am33xx_add_i2c2(void *pdata)
++{
++	return add_generic_device("i2c-am33xx", 2, NULL, AM33XX_I2C2_BASE,
++			SZ_4K, IORESOURCE_MEM, pdata);
++}
++
+ #endif /* __MACH_OMAP3_DEVICES_H */
+diff --git a/arch/arm/mach-omap/include/mach/am33xx-generic.h b/arch/arm/mach-omap/include/mach/am33xx-generic.h
+index ba69caf..ec22ad2 100644
+--- a/arch/arm/mach-omap/include/mach/am33xx-generic.h
++++ b/arch/arm/mach-omap/include/mach/am33xx-generic.h
+@@ -1,6 +1,25 @@
+ #ifndef __MACH_AM33XX_GENERIC_H
+ #define __MACH_AM33XX_GENERIC_H
+ 
++#include <mach/generic.h>
++#include <mach/am33xx-silicon.h>
++
+ int am33xx_register_ethaddr(int eth_id, int mac_id);
+ 
++u32 am33xx_get_cpu_rev(void);
++
++static inline void am33xx_save_bootinfo(uint32_t *info)
++{
++	unsigned long i = (unsigned long)info;
++
++	if (i & 0x3)
++		return;
++	if (i < AM33XX_SRAM0_START)
++		return;
++	if (i > AM33XX_SRAM0_START + AM33XX_SRAM0_SIZE)
++		return;
++
++	omap_save_bootinfo(info);
++}
++
+ #endif /* __MACH_AM33XX_GENERIC_H */
+diff --git a/arch/arm/mach-omap/include/mach/am33xx-mux.h b/arch/arm/mach-omap/include/mach/am33xx-mux.h
+index 44b93bd..fe3168b 100644
+--- a/arch/arm/mach-omap/include/mach/am33xx-mux.h
++++ b/arch/arm/mach-omap/include/mach/am33xx-mux.h
+@@ -256,5 +256,7 @@ extern void am33xx_enable_i2c2_pin_mux(void);
+ extern void am33xx_enable_uart0_pin_mux(void);
+ extern void am33xx_enable_uart2_pin_mux(void);
+ extern void am33xx_enable_mmc0_pin_mux(void);
++extern void am33xx_enable_spi0_pin_mux(void);
++extern void am33xx_enable_nand_pin_mux(void);
+ 
+ #endif /*__AM33XX_MUX_H__ */
+diff --git a/arch/arm/mach-omap/include/mach/am33xx-silicon.h b/arch/arm/mach-omap/include/mach/am33xx-silicon.h
+index 9edf4ca..30b605a 100644
+--- a/arch/arm/mach-omap/include/mach/am33xx-silicon.h
++++ b/arch/arm/mach-omap/include/mach/am33xx-silicon.h
+@@ -17,6 +17,8 @@
+ #ifndef __ASM_ARCH_AM33XX_H
+ #define __ASM_ARCH_AM33XX_H
+ 
++#include <sizes.h>
++
+ /** AM335x Internal Bus Base addresses */
+ #define AM33XX_L4_WKUP_BASE		0x44C00000
+ #define AM33XX_L4_PER_BASE		0x48000000
+@@ -41,6 +43,11 @@
+ #define AM33XX_DRAM_ADDR_SPACE_START	0x80000000
+ #define AM33XX_DRAM_ADDR_SPACE_END	0xC0000000
+ 
++/* I2C */
++#define AM33XX_I2C0_BASE	(AM33XX_L4_WKUP_BASE + 0x20B000)
++#define AM33XX_I2C1_BASE	(AM33XX_L4_PER_BASE + 0x02A000)
++#define AM33XX_I2C2_BASE	(AM33XX_L4_PER_BASE + 0x19C000)
++
+ /* GPMC */
+ #define AM33XX_GPMC_BASE		0x50000000
+ 
+@@ -49,6 +56,10 @@
+ #define AM33XX_MMC1_BASE		(AM33XX_L4_PER_BASE + 0x1D8000)
+ #define AM33XX_MMCHS2_BASE		0x47810000
+ 
++/* SPI */
++#define AM33XX_MCSPI0_BASE		(AM33XX_L4_PER_BASE + 0x30000)
++#define AM33XX_MCSPI1_BASE		(AM33XX_L4_PER_BASE + 0x1A0000)
++
+ /* DTMTimer0 */
+ #define AM33XX_DMTIMER0_BASE		(AM33XX_L4_WKUP_BASE + 0x205000)
+ 
+@@ -60,6 +71,7 @@
+ 
+ /* CTRL */
+ #define AM33XX_CTRL_BASE		(AM33XX_L4_WKUP_BASE + 0x210000)
++#define AM33XX_IDCODE_REG		(AM33XX_CTRL_BASE + 0x600)
+ 
+ /* Watchdog Timer */
+ #define AM33XX_WDT_BASE			0x44E35000
+@@ -96,6 +108,7 @@
+ #define EMIF4_SDRAM_TIM_3_SHADOW	0x2C
+ #define EMIF0_SDRAM_MGMT_CTRL		0x38
+ #define EMIF0_SDRAM_MGMT_CTRL_SHD	0x3C
++#define EMIF4_ZQ_CONFIG			0xC8
+ #define EMIF4_DDR_PHY_CTRL_1		0xE4
+ #define EMIF4_DDR_PHY_CTRL_1_SHADOW	0xE8
+ #define EMIF4_DDR_PHY_CTRL_2		0xEC
+@@ -105,11 +118,10 @@
+ #define AM33XX_VTP1_CTRL_REG		0x48140E10
+ 
+ /* OCMC */
+-#define AM33XX_SRAM0_SIZE			(0x1B400) /* 109 KB */
++#define AM33XX_SRAM0_START			0x402f0400
++#define AM33XX_SRAM0_SIZE			(SZ_128K - SZ_1K)
+ #define AM33XX_SRAM_GPMC_STACK_SIZE		(0x40)
+ 
+-#define AM33XX_LOW_LEVEL_SRAM_STACK		(AM33XX_SRAM0_START + AM33XX_SRAM0_SIZE - 4)
+-
+ /* DDR offsets */
+ #define	AM33XX_DDR_PHY_BASE_ADDR		0x44E12000
+ #define	AM33XX_DDR_IO_CTRL			0x44E10E04
+@@ -148,9 +160,11 @@
+ #define	AM33XX_DATA0_WRLVL_INIT_RATIO_0		(AM33XX_DDR_PHY_BASE_ADDR + 0x0F0)
+ 
+ #define	AM33XX_DATA0_WRLVL_INIT_RATIO_1		(AM33XX_DDR_PHY_BASE_ADDR + 0x0F4)
++#define	AM33XX_DATA0_WRLVL_INIT_MODE_0		(AM33XX_DDR_PHY_BASE_ADDR + 0x0F8)
+ #define	AM33XX_DATA0_GATELVL_INIT_RATIO_0	(AM33XX_DDR_PHY_BASE_ADDR + 0x0FC)
+ 
+ #define	AM33XX_DATA0_GATELVL_INIT_RATIO_1	(AM33XX_DDR_PHY_BASE_ADDR + 0x100)
++#define	AM33XX_DATA0_GATELVL_INIT_MODE_0	(AM33XX_DDR_PHY_BASE_ADDR + 0x104)
+ #define	AM33XX_DATA0_FIFO_WE_SLAVE_RATIO_0	(AM33XX_DDR_PHY_BASE_ADDR + 0x108)
+ 
+ #define	AM33XX_DATA0_FIFO_WE_SLAVE_RATIO_1	(AM33XX_DDR_PHY_BASE_ADDR + 0x10C)
+@@ -160,6 +174,16 @@
+ #define AM33XX_DATA0_DLL_LOCK_DIFF_0		(AM33XX_DDR_PHY_BASE_ADDR + 0x138)
+ 
+ #define AM33XX_DATA0_RANK0_DELAYS_0		(AM33XX_DDR_PHY_BASE_ADDR + 0x134)
++
++#define	AM33XX_DATA1_RD_DQS_SLAVE_RATIO_0	(AM33XX_DDR_PHY_BASE_ADDR + 0x16C)
++#define	AM33XX_DATA1_WR_DQS_SLAVE_RATIO_0	(AM33XX_DDR_PHY_BASE_ADDR + 0x180)
++
++#define	AM33XX_DATA1_WRLVL_INIT_MODE_0		(AM33XX_DDR_PHY_BASE_ADDR + 0x19C)
++#define	AM33XX_DATA1_GATELVL_INIT_MODE_0	(AM33XX_DDR_PHY_BASE_ADDR + 0x1A8)
++
++#define	AM33XX_DATA1_FIFO_WE_SLAVE_RATIO_0	(AM33XX_DDR_PHY_BASE_ADDR + 0x1AC)
++#define	AM33XX_DATA1_WR_DATA_SLAVE_RATIO_0	(AM33XX_DDR_PHY_BASE_ADDR + 0x1C4)
++
+ #define	AM33XX_DATA1_RANK0_DELAYS_0		(AM33XX_DDR_PHY_BASE_ADDR + 0x1D8)
+ 
+ /* Ethernet MAC ID from EFuse */
+@@ -169,4 +193,48 @@
+ #define AM33XX_MAC_ID1_HI	(AM33XX_CTRL_BASE + 0x63c)
+ #define AM33XX_MAC_MII_SEL	(AM33XX_CTRL_BASE + 0x650)
+ 
++struct am33xx_cmd_control {
++	u32 slave_ratio0;
++	u32 dll_lock_diff0;
++	u32 invert_clkout0;
++	u32 slave_ratio1;
++	u32 dll_lock_diff1;
++	u32 invert_clkout1;
++	u32 slave_ratio2;
++	u32 dll_lock_diff2;
++	u32 invert_clkout2;
++};
++
++struct am33xx_emif_regs {
++	u32 emif_read_latency;
++	u32 emif_tim1;
++	u32 emif_tim2;
++	u32 emif_tim3;
++	u32 sdram_config;
++	u32 sdram_config2;
++	u32 zq_config;
++	u32 sdram_ref_ctrl;
++};
++
++struct am33xx_ddr_data {
++	u32 rd_slave_ratio0;
++	u32 wr_dqs_slave_ratio0;
++	u32 wrlvl_init_ratio0;
++	u32 gatelvl_init_ratio0;
++	u32 fifo_we_slave_ratio0;
++	u32 wr_slave_ratio0;
++	u32 use_rank0_delay;
++	u32 dll_lock_diff0;
++};
++
++void am33xx_uart0_soft_reset(void);
++void am33xx_config_vtp(void);
++void am33xx_ddr_phydata_cmd_macro(const struct am33xx_cmd_control *cmd_ctrl);
++void am33xx_config_io_ctrl(int ioctrl);
++void am33xx_config_sdram(const struct am33xx_emif_regs *regs);
++void am33xx_config_ddr_data(const struct am33xx_ddr_data *data, int macronr);
++void am335x_sdram_init(int ioctrl, const struct am33xx_cmd_control *cmd_ctrl,
++			const struct am33xx_emif_regs *emif_regs,
++			const struct am33xx_ddr_data *ddr_data);
++
+ #endif
+diff --git a/arch/arm/mach-omap/include/mach/bbu.h b/arch/arm/mach-omap/include/mach/bbu.h
+new file mode 100644
+index 0000000..6d4b70f
+--- /dev/null
++++ b/arch/arm/mach-omap/include/mach/bbu.h
+@@ -0,0 +1,15 @@
++#ifndef __MACH_BBU_H
++#define __MACH_BBU_H
++
++#include <bbu.h>
++
++#ifdef CONFIG_BAREBOX_UPDATE_AM33XX_SPI_NOR_MLO
++int am33xx_bbu_spi_nor_mlo_register_handler(const char *name, char *devicefile);
++#else
++int am33xx_bbu_spi_nor_mlo_register_handler(const char *name, char *devicefile)
++{
++	return 0;
++}
++#endif
++
++#endif
+diff --git a/arch/arm/mach-omap/include/mach/devices.h b/arch/arm/mach-omap/include/mach/devices.h
+index adae01b..537213f 100644
+--- a/arch/arm/mach-omap/include/mach/devices.h
++++ b/arch/arm/mach-omap/include/mach/devices.h
+@@ -9,6 +9,4 @@ void omap_add_sram0(resource_size_t base, resource_size_t size);
+ 
+ struct device_d *omap_add_uart(int id, unsigned long base);
+ 
+-struct device_d *omap_add_i2c(int id, unsigned long base, void *pdata);
+-
+ #endif /* __MACH_OMAP_DEVICES_H */
+diff --git a/arch/arm/mach-omap/include/mach/generic.h b/arch/arm/mach-omap/include/mach/generic.h
+index 5a10a54..ec7a4ef 100644
+--- a/arch/arm/mach-omap/include/mach/generic.h
++++ b/arch/arm/mach-omap/include/mach/generic.h
+@@ -27,4 +27,29 @@
+ #define cpu_is_omap4xxx()	(0)
+ #endif
+ 
++#ifdef CONFIG_ARCH_AM33XX
++#define cpu_is_am33xx()		(1)
++#else
++#define cpu_is_am33xx()		(0)
++#endif
++
++struct omap_barebox_part {
++	unsigned int nand_offset;
++	unsigned int nand_size;
++	unsigned int nor_offset;
++	unsigned int nor_size;
++};
++
++#ifdef CONFIG_SHELL_NONE
++int omap_set_barebox_part(struct omap_barebox_part *part);
++#else
++static inline int omap_set_barebox_part(struct omap_barebox_part *part)
++{
++	return 0;
++}
++#endif
++
++extern uint32_t omap_bootinfo[3];
++void omap_save_bootinfo(void *data);
++
+ #endif
+diff --git a/arch/arm/mach-omap/include/mach/gpmc_nand.h b/arch/arm/mach-omap/include/mach/gpmc_nand.h
+index 4a93465..ae8d715 100644
+--- a/arch/arm/mach-omap/include/mach/gpmc_nand.h
++++ b/arch/arm/mach-omap/include/mach/gpmc_nand.h
+@@ -43,6 +43,7 @@ struct gpmc_nand_platform_data {
+ 	int cs;
+ 	struct mtd_partition *parts;
+ 	int nr_parts;
++	int is_elm_used;
+ 	/** If there are any special setups you'd want to do */
+ 	int (*nand_setup) (struct gpmc_nand_platform_data *);
+ 
+@@ -65,5 +66,6 @@ int omap_add_gpmc_nand_device(struct gpmc_nand_platform_data *pdata);
+ 
+ extern struct gpmc_config omap3_nand_cfg;
+ extern struct gpmc_config omap4_nand_cfg;
++extern struct gpmc_config am33xx_nand_cfg;
+ 
+ #endif				/* __ASM_OMAP_NAND_GPMC_H */
+diff --git a/arch/arm/mach-omap/include/mach/omap3-devices.h b/arch/arm/mach-omap/include/mach/omap3-devices.h
+index de67ea0..0809e95 100644
+--- a/arch/arm/mach-omap/include/mach/omap3-devices.h
++++ b/arch/arm/mach-omap/include/mach/omap3-devices.h
+@@ -77,17 +77,20 @@ static inline struct device_d *omap3_add_mmc3(struct omap_hsmmc_platform_data *p
+ 
+ static inline struct device_d *omap3_add_i2c1(void *pdata)
+ {
+-	return omap_add_i2c(0, OMAP3_I2C1_BASE, pdata);
++	return add_generic_device("i2c-omap3", 0, NULL, OMAP3_I2C1_BASE,
++			SZ_4K, IORESOURCE_MEM, pdata);
+ }
+ 
+ static inline struct device_d *omap3_add_i2c2(void *pdata)
+ {
+-	return omap_add_i2c(1, OMAP3_I2C2_BASE, pdata);
++	return add_generic_device("i2c-omap3", 1, NULL, OMAP3_I2C2_BASE,
++			SZ_4K, IORESOURCE_MEM, pdata);
+ }
+ 
+ static inline struct device_d *omap3_add_i2c3(void *pdata)
+ {
+-	return omap_add_i2c(2, OMAP3_I2C3_BASE, pdata);
++	return add_generic_device("i2c-omap3", 2, NULL, OMAP3_I2C3_BASE,
++			SZ_4K, IORESOURCE_MEM, pdata);
+ }
+ 
+ static inline struct device_d *omap3_add_ehci(void *pdata)
+diff --git a/arch/arm/mach-omap/include/mach/omap3-generic.h b/arch/arm/mach-omap/include/mach/omap3-generic.h
+new file mode 100644
+index 0000000..7f0da4e
+--- /dev/null
++++ b/arch/arm/mach-omap/include/mach/omap3-generic.h
+@@ -0,0 +1,21 @@
++#ifndef __MACH_OMAP3_GENERIC_H
++#define __MACH_OMAP3_GENERIC_H
++
++#include <mach/generic.h>
++#include <mach/omap3-silicon.h>
++
++static inline void omap3_save_bootinfo(uint32_t *info)
++{
++	unsigned long i = (unsigned long)info;
++
++	if (i & 0x3)
++		return;
++	if (i < OMAP3_SRAM_BASE)
++		return;
++	if (i > OMAP3_SRAM_BASE + SZ_64K)
++		return;
++
++	omap_save_bootinfo(info);
++}
++
++#endif /* __MACH_OMAP3_GENERIC_H */
+diff --git a/arch/arm/mach-omap/include/mach/omap4-devices.h b/arch/arm/mach-omap/include/mach/omap4-devices.h
+index 561d9ce..76c9789 100644
+--- a/arch/arm/mach-omap/include/mach/omap4-devices.h
++++ b/arch/arm/mach-omap/include/mach/omap4-devices.h
+@@ -60,22 +60,26 @@ static inline struct device_d *omap44xx_add_mmc5(struct omap_hsmmc_platform_data
+ 
+ static inline struct device_d *omap44xx_add_i2c1(void *pdata)
+ {
+-	return omap_add_i2c(0, OMAP44XX_I2C1_BASE, pdata);
++	return add_generic_device("i2c-omap4", 0, NULL, OMAP44XX_I2C1_BASE,
++			SZ_4K, IORESOURCE_MEM, pdata);
+ }
+ 
+ static inline struct device_d *omap44xx_add_i2c2(void *pdata)
+ {
+-	return omap_add_i2c(1, OMAP44XX_I2C2_BASE, pdata);
++	return add_generic_device("i2c-omap4", 1, NULL, OMAP44XX_I2C2_BASE,
++			SZ_4K, IORESOURCE_MEM, pdata);
+ }
+ 
+ static inline struct device_d *omap44xx_add_i2c3(void *pdata)
+ {
+-	return omap_add_i2c(2, OMAP44XX_I2C3_BASE, pdata);
++	return add_generic_device("i2c-omap4", 2, NULL, OMAP44XX_I2C3_BASE,
++			SZ_4K, IORESOURCE_MEM, pdata);
+ }
+ 
+ static inline struct device_d *omap44xx_add_i2c4(void *pdata)
+ {
+-	return omap_add_i2c(3, OMAP44XX_I2C4_BASE, pdata);
++	return add_generic_device("i2c-omap4", 3, NULL, OMAP44XX_I2C4_BASE,
++			SZ_4K, IORESOURCE_MEM, pdata);
+ }
+ 
+ static inline struct device_d *omap44xx_add_ehci(void *pdata)
+diff --git a/arch/arm/mach-omap/include/mach/omap4-generic.h b/arch/arm/mach-omap/include/mach/omap4-generic.h
+new file mode 100644
+index 0000000..44f5a12
+--- /dev/null
++++ b/arch/arm/mach-omap/include/mach/omap4-generic.h
+@@ -0,0 +1,21 @@
++#ifndef __MACH_OMAP4_GENERIC_H
++#define __MACH_OMAP4_GENERIC_H
++
++#include <mach/generic.h>
++#include <mach/omap4-silicon.h>
++
++static inline void omap4_save_bootinfo(uint32_t *info)
++{
++	unsigned long i = (unsigned long)info;
++
++	if (i & 0x3)
++		return;
++	if (i < OMAP44XX_SRAM_BASE)
++		return;
++	if (i > OMAP44XX_SRAM_BASE + SZ_64K)
++		return;
++
++	omap_save_bootinfo(info);
++}
++
++#endif /* __MACH_OMAP4_GENERIC_H */
+diff --git a/arch/arm/mach-omap/include/mach/sys_info.h b/arch/arm/mach-omap/include/mach/sys_info.h
+index 4d9b138..fce5895 100644
+--- a/arch/arm/mach-omap/include/mach/sys_info.h
++++ b/arch/arm/mach-omap/include/mach/sys_info.h
+@@ -40,6 +40,7 @@
+ #define CPU_1710	0x1710
+ #define CPU_2420	0x2420
+ #define CPU_2430	0x2430
++#define CPU_3350	0x3350
+ #define CPU_3430	0x3430
+ #define CPU_3630	0x3630
+ 
+@@ -54,6 +55,10 @@
+ #define OMAP34XX_ES3		cpu_revision(CPU_3430, 3)
+ #define OMAP34XX_ES3_1		cpu_revision(CPU_3430, 4)
+ 
++#define AM335X_ES1_0		cpu_revision(CPU_3350, 0)
++#define AM335X_ES2_0		cpu_revision(CPU_3350, 1)
++#define AM335X_ES2_1		cpu_revision(CPU_3350, 2)
++
+ #define OMAP36XX_ES1		cpu_revision(CPU_3630, 0)
+ #define OMAP36XX_ES1_1		cpu_revision(CPU_3630, 1)
+ #define OMAP36XX_ES1_2		cpu_revision(CPU_3630, 2)
+@@ -76,8 +81,9 @@
+ /**
+  * Hawkeye definitions to identify silicon families
+  */
+-#define OMAP_HAWKEYE_34XX	0xB7AE
+-#define OMAP_HAWKEYE_36XX	0xB891
++#define OMAP_HAWKEYE_34XX	0xB7AE /* OMAP34xx */
++#define OMAP_HAWKEYE_36XX	0xB891 /* OMAP36xx */
++#define OMAP_HAWKEYE_335X	0xB944 /* AM335x */
+ 
+ /** These are implemented by the System specific code in omapX-generic.c */
+ u32 get_cpu_type(void);
+diff --git a/arch/arm/mach-omap/omap3_generic.c b/arch/arm/mach-omap/omap3_generic.c
+index f144813..8b661ff 100644
+--- a/arch/arm/mach-omap/omap3_generic.c
++++ b/arch/arm/mach-omap/omap3_generic.c
+@@ -33,6 +33,7 @@
+ #include <io.h>
+ #include <mach/omap3-silicon.h>
+ #include <mach/gpmc.h>
++#include <mach/generic.h>
+ #include <mach/sdrc.h>
+ #include <mach/control.h>
+ #include <mach/omap3-smx.h>
+@@ -468,12 +469,21 @@ void omap3_core_init(void)
+ static int omap3_bootsource(void)
+ {
+ 	enum bootsource src = BOOTSOURCE_UNKNOWN;
+-	u32 bootsrc = readl(OMAP3_TRACING_VECTOR1);
+ 
+-	if (bootsrc & (1 << 2))
++	switch (omap_bootinfo[1] & 0xFF) {
++	case 0x02:
+ 		src = BOOTSOURCE_NAND;
+-	if (bootsrc & (1 << 6))
++		break;
++	case 0x06:
+ 		src = BOOTSOURCE_MMC;
++		break;
++	case 0x11:
++		src = BOOTSOURCE_USB;
++		break;
++	default:
++		src = BOOTSOURCE_UNKNOWN;
++	}
++
+ 	bootsource_set(src);
+ 	bootsource_set_instance(0);
+ 
+diff --git a/arch/arm/mach-omap/omap4_generic.c b/arch/arm/mach-omap/omap4_generic.c
+index 7d71fdc..4e98205 100644
+--- a/arch/arm/mach-omap/omap4_generic.c
++++ b/arch/arm/mach-omap/omap4_generic.c
+@@ -6,6 +6,7 @@
+ #include <mach/omap4-silicon.h>
+ #include <mach/omap4-mux.h>
+ #include <mach/syslib.h>
++#include <mach/generic.h>
+ #include <mach/gpmc.h>
+ #include <mach/gpio.h>
+ #include <mach/omap4_rom_usb.h>
+@@ -504,14 +505,21 @@ static int omap_vector_init(void)
+ static int omap4_bootsource(void)
+ {
+ 	enum bootsource src = BOOTSOURCE_UNKNOWN;
+-	u32 bootsrc = readl(OMAP4_TRACING_VECTOR3);
+ 
+-	if (bootsrc & (1 << 5))
+-		src = BOOTSOURCE_MMC;
+-	else if (bootsrc & (1 << 3))
++	switch (omap_bootinfo[2] & 0xFF) {
++	case 0x03:
+ 		src = BOOTSOURCE_NAND;
+-	else if (bootsrc & (1<<20))
++		break;
++	case 0x05:
++		src = BOOTSOURCE_MMC;
++		break;
++	case 0x20:
+ 		src = BOOTSOURCE_USB;
++		break;
++	default:
++		src = BOOTSOURCE_UNKNOWN;
++	}
++
+ 	bootsource_set(src);
+ 	bootsource_set_instance(0);
+ 
+diff --git a/arch/arm/mach-omap/omap_bootinfo.S b/arch/arm/mach-omap/omap_bootinfo.S
+new file mode 100644
+index 0000000..ffd0a3d
+--- /dev/null
++++ b/arch/arm/mach-omap/omap_bootinfo.S
+@@ -0,0 +1,25 @@
++#include <config.h>
++#include <linux/linkage.h>
++#include <asm/assembler.h>
++
++.section ".text_bare_init","ax"
++.globl omap_bootinfo
++omap_bootinfo:
++	.word 0x0
++	.word 0x0
++	.word 0x0
++
++.section ".text_bare_init","ax"
++ENTRY(omap_save_bootinfo)
++	/*
++	* save data from rom boot loader
++	*/
++	adr     r2, omap_bootinfo
++	ldr     r1, [r0, #0x00]
++	str     r1, [r2, #0x00]
++	ldr     r1, [r0, #0x04]
++	str     r1, [r2, #0x04]
++	ldr     r1, [r0, #0x08]
++	str     r1, [r2, #0x08]
++	mov	pc, lr
++ENDPROC(omap_save_bootinfo)
+diff --git a/arch/arm/mach-omap/omap_devices.c b/arch/arm/mach-omap/omap_devices.c
+index 056cba5..30cfdd0 100644
+--- a/arch/arm/mach-omap/omap_devices.c
++++ b/arch/arm/mach-omap/omap_devices.c
+@@ -24,9 +24,3 @@ struct device_d *omap_add_uart(int id, unsigned long base)
+ 	return add_ns16550_device(id, base, 1024,
+ 			IORESOURCE_MEM_8BIT, &serial_plat);
+ }
+-
+-struct device_d *omap_add_i2c(int id, unsigned long base, void *pdata)
+-{
+-	return add_generic_device("i2c-omap", id, NULL, base, SZ_4K,
+-			   IORESOURCE_MEM, pdata);
+-}
+diff --git a/arch/arm/mach-omap/xload.c b/arch/arm/mach-omap/xload.c
+index 3cce3f2..76746e2 100644
+--- a/arch/arm/mach-omap/xload.c
++++ b/arch/arm/mach-omap/xload.c
+@@ -9,6 +9,16 @@
+ #include <fcntl.h>
+ #include <sizes.h>
+ #include <filetype.h>
++#include <mach/generic.h>
++
++struct omap_barebox_part *barebox_part;
++
++static struct omap_barebox_part default_part = {
++	.nand_offset = SZ_128K,
++	.nand_size = SZ_1M,
++	.nor_offset = SZ_128K,
++	.nor_size = SZ_1M,
++};
+ 
+ static void *read_image_head(const char *name)
+ {
+@@ -45,14 +55,15 @@ static unsigned int get_image_size(void *head)
+ 	return ret;
+ }
+ 
+-static void *omap_xload_boot_nand(int offset)
++static void *omap_xload_boot_nand(int offset, int part_size)
+ {
+ 	int ret;
+ 	int size;
+ 	void *to, *header;
+ 	struct cdev *cdev;
+ 
+-	devfs_add_partition("nand0", offset, SZ_1M, DEVFS_PARTITION_FIXED, "x");
++	devfs_add_partition("nand0", offset, part_size,
++					DEVFS_PARTITION_FIXED, "x");
+ 	dev_add_bb_dev("x", "bbx");
+ 
+ 	header = read_image_head("bbx");
+@@ -104,14 +115,15 @@ static void *omap_xload_boot_mmc(void)
+ 	return buf;
+ }
+ 
+-static void *omap_xload_boot_spi(int offset)
++static void *omap_xload_boot_spi(int offset, int part_size)
+ {
+ 	int ret;
+ 	int size;
+ 	void *to, *header;
+ 	struct cdev *cdev;
+ 
+-	devfs_add_partition("m25p0", offset, SZ_1M, DEVFS_PARTITION_FIXED, "x");
++	devfs_add_partition("m25p0", offset, part_size,
++					DEVFS_PARTITION_FIXED, "x");
+ 
+ 	header = read_image_head("x");
+ 	if (header == NULL)
+@@ -163,7 +175,11 @@ static void *omap4_xload_boot_usb(void){
+  */
+ static __noreturn int omap_xload(void)
+ {
+-	int (*func)(void) = NULL;
++	int (*func)(void *) = NULL;
++	uint32_t *arg;
++
++	if (!barebox_part)
++		barebox_part = &default_part;
+ 
+ 	switch (bootsource_get())
+ 	{
+@@ -181,15 +197,18 @@ static __noreturn int omap_xload(void)
+ 		}
+ 	case BOOTSOURCE_NAND:
+ 		printf("booting from NAND\n");
+-		func = omap_xload_boot_nand(SZ_128K);
++		func = omap_xload_boot_nand(barebox_part->nand_offset,
++					barebox_part->nand_size);
+ 		break;
+ 	case BOOTSOURCE_SPI:
+ 		printf("booting from SPI\n");
+-		func = omap_xload_boot_spi(SZ_128K);
++		func = omap_xload_boot_spi(barebox_part->nor_offset,
++					barebox_part->nor_size);
+ 		break;
+ 	default:
+ 		printf("unknown boot source. Fall back to nand\n");
+-		func = omap_xload_boot_nand(SZ_128K);
++		func = omap_xload_boot_nand(barebox_part->nand_offset,
++					barebox_part->nand_size);
+ 		break;
+ 	}
+ 
+@@ -198,12 +217,21 @@ static __noreturn int omap_xload(void)
+ 		while (1);
+ 	}
+ 
++	arg = (uint32_t *)&omap_bootinfo;
++
+ 	shutdown_barebox();
+-	func();
++	func(arg);
+ 
+ 	while (1);
+ }
+ 
++int omap_set_barebox_part(struct omap_barebox_part *part)
++{
++	barebox_part = part;
++
++	return 0;
++}
++
+ static int omap_set_xload(void)
+ {
+ 	barebox_main = omap_xload;
+diff --git a/drivers/i2c/busses/i2c-omap.c b/drivers/i2c/busses/i2c-omap.c
+index 503443f..2eb5133 100644
+--- a/drivers/i2c/busses/i2c-omap.c
++++ b/drivers/i2c/busses/i2c-omap.c
+@@ -24,10 +24,6 @@
+  * GNU General Public License for more details.
+  */
+ 
+-
+-/* #include <linux/delay.h> */
+-
+-
+ #include <clock.h>
+ #include <common.h>
+ #include <driver.h>
+@@ -44,12 +40,6 @@
+ #include <mach/generic.h>
+ #include <mach/omap3-clock.h>
+ 
+-#define OMAP_I2C_SIZE		0x3f
+-#define OMAP1_I2C_BASE		0xfffb3800
+-#define OMAP2_I2C_BASE1		0x48070000
+-#define OMAP2_I2C_BASE2		0x48072000
+-#define OMAP2_I2C_BASE3		0x48060000
+-
+ /* This will be the driver name */
+ #define DRIVER_NAME "i2c-omap"
+ 
+@@ -141,11 +131,17 @@
+ #define SYSC_IDLEMODE_SMART		0x2
+ #define SYSC_CLOCKACTIVITY_FCLK		0x2
+ 
++/* i2c driver flags from kernel */
++#define OMAP_I2C_FLAG_RESET_REGS_POSTIDLE	BIT(3)
++#define OMAP_I2C_FLAG_BUS_SHIFT_NONE		0
++#define OMAP_I2C_FLAG_BUS_SHIFT_1		BIT(7)
++#define OMAP_I2C_FLAG_BUS_SHIFT_2		BIT(8)
++#define OMAP_I2C_FLAG_BUS_SHIFT__SHIFT		7
+ 
+ struct omap_i2c_struct {
+ 	void 			*base;
+-	u8			*regs;
+ 	u8			reg_shift;
++	struct omap_i2c_driver_data	*data;
+ 	struct resource		*ioarea;
+ 	u32			speed;		/* Speed of bus in Khz */
+ 	u16			cmd_err;
+@@ -241,22 +237,50 @@ static const u8 omap4_reg_map[] = {
+ 	[OMAP_I2C_IRQENABLE_CLR] = 0x30,
+ };
+ 
++struct omap_i2c_driver_data {
++	u32		flags;
++	u32		fclk_rate;
++	u8		*regs;
++};
++
++static struct omap_i2c_driver_data omap3_data = {
++	.flags =	OMAP_I2C_FLAG_RESET_REGS_POSTIDLE |
++			OMAP_I2C_FLAG_BUS_SHIFT_2,
++	.fclk_rate =	96000,
++	.regs =		(u8 *) reg_map,
++};
++
++static struct omap_i2c_driver_data omap4_data = {
++	.flags =	OMAP_I2C_FLAG_BUS_SHIFT_NONE,
++	.fclk_rate =	96000,
++	.regs =		(u8 *) omap4_reg_map,
++};
++
++static struct omap_i2c_driver_data am33xx_data = {
++	.flags =	OMAP_I2C_FLAG_RESET_REGS_POSTIDLE |
++			OMAP_I2C_FLAG_BUS_SHIFT_NONE,
++	.fclk_rate =	48000,
++	.regs =		(u8 *) omap4_reg_map,
++};
++
+ static inline void omap_i2c_write_reg(struct omap_i2c_struct *i2c_omap,
+ 				      int reg, u16 val)
+ {
+ 	__raw_writew(val, i2c_omap->base +
+-			(i2c_omap->regs[reg] << i2c_omap->reg_shift));
++			(i2c_omap->data->regs[reg] << i2c_omap->reg_shift));
+ }
+ 
+ static inline u16 omap_i2c_read_reg(struct omap_i2c_struct *i2c_omap, int reg)
+ {
+ 	return __raw_readw(i2c_omap->base +
+-			(i2c_omap->regs[reg] << i2c_omap->reg_shift));
++			(i2c_omap->data->regs[reg] << i2c_omap->reg_shift));
+ }
+ 
+ static void omap_i2c_unidle(struct omap_i2c_struct *i2c_omap)
+ {
+-	if (cpu_is_omap34xx()) {
++	struct omap_i2c_driver_data *i2c_data = i2c_omap->data;
++
++	if (i2c_data->flags & OMAP_I2C_FLAG_RESET_REGS_POSTIDLE) {
+ 		omap_i2c_write_reg(i2c_omap, OMAP_I2C_CON_REG, 0);
+ 		omap_i2c_write_reg(i2c_omap, OMAP_I2C_PSC_REG, i2c_omap->pscstate);
+ 		omap_i2c_write_reg(i2c_omap, OMAP_I2C_SCLL_REG, i2c_omap->scllstate);
+@@ -299,9 +323,8 @@ static int omap_i2c_init(struct omap_i2c_struct *i2c_omap)
+ 	u16 psc = 0, scll = 0, sclh = 0, buf = 0;
+ 	u16 fsscll = 0, fssclh = 0, hsscll = 0, hssclh = 0;
+ 	uint64_t start;
+-
+-	unsigned long fclk_rate = 12000000;
+ 	unsigned long internal_clk = 0;
++	struct omap_i2c_driver_data *i2c_data = i2c_omap->data;
+ 
+ 	if (i2c_omap->rev >= OMAP_I2C_REV_2) {
+ 		/* Disable I2C controller before soft reset */
+@@ -352,63 +375,50 @@ static int omap_i2c_init(struct omap_i2c_struct *i2c_omap)
+ 	}
+ 	omap_i2c_write_reg(i2c_omap, OMAP_I2C_CON_REG, 0);
+ 
+-	/* omap1 handling is missing here */
+-
+-	if (cpu_is_omap2430() || cpu_is_omap34xx() || cpu_is_omap4xxx()) {
+-
+-		/*
+-		 * HSI2C controller internal clk rate should be 19.2 Mhz for
+-		 * HS and for all modes on 2430. On 34xx we can use lower rate
+-		 * to get longer filter period for better noise suppression.
+-		 * The filter is iclk (fclk for HS) period.
+-		 */
+-		if (i2c_omap->speed > 400 || cpu_is_omap2430())
+-			internal_clk = 19200;
+-		else if (i2c_omap->speed > 100)
+-			internal_clk = 9600;
+-		else
+-			internal_clk = 4000;
+-		fclk_rate = 96000000 / 1000;
+-
+-		/* Compute prescaler divisor */
+-		psc = fclk_rate / internal_clk;
+-		psc = psc - 1;
+-
+-		/* If configured for High Speed */
+-		if (i2c_omap->speed > 400) {
+-			unsigned long scl;
+-
+-			/* For first phase of HS mode */
+-			scl = internal_clk / 400;
+-			fsscll = scl - (scl / 3) - 7;
+-			fssclh = (scl / 3) - 5;
+-
+-			/* For second phase of HS mode */
+-			scl = fclk_rate / i2c_omap->speed;
+-			hsscll = scl - (scl / 3) - 7;
+-			hssclh = (scl / 3) - 5;
+-		} else if (i2c_omap->speed > 100) {
+-			unsigned long scl;
+-
+-			/* Fast mode */
+-			scl = internal_clk / i2c_omap->speed;
+-			fsscll = scl - (scl / 3) - 7;
+-			fssclh = (scl / 3) - 5;
+-		} else {
+-			/* Standard mode */
+-			fsscll = internal_clk / (i2c_omap->speed * 2) - 7;
+-			fssclh = internal_clk / (i2c_omap->speed * 2) - 5;
+-		}
+-		scll = (hsscll << OMAP_I2C_SCLL_HSSCLL) | fsscll;
+-		sclh = (hssclh << OMAP_I2C_SCLH_HSSCLH) | fssclh;
++	/*
++	 * HSI2C controller internal clk rate should be 19.2 Mhz for
++	 * HS and for all modes on 2430. On 34xx we can use lower rate
++	 * to get longer filter period for better noise suppression.
++	 * The filter is iclk (fclk for HS) period.
++	 */
++	if (i2c_omap->speed > 400)
++		internal_clk = 19200;
++	else if (i2c_omap->speed > 100)
++		internal_clk = 9600;
++	else
++		internal_clk = 4000;
++
++	/* Compute prescaler divisor */
++	psc = i2c_data->fclk_rate / internal_clk;
++	psc = psc - 1;
++
++	/* If configured for High Speed */
++	if (i2c_omap->speed > 400) {
++		unsigned long scl;
++
++		/* For first phase of HS mode */
++		scl = internal_clk / 400;
++		fsscll = scl - (scl / 3) - 7;
++		fssclh = (scl / 3) - 5;
++
++		/* For second phase of HS mode */
++		scl = i2c_data->fclk_rate / i2c_omap->speed;
++		hsscll = scl - (scl / 3) - 7;
++		hssclh = (scl / 3) - 5;
++	} else if (i2c_omap->speed > 100) {
++		unsigned long scl;
++
++		/* Fast mode */
++		scl = internal_clk / i2c_omap->speed;
++		fsscll = scl - (scl / 3) - 7;
++		fssclh = (scl / 3) - 5;
+ 	} else {
+-		/* Program desired operating rate */
+-		fclk_rate /= (psc + 1) * 1000;
+-		if (psc > 2)
+-			psc = 2;
+-		scll = fclk_rate / (i2c_omap->speed * 2) - 7 + psc;
+-		sclh = fclk_rate / (i2c_omap->speed * 2) - 7 + psc;
++		/* Standard mode */
++		fsscll = internal_clk / (i2c_omap->speed * 2) - 7;
++		fssclh = internal_clk / (i2c_omap->speed * 2) - 5;
+ 	}
++	scll = (hsscll << OMAP_I2C_SCLL_HSSCLL) | fsscll;
++	sclh = (hssclh << OMAP_I2C_SCLH_HSSCLH) | fssclh;
+ 
+ 	/* Setup clock prescaler to obtain approx 12MHz I2C module clock: */
+ 	omap_i2c_write_reg(i2c_omap, OMAP_I2C_PSC_REG, psc);
+@@ -433,7 +443,7 @@ static int omap_i2c_init(struct omap_i2c_struct *i2c_omap)
+ 			OMAP_I2C_IE_AL)  | ((i2c_omap->fifo_size) ?
+ 				(OMAP_I2C_IE_RDR | OMAP_I2C_IE_XDR) : 0);
+ 	omap_i2c_write_reg(i2c_omap, OMAP_I2C_IE_REG, i2c_omap->iestate);
+-	if (cpu_is_omap34xx()) {
++	if (i2c_data->flags & OMAP_I2C_FLAG_RESET_REGS_POSTIDLE) {
+ 		i2c_omap->pscstate = psc;
+ 		i2c_omap->scllstate = scll;
+ 		i2c_omap->sclhstate = sclh;
+@@ -525,15 +535,6 @@ complete:
+ 				if (dev->buf_len) {
+ 					*dev->buf++ = w;
+ 					dev->buf_len--;
+-					/* Data reg from 2430 is 8 bit wide */
+-					if (!cpu_is_omap2430() &&
+-							!cpu_is_omap34xx() &&
+-							!cpu_is_omap4xxx()) {
+-						if (dev->buf_len) {
+-							*dev->buf++ = w >> 8;
+-							dev->buf_len--;
+-						}
+-					}
+ 				} else {
+ 					if (stat & OMAP_I2C_STAT_RRDY)
+ 						dev_err(&dev->adapter.dev,
+@@ -566,15 +567,6 @@ complete:
+ 				if (dev->buf_len) {
+ 					w = *dev->buf++;
+ 					dev->buf_len--;
+-					/* Data reg from  2430 is 8 bit wide */
+-					if (!cpu_is_omap2430() &&
+-							!cpu_is_omap34xx() &&
+-							!cpu_is_omap4xxx()) {
+-						if (dev->buf_len) {
+-							w |= *dev->buf++ << 8;
+-							dev->buf_len--;
+-						}
+-					}
+ 				} else {
+ 					if (stat & OMAP_I2C_STAT_XRDY)
+ 						dev_err(&dev->adapter.dev,
+@@ -706,7 +698,7 @@ static int omap_i2c_xfer_msg(struct i2c_adapter *adapter,
+ 	ret = omap_i2c_isr(i2c_omap);
+ 	while (ret){
+ 		ret = omap_i2c_isr(i2c_omap);
+-		if (is_timeout(start, MSECOND)) {
++		if (is_timeout(start, 50 * MSECOND)) {
+ 				dev_err(&adapter->dev,
+ 				"timed out on polling for "
+ 				"open i2c message handling\n");
+@@ -773,9 +765,10 @@ static int __init
+ i2c_omap_probe(struct device_d *pdev)
+ {
+ 	struct omap_i2c_struct	*i2c_omap;
+-	/* struct i2c_platform_data *pdata; */
++	struct omap_i2c_driver_data *i2c_data;
+ 	int r;
+ 	u32 speed = 0;
++	u16 s;
+ 
+ 	i2c_omap = kzalloc(sizeof(struct omap_i2c_struct), GFP_KERNEL);
+ 	if (!i2c_omap) {
+@@ -783,13 +776,13 @@ i2c_omap_probe(struct device_d *pdev)
+ 		goto err_free_mem;
+ 	}
+ 
+-	if (cpu_is_omap4xxx()) {
+-		i2c_omap->regs = (u8 *)omap4_reg_map;
+-		i2c_omap->reg_shift = 0;
+-	} else {
+-		i2c_omap->regs = (u8 *)reg_map;
+-		i2c_omap->reg_shift = 2;
+-	}
++	r = dev_get_drvdata(pdev, (unsigned long *)&i2c_data);
++	if (r)
++		return r;
++
++	i2c_omap->data = i2c_data;
++	i2c_omap->reg_shift = (i2c_data->flags >>
++					OMAP_I2C_FLAG_BUS_SHIFT__SHIFT) & 3;
+ 
+ 	if (pdev->platform_data != NULL)
+ 		speed = *(u32 *)pdev->platform_data;
+@@ -802,28 +795,23 @@ i2c_omap_probe(struct device_d *pdev)
+ 	omap_i2c_unidle(i2c_omap);
+ 
+ 	i2c_omap->rev = omap_i2c_read_reg(i2c_omap, OMAP_I2C_REV_REG) & 0xff;
+-	/* i2c_omap->base = OMAP2_I2C_BASE3; */
+ 
+-	if (cpu_is_omap2430() || cpu_is_omap34xx() || cpu_is_omap4xxx()) {
+-		u16 s;
++	/* Set up the fifo size - Get total size */
++	s = (omap_i2c_read_reg(i2c_omap, OMAP_I2C_BUFSTAT_REG) >> 14) & 0x3;
++	i2c_omap->fifo_size = 0x8 << s;
+ 
+-		/* Set up the fifo size - Get total size */
+-		s = (omap_i2c_read_reg(i2c_omap, OMAP_I2C_BUFSTAT_REG) >> 14) & 0x3;
+-		i2c_omap->fifo_size = 0x8 << s;
+-
+-		/*
+-		 * Set up notification threshold as half the total available
+-		 * size. This is to ensure that we can handle the status on int
+-		 * call back latencies.
+-		 */
++	/*
++	 * Set up notification threshold as half the total available
++	 * size. This is to ensure that we can handle the status on int
++	 * call back latencies.
++	 */
+ 
+-		i2c_omap->fifo_size = (i2c_omap->fifo_size / 2);
++	i2c_omap->fifo_size = (i2c_omap->fifo_size / 2);
+ 
+-		if (i2c_omap->rev >= OMAP_I2C_REV_ON_4430)
+-			i2c_omap->b_hw = 0; /* Disable hardware fixes */
+-		else
+-			i2c_omap->b_hw = 1; /* Enable hardware fixes */
+-	}
++	if (i2c_omap->rev >= OMAP_I2C_REV_ON_4430)
++		i2c_omap->b_hw = 0; /* Disable hardware fixes */
++	else
++		i2c_omap->b_hw = 1; /* Enable hardware fixes */
+ 
+ 	/* reset ASAP, clearing any IRQs */
+ 	omap_i2c_init(i2c_omap);
+@@ -856,9 +844,25 @@ err_free_mem:
+ 	return r;
+ }
+ 
++static struct platform_device_id omap_i2c_ids[] = {
++	 {
++		.name = "i2c-omap3",
++		.driver_data = (unsigned long)&omap3_data,
++	}, {
++		.name = "i2c-omap4",
++		.driver_data = (unsigned long)&omap4_data,
++	}, {
++		.name = "i2c-am33xx",
++		.driver_data = (unsigned long)&am33xx_data,
++	}, {
++		/* sentinel */
++	},
++};
++
+ static struct driver_d omap_i2c_driver = {
+ 	.probe		= i2c_omap_probe,
+ 	.name		= DRIVER_NAME,
++	.id_table	= omap_i2c_ids,
+ };
+ device_platform_driver(omap_i2c_driver);
+ 
+diff --git a/drivers/mtd/devices/Makefile b/drivers/mtd/devices/Makefile
+index bf1f8a9..9d237c7 100644
+--- a/drivers/mtd/devices/Makefile
++++ b/drivers/mtd/devices/Makefile
+@@ -5,3 +5,4 @@
+ obj-$(CONFIG_MTD_DATAFLASH)	+= mtd_dataflash.o
+ obj-$(CONFIG_MTD_DOCG3)		+= docg3.o
+ obj-$(CONFIG_MTD_M25P80)	+= m25p80.o
++obj-$(CONFIG_NAND_OMAP_GPMC)	+= elm.o
+diff --git a/drivers/mtd/devices/elm.c b/drivers/mtd/devices/elm.c
+new file mode 100644
+index 0000000..aa1f6d0
+--- /dev/null
++++ b/drivers/mtd/devices/elm.c
+@@ -0,0 +1,175 @@
++/*
++ * Error Location Module
++ *
++ * Copyright (C) 2012 Texas Instruments Incorporated - http://www.ti.com/
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License as published by
++ * the Free Software Foundation; either version 2 of the License, or
++ * (at your option) any later version.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
++ * GNU General Public License for more details.
++ *
++ */
++
++#include <common.h>
++#include <driver.h>
++#include <errno.h>
++#include <io.h>
++#include <init.h>
++#include <linux/list.h>
++#include <linux/bitops.h>
++#include <linux/mtd/elm.h>
++
++struct elm_info {
++	struct device_d *dev;
++	void __iomem *elm_base;
++	struct list_head list;
++	enum bch_ecc bch_type;
++};
++
++static LIST_HEAD(elm_devices);
++
++void elm_reset(struct elm_info *info)
++{
++	u32 reg;
++
++	reg = readl(info->elm_base + ELM_SYSCONFIG);
++	reg |= ELM_SYSCONFIG_SOFTRESET;
++	writel(reg, info->elm_base + ELM_SYSCONFIG);
++
++	while (!(readl(info->elm_base + ELM_SYSSTATUS)
++					& ELM_SYSSTATUS_RESETDONE))
++		;
++
++	reg = readl(info->elm_base + ELM_SYSCONFIG);
++	reg &= ~ELM_SYSCONFIG_SIDLE_MASK;
++	reg |= ELM_SYSCONFIG_SMART_IDLE;
++	writel(reg, info->elm_base + ELM_SYSCONFIG);
++}
++
++void elm_config(struct elm_info *info)
++{
++	u32 reg;
++	u32 buffer_size = 0x7ff;
++
++	reg = (info->bch_type & ECC_BCH_LEVEL_MASK) | (buffer_size << 16);
++	writel(reg, info->elm_base + ELM_LOCATION_CONFIG);
++
++	/* config in Continuous mode */
++	writel(0x0, info->elm_base + ELM_PAGE_CTRL);
++}
++
++void elm_load_syndrome(struct elm_info *info, char *syndrome)
++{
++	int reg;
++	int i;
++
++	for (i = 0; i < 4; i++) {
++		reg = syndrome[0] | syndrome[1] << 8 |
++			syndrome[2] << 16 | syndrome[3] << 24;
++		writel(reg, info->elm_base + ELM_SYNDROME_FRAGMENT_0 + i * 4);
++		syndrome += 4;
++	}
++}
++
++void elm_start_processing(struct elm_info *info)
++{
++	u32 reg;
++
++	reg = readl(info->elm_base + ELM_SYNDROME_FRAGMENT_6);
++	reg |= ELM_SYNDROME_VALID;
++	writel(reg, info->elm_base + ELM_SYNDROME_FRAGMENT_6);
++}
++
++void rotate_ecc_bytes(u8 *src, u8 *dst)
++{
++	int i;
++
++	for (i = 0; i < BCH8_ECC_OOB_BYTES; i++)
++		dst[BCH8_ECC_OOB_BYTES - 1 - i] = src[i];
++}
++
++int elm_decode_bch_error(struct device_d *dev, char *ecc_calc,
++							unsigned int *err_loc)
++{
++	u8 ecc_data[28] = {0};
++	u32 reg;
++	int i, err_no;
++	struct elm_info *info = dev->priv;
++
++	rotate_ecc_bytes(ecc_calc, ecc_data);
++	elm_load_syndrome(info, ecc_data);
++	elm_start_processing(info);
++
++	while ((readl(info->elm_base + ELM_IRQSTATUS) & (0x1 << 0)) != 0x1)
++		;
++	writel((0x1 << 0), info->elm_base + ELM_IRQSTATUS);
++
++	reg = readl(info->elm_base + ELM_LOCATION_STATUS);
++	if (reg & ECC_CORRECTABLE_MASK) {
++		err_no = reg & ECC_NB_ERRORS_MASK;
++
++		for (i = 0; i < err_no; i++) {
++			reg = readl(info->elm_base +
++					ELM_ERROR_LOCATION_0 + i * 4);
++			err_loc[i] = reg;
++		}
++		return err_no;
++	}
++
++	return -EINVAL;
++}
++EXPORT_SYMBOL(elm_decode_bch_error);
++
++struct device_d *elm_request(enum bch_ecc bch_type)
++{
++	struct elm_info *info;
++
++	list_for_each_entry(info, &elm_devices, list) {
++		if (info && info->dev) {
++			info->bch_type = bch_type;
++			elm_config(info);
++			return info->dev;
++		}
++	}
++
++	return NULL;
++}
++EXPORT_SYMBOL(elm_request);
++static int elm_probe(struct device_d *pdev)
++{
++	struct resource *res = NULL;
++	struct elm_info *info;
++
++	info = xzalloc(sizeof(*info));
++
++	res =  dev_request_mem_region(pdev, 0);
++
++	info->dev = pdev;
++	info->dev->priv = info;
++	info->elm_base = res;
++
++	INIT_LIST_HEAD(&info->list);
++	list_add(&info->list, &elm_devices);
++
++	elm_reset(info);
++	elm_config(info);
++
++	return 0;
++}
++
++static struct driver_d elm_driver = {
++	.name   = "elm",
++	.probe  = elm_probe,
++};
++
++static int elm_init(void)
++{
++	return platform_driver_register(&elm_driver);
++}
++
++device_initcall(elm_init);
+diff --git a/drivers/mtd/nand/nand_base.c b/drivers/mtd/nand/nand_base.c
+index 1969aff..1434212 100644
+--- a/drivers/mtd/nand/nand_base.c
++++ b/drivers/mtd/nand/nand_base.c
+@@ -373,17 +373,20 @@ static void nand_command(struct mtd_info *mtd, unsigned int command,
+ 	}
+ 	chip->cmd_ctrl(mtd, NAND_CMD_NONE, NAND_NCE | NAND_CTRL_CHANGE);
+ 
+-	/*
+-	 * program and erase have their own busy handlers
+-	 * status and sequential in needs no delay
+-	 */
++	/* Some commands need no delay */
+ 	switch (command) {
+ 
+-	case NAND_CMD_PAGEPROG:
+ 	case NAND_CMD_ERASE1:
+-	case NAND_CMD_ERASE2:
++		return;
++
+ 	case NAND_CMD_SEQIN:
++		/* need to wait tADL, but ready line not used */
++		ndelay(70);
++		return;
++
+ 	case NAND_CMD_STATUS:
++		/* need to wait tWHR, but ready line not used */
++		ndelay(80);
+ 		return;
+ 
+ 	case NAND_CMD_RESET:
+@@ -405,7 +408,7 @@ static void nand_command(struct mtd_info *mtd, unsigned int command,
+ 		 */
+ 		if (!chip->dev_ready) {
+ 			udelay(chip->chip_delay);
+-			return;
++			goto afterready;
+ 		}
+ 	}
+ 	/* Apply this short delay always to ensure that we do wait tWB in
+@@ -413,6 +416,11 @@ static void nand_command(struct mtd_info *mtd, unsigned int command,
+ 	ndelay(100);
+ 
+ 	nand_wait_ready(mtd);
++
++afterready:
++	if (command == NAND_CMD_READ0)
++		/* need to wait tRR after chip ready */
++		ndelay(20);
+ }
+ 
+ /**
+@@ -465,22 +473,25 @@ static void nand_command_lp(struct mtd_info *mtd, unsigned int command,
+ 	}
+ 	chip->cmd_ctrl(mtd, NAND_CMD_NONE, NAND_NCE | NAND_CTRL_CHANGE);
+ 
+-	/*
+-	 * program and erase have their own busy handlers
+-	 * status, sequential in, and deplete1 need no delay
+-	 */
+ 	switch (command) {
+ 
++	/* Some commands need no delay */
+ 	case NAND_CMD_CACHEDPROG:
+-	case NAND_CMD_PAGEPROG:
+ 	case NAND_CMD_ERASE1:
+-	case NAND_CMD_ERASE2:
+-	case NAND_CMD_SEQIN:
+ 	case NAND_CMD_RNDIN:
+-	case NAND_CMD_STATUS:
+ 	case NAND_CMD_DEPLETE1:
+ 		return;
+ 
++	case NAND_CMD_SEQIN:
++		/* need to wait tADL, but ready line not used */
++		ndelay(70);
++		return;
++
++	case NAND_CMD_STATUS:
++		/* need to wait tWRH, but ready line not used */
++		ndelay(80);
++		return;
++
+ 		/*
+ 		 * read error status commands require only a short delay
+ 		 */
+@@ -509,6 +520,8 @@ static void nand_command_lp(struct mtd_info *mtd, unsigned int command,
+ 			       NAND_NCE | NAND_CLE | NAND_CTRL_CHANGE);
+ 		chip->cmd_ctrl(mtd, NAND_CMD_NONE,
+ 			       NAND_NCE | NAND_CTRL_CHANGE);
++		/* tWHR */
++		ndelay(80);
+ 		return;
+ 
+ 	case NAND_CMD_READ0:
+@@ -525,7 +538,7 @@ static void nand_command_lp(struct mtd_info *mtd, unsigned int command,
+ 		 */
+ 		if (!chip->dev_ready) {
+ 			udelay(chip->chip_delay);
+-			return;
++			goto afterready;
+ 		}
+ 	}
+ 
+@@ -534,6 +547,11 @@ static void nand_command_lp(struct mtd_info *mtd, unsigned int command,
+ 	ndelay(100);
+ 
+ 	nand_wait_ready(mtd);
++
++afterready:
++	if (command == NAND_CMD_READ0)
++		/* need to wait tRR after chip ready */
++		ndelay(20);
+ }
+ 
+ /**
+@@ -1126,7 +1144,7 @@ static int nand_flash_detect_onfi(struct mtd_info *mtd, struct nand_chip *chip,
+ 	chip->options &= ~NAND_CHIPOPTIONS_MSK;
+ 	chip->options |= NAND_NO_READRDY & NAND_CHIPOPTIONS_MSK;
+ 
+-	pr_info("ONFI flash detected ... ");
++	pr_info("ONFI flash detected ...\n");
+ 	return 1;
+ }
+ 
+diff --git a/drivers/mtd/nand/nand_hwecc.c b/drivers/mtd/nand/nand_hwecc.c
+index a48efa1..4d7f745 100644
+--- a/drivers/mtd/nand/nand_hwecc.c
++++ b/drivers/mtd/nand/nand_hwecc.c
+@@ -72,6 +72,8 @@ static void nand_write_page_hwecc(struct mtd_info *mtd, struct nand_chip *chip,
+ 	const uint8_t *p = buf;
+ 	uint32_t *eccpos = chip->ecc.layout->eccpos;
+ 
++	memset(ecc_calc, 0, eccsteps * eccbytes);
++
+ 	for (i = 0; eccsteps; eccsteps--, i += eccbytes, p += eccsize) {
+ 		chip->ecc.hwctl(mtd, NAND_ECC_WRITE);
+ 		chip->write_buf(mtd, p, eccsize);
+diff --git a/drivers/mtd/nand/nand_omap_gpmc.c b/drivers/mtd/nand/nand_omap_gpmc.c
+index d448251..c75e02b 100644
+--- a/drivers/mtd/nand/nand_omap_gpmc.c
++++ b/drivers/mtd/nand/nand_omap_gpmc.c
+@@ -64,6 +64,7 @@
+ #include <driver.h>
+ #include <malloc.h>
+ #include <clock.h>
++#include <linux/mtd/elm.h>
+ #include <linux/mtd/mtd.h>
+ #include <linux/mtd/nand.h>
+ #include <linux/mtd/nand_ecc.h>
+@@ -85,6 +86,22 @@
+ #define GPMC_ECC_SIZE_CONFIG_ECCSIZE0(x)	((x) << 12)
+ #define GPMC_ECC_SIZE_CONFIG_ECCSIZE1(x)	((x) << 22)
+ 
++#define SECTOR_BYTES		(512)
++#define BCH8_ECC_MAX		((SECTOR_BYTES + BCH8_ECC_OOB_BYTES) * 8)
++#define BCH4_ECC_MAX		((SECTOR_BYTES + BCH4_ECC_OOB_BYTES) * 8)
++
++/* GPMC ecc engine settings for read */
++#define BCH_WRAPMODE_1		1	/* BCH wrap mode 1 */
++#define BCH8R_ECC_SIZE0		0x1a	/* ecc_size0 = 26 */
++#define BCH8R_ECC_SIZE1		0x2	/* ecc_size1 = 2 */
++#define BCH4R_ECC_SIZE0		0xd	/* ecc_size0 = 13 */
++#define BCH4R_ECC_SIZE1		0x3	/* ecc_size1 = 3 */
++
++/* GPMC ecc engine settings for write */
++#define BCH_WRAPMODE_6		6	/* BCH wrap mode 6 */
++#define BCH_ECC_SIZE0		0x0	/* ecc_size0 = 0, no oob protection */
++#define BCH_ECC_SIZE1		0x20	/* ecc_size1 = 32 */
++
+ int omap_gpmc_decode_bch(int select_4_8, unsigned char *ecc, unsigned int *err_loc);
+ 
+ static char *ecc_mode_strings[] = {
+@@ -112,6 +129,8 @@ struct gpmc_nand_info {
+ 	unsigned char ecc_parity_pairs;
+ 	enum gpmc_ecc_mode ecc_mode;
+ 	void *cs_base;
++	int is_elm_used;
++	struct device_d *elm_dev;
+ };
+ 
+ /* Typical BOOTROM oob layouts-requires hwecc **/
+@@ -279,7 +298,6 @@ static int __omap_calculate_ecc(struct mtd_info *mtd, const uint8_t *dat,
+ 	unsigned int reg;
+ 	unsigned int val1 = 0x0, val2 = 0x0;
+ 	unsigned int val3 = 0x0, val4 = 0x0;
+-	int i;
+ 	int ecc_size = 8;
+ 
+ 	switch (oinfo->ecc_mode) {
+@@ -288,33 +306,31 @@ static int __omap_calculate_ecc(struct mtd_info *mtd, const uint8_t *dat,
+ 		/* fall through */
+ 	case OMAP_ECC_BCH8_CODE_HW:
+ 	case OMAP_ECC_BCH8_CODE_HW_ROMCODE:
+-		for (i = 0; i < 4; i++) {
+-			/*
+-			 * Reading HW ECC_BCH_Results
+-			 * 0x240-0x24C, 0x250-0x25C, 0x260-0x26C, 0x270-0x27C
+-			 */
+-			reg =  GPMC_ECC_BCH_RESULT_0 + (0x10 * (i + sblock));
+-			val1 = readl(oinfo->gpmc_base + reg);
+-			val2 = readl(oinfo->gpmc_base + reg + 4);
+-			if (ecc_size == 8) {
+-				val3 = readl(oinfo->gpmc_base  +reg + 8);
+-				val4 = readl(oinfo->gpmc_base + reg + 12);
+-
+-				*ecc_code++ = (val4 & 0xFF);
+-				*ecc_code++ = ((val3 >> 24) & 0xFF);
+-				*ecc_code++ = ((val3 >> 16) & 0xFF);
+-				*ecc_code++ = ((val3 >> 8) & 0xFF);
+-				*ecc_code++ = (val3 & 0xFF);
+-				*ecc_code++ = ((val2 >> 24) & 0xFF);
+-			}
+-			*ecc_code++ = ((val2 >> 16) & 0xFF);
+-			*ecc_code++ = ((val2 >> 8) & 0xFF);
+-			*ecc_code++ = (val2 & 0xFF);
+-			*ecc_code++ = ((val1 >> 24) & 0xFF);
+-			*ecc_code++ = ((val1 >> 16) & 0xFF);
+-			*ecc_code++ = ((val1 >> 8) & 0xFF);
+-			*ecc_code++ = (val1 & 0xFF);
++		/*
++		 * Reading HW ECC_BCH_Results
++		 * 0x240-0x24C, 0x250-0x25C, 0x260-0x26C, 0x270-0x27C
++		 */
++		reg =  GPMC_ECC_BCH_RESULT_0 + (0x10 * sblock);
++		val1 = readl(oinfo->gpmc_base + reg);
++		val2 = readl(oinfo->gpmc_base + reg + 4);
++		if (ecc_size == 8) {
++			val3 = readl(oinfo->gpmc_base + reg + 8);
++			val4 = readl(oinfo->gpmc_base + reg + 12);
++
++			*ecc_code++ = (val4 & 0xFF);
++			*ecc_code++ = ((val3 >> 24) & 0xFF);
++			*ecc_code++ = ((val3 >> 16) & 0xFF);
++			*ecc_code++ = ((val3 >> 8) & 0xFF);
++			*ecc_code++ = (val3 & 0xFF);
++			*ecc_code++ = ((val2 >> 24) & 0xFF);
+ 		}
++		*ecc_code++ = ((val2 >> 16) & 0xFF);
++		*ecc_code++ = ((val2 >> 8) & 0xFF);
++		*ecc_code++ = (val2 & 0xFF);
++		*ecc_code++ = ((val1 >> 24) & 0xFF);
++		*ecc_code++ = ((val1 >> 16) & 0xFF);
++		*ecc_code++ = ((val1 >> 8) & 0xFF);
++		*ecc_code++ = (val1 & 0xFF);
+ 		break;
+ 	case OMAP_ECC_HAMMING_CODE_HW_ROMCODE:
+ 		/* read ecc result */
+@@ -344,15 +360,18 @@ static int omap_correct_bch(struct mtd_info *mtd, uint8_t *dat,
+ 	struct gpmc_nand_info *oinfo = (struct gpmc_nand_info *)(nand->priv);
+ 	int i, j, eccsize, eccflag, count, totalcount;
+ 	unsigned int err_loc[8];
++	int error_max;
+ 	int blocks = 0;
+ 	int select_4_8;
+ 
+ 	if (oinfo->ecc_mode == OMAP_ECC_BCH4_CODE_HW) {
+ 		eccsize = 7;
+ 		select_4_8 = 0;
++		error_max = BCH4_ECC_MAX;
+ 	} else {
+ 		eccsize = 13;
+ 		select_4_8 = 1;
++		error_max = BCH8_ECC_MAX;
+ 	}
+ 
+ 	if (nand->ecc.size  == 2048)
+@@ -380,22 +399,49 @@ static int omap_correct_bch(struct mtd_info *mtd, uint8_t *dat,
+ 
+ 		count = 0;
+ 		if (eccflag == 1) {
+-			count = omap_gpmc_decode_bch(select_4_8, calc_ecc, err_loc);
++			if (oinfo->is_elm_used)
++				count = elm_decode_bch_error(oinfo->elm_dev,
++							calc_ecc, err_loc);
++			else
++				count = omap_gpmc_decode_bch(select_4_8,
++							calc_ecc, err_loc);
++
+ 			if (count < 0)
+ 				return count;
+ 			else
+ 				totalcount += count;
+ 		}
+ 
+-		for (j = 0; j < count; j++) {
+-			if (err_loc[j] < 4096)
+-				dat[err_loc[j] >> 3] ^=
+-						1 << (err_loc[j] & 7);
+-			/* else, not interested to correct ecc */
++		if (oinfo->is_elm_used) {
++			for (j = 0; j < count; j++) {
++				u32 bit_pos, byte_pos;
++				bit_pos   = err_loc[j] % 8;
++				byte_pos  = (error_max - err_loc[j] - 1) / 8;
++				if (err_loc[j] < error_max) {
++					/*
++					 * Check bit flip error reported in data
++					 * area, if yes correct bit flip, else
++					 * bit flip in OOB area.
++					 */
++					if (byte_pos < 512)
++						dat[byte_pos] ^= 1 << bit_pos;
++					else
++						read_ecc[byte_pos - 512] ^=
++								1 << bit_pos;
++				}
++				/* else, not interested to correct ecc */
++			}
++		} else {
++			for (j = 0; j < count; j++) {
++				if (err_loc[j] < 4096)
++					dat[err_loc[j] >> 3] ^=
++							1 << (err_loc[j] & 7);
++				/* else, not interested to correct ecc */
++			}
+ 		}
+ 
+-		calc_ecc = calc_ecc + eccsize;
+-		read_ecc = read_ecc + eccsize;
++		calc_ecc = calc_ecc + 14;
++		read_ecc = read_ecc + 14;
+ 		dat += 512;
+ 	}
+ 
+@@ -474,12 +520,6 @@ static int omap_correct_data(struct mtd_info *mtd, uint8_t *dat,
+ 	case OMAP_ECC_BCH4_CODE_HW:
+ 	case OMAP_ECC_BCH8_CODE_HW:
+ 	case OMAP_ECC_BCH8_CODE_HW_ROMCODE:
+-		/*
+-		 * The nand layer already called omap_calculate_ecc,
+-		 * but before it has read the oob data. Do it again,
+-		 * this time with oob data.
+-		 */
+-		__omap_calculate_ecc(mtd, dat, calc_ecc, 0);
+ 		return omap_correct_bch(mtd, dat, read_ecc, calc_ecc);
+ 	default:
+ 		return -EINVAL;
+@@ -501,25 +541,25 @@ static void omap_enable_hwecc(struct mtd_info *mtd, int mode)
+ 	switch (oinfo->ecc_mode) {
+ 	case OMAP_ECC_BCH4_CODE_HW:
+ 		if (mode == NAND_ECC_READ) {
+-			eccsize1 = 0xD; eccsize0 = 0x48;
++			eccsize1 = BCH4R_ECC_SIZE1; eccsize0 = BCH4R_ECC_SIZE0;
+ 			bch_mod = 0;
+-			bch_wrapmode = 0x09;
++			bch_wrapmode = BCH_WRAPMODE_1;
+ 		} else {
+-			eccsize1 = 0x20; eccsize0 = 0x00;
++			eccsize1 = BCH_ECC_SIZE1; eccsize0 = BCH_ECC_SIZE0;
+ 			bch_mod = 0;
+-			bch_wrapmode = 0x06;
++			bch_wrapmode = BCH_WRAPMODE_6;
+ 		}
+ 		break;
+ 	case OMAP_ECC_BCH8_CODE_HW:
+ 	case OMAP_ECC_BCH8_CODE_HW_ROMCODE:
+ 		if (mode == NAND_ECC_READ) {
+-			eccsize1 = 0x1A; eccsize0 = 0x18;
++			eccsize1 = BCH8R_ECC_SIZE1; eccsize0 = BCH8R_ECC_SIZE0;
+ 			bch_mod = 1;
+-			bch_wrapmode = 0x04;
++			bch_wrapmode = BCH_WRAPMODE_1;
+ 		} else {
+-			eccsize1 = 0x20; eccsize0 = 0x00;
++			eccsize1 = BCH_ECC_SIZE1; eccsize0 = BCH_ECC_SIZE0;
+ 			bch_mod = 1;
+-			bch_wrapmode = 0x06;
++			bch_wrapmode = BCH_WRAPMODE_6;
+ 		}
+ 		break;
+ 	case OMAP_ECC_HAMMING_CODE_HW_ROMCODE:
+@@ -555,7 +595,7 @@ static void omap_enable_hwecc(struct mtd_info *mtd, int mode)
+ 				GPMC_ECC_CONFIG_ECCBCHTSEL(bch_mod) |
+ 				GPMC_ECC_CONFIG_ECCWRAPMODE(bch_wrapmode) |
+ 				dev_width |
+-				GPMC_ECC_CONFIG_ECCTOPSECTOR(3) |
++				GPMC_ECC_CONFIG_ECCTOPSECTOR(0) |
+ 				GPMC_ECC_CONFIG_ECCCS(cs) |
+ 				GPMC_ECC_CONFIG_ECCENABLE);
+ 	}
+@@ -594,33 +634,51 @@ static void omap_read_buf_pref(struct mtd_info *mtd, u_char *buf, int len)
+ 	struct gpmc_nand_info *info = container_of(mtd,
+ 						struct gpmc_nand_info, minfo);
+ 	u32 r_count = 0;
++	int ret = 0;
+ 	u32 *p = (u32 *)buf;
+ 
+ 	/* take care of subpage reads */
+ 	if (len % 4) {
+ 		if (info->nand.options & NAND_BUSWIDTH_16)
+-			readsw(info->cs_base, buf, (len % 4) / 2);
++			readsw(info->gpmc_data, buf, (len % 4) / 2);
+ 		else
+-			readsb(info->cs_base, buf, len % 4);
++			readsb(info->gpmc_data, buf, len % 4);
+ 		p = (u32 *) (buf + len % 4);
+ 		len -= len % 4;
+ 	}
+ 
+ 	/* configure and start prefetch transfer */
+-	gpmc_prefetch_enable(info->gpmc_cs,
++	ret = gpmc_prefetch_enable(info->gpmc_cs,
+ 			PREFETCH_FIFOTHRESHOLD_MAX, 0x0, len, 0x0);
+ 
+-	do {
+-		r_count = readl(info->gpmc_base + GPMC_PREFETCH_STATUS);
+-		r_count = GPMC_PREFETCH_STATUS_FIFO_CNT(r_count);
+-		r_count = r_count >> 2;
+-		readsl(info->cs_base, p, r_count);
+-		p += r_count;
+-		len -= r_count << 2;
+-	} while (len);
+-
+-	/* disable and stop the PFPW engine */
+-	gpmc_prefetch_reset(info->gpmc_cs);
++	if (ret) {
++		/* PFPW engine is busy, use cpu copy method */
++		if (info->nand.options & NAND_BUSWIDTH_16)
++			readsw(info->gpmc_data, p, len / 2);
++		else
++			readsb(info->gpmc_data, p, len);
++	} else {
++		do {
++			r_count = readl(info->gpmc_base + GPMC_PREFETCH_STATUS);
++			r_count = GPMC_PREFETCH_STATUS_FIFO_CNT(r_count);
++			r_count = r_count >> 2;
++
++			/* Can only readsl() to a 32 bit bounday */
++			if ((u32)p % 4) {
++				u_char *charp = (u_char *)p;
++
++				readsb(info->cs_base, p, r_count << 2);
++				charp += r_count << 2;
++				p = (u32 *)charp;
++			} else {
++				readsl(info->cs_base, p, r_count);
++				p += r_count;
++			}
++			len -= r_count << 2;
++		} while (len);
++		/* disable and stop the PFPW engine */
++		gpmc_prefetch_reset(info->gpmc_cs);
++	}
+ }
+ 
+ /**
+@@ -638,6 +696,7 @@ static void omap_write_buf_pref(struct mtd_info *mtd,
+ 	u_char *buf1 = (u_char *)buf;
+ 	u32 *p32 = (u32 *)buf;
+ 	uint64_t start;
++	int ret;
+ 
+ 	/* take care of subpage writes */
+ 	while (len % 4 != 0) {
+@@ -648,34 +707,42 @@ static void omap_write_buf_pref(struct mtd_info *mtd,
+ 	}
+ 
+ 	/*  configure and start prefetch transfer */
+-	gpmc_prefetch_enable(info->gpmc_cs,
++	ret = gpmc_prefetch_enable(info->gpmc_cs,
+ 			PREFETCH_FIFOTHRESHOLD_MAX, 0x0, len, 0x1);
+ 
+-	while (len >= 0) {
+-		w_count = readl(info->gpmc_base + GPMC_PREFETCH_STATUS);
+-		w_count = GPMC_PREFETCH_STATUS_FIFO_CNT(w_count);
+-		w_count = w_count >> 2;
+-		writesl(info->cs_base, p32, w_count);
+-		p32 += w_count;
+-		len -= w_count << 2;
+-	}
++	if (ret) {
++		/* PFPW engine is busy, use cpu copy method */
++		if (info->nand.options & NAND_BUSWIDTH_16)
++			writesw(info->gpmc_data, p32, len / 2);
++		else
++			writesb(info->gpmc_data, p32, len);
++	} else {
++		while (len >= 0) {
++			w_count = readl(info->gpmc_base + GPMC_PREFETCH_STATUS);
++			w_count = GPMC_PREFETCH_STATUS_FIFO_CNT(w_count);
++			w_count = w_count >> 2;
++			writesl(info->cs_base, p32, w_count);
++			p32 += w_count;
++			len -= w_count << 2;
++		}
+ 
+-	/* wait for data to flushed-out before reset the prefetch */
+-	start = get_time_ns();
+-	while (1) {
+-		u32 regval, status;
+-		regval = readl(info->gpmc_base + GPMC_PREFETCH_STATUS);
+-		status = GPMC_PREFETCH_STATUS_COUNT(regval);
+-		if (!status)
+-			break;
+-		if (is_timeout(start, 100 * MSECOND)) {
+-			dev_err(info->pdev, "prefetch flush timed out\n");
+-			break;
++		/* wait for data to flushed-out before reset the prefetch */
++		start = get_time_ns();
++		while (1) {
++			u32 regval, status;
++			regval = readl(info->gpmc_base + GPMC_PREFETCH_STATUS);
++			status = GPMC_PREFETCH_STATUS_COUNT(regval);
++			if (!status)
++				break;
++			if (is_timeout(start, 100 * MSECOND)) {
++				dev_err(info->pdev, "prefetch flush timed out\n");
++				break;
++			}
+ 		}
+-	}
+ 
+-	/* disable and stop the PFPW engine */
+-	gpmc_prefetch_reset(info->gpmc_cs);
++		/* disable and stop the PFPW engine */
++		gpmc_prefetch_reset(info->gpmc_cs);
++	}
+ }
+ 
+ /*
+@@ -751,12 +818,71 @@ static int omap_gpmc_read_page_bch_rom_mode(struct mtd_info *mtd,
+ 	return 0;
+ }
+ 
++/**
++ * nand_read_page_hwecc - [REPLACABLE] hardware ecc based page read function
++ * @mtd:        mtd info structure
++ * @chip:       nand chip info structure
++ * @buf:        buffer to store read data
++ *
++ * Not for syndrome calculating ecc controllers which need a special oob layout
++ */
++static int omap_read_page_bch(struct mtd_info *mtd, struct nand_chip *chip,
++				uint8_t *buf)
++{
++	int i, eccsize = chip->ecc.size;
++	int eccbytes = chip->ecc.bytes;
++	int eccsteps = chip->ecc.steps;
++	uint8_t *p = buf;
++	uint8_t *ecc_calc = chip->buffers->ecccalc;
++	uint8_t *ecc_code = chip->buffers->ecccode;
++	uint32_t *eccpos = chip->ecc.layout->eccpos;
++	uint8_t *oob = &chip->oob_poi[eccpos[0]];
++	uint32_t data_pos;
++	uint32_t oob_pos;
++
++	data_pos = 0;
++	/* oob area start */
++	oob_pos = (eccsize * eccsteps) + chip->ecc.layout->eccpos[0];
++
++	for (i = 0; eccsteps; eccsteps--, i += eccbytes, p += eccsize,
++							oob += eccbytes) {
++		chip->ecc.hwctl(mtd, NAND_ECC_READ);
++		chip->cmdfunc(mtd, NAND_CMD_RNDOUT, data_pos, -1);
++		chip->read_buf(mtd, p, eccsize);
++
++		chip->cmdfunc(mtd, NAND_CMD_RNDOUT, oob_pos, -1);
++		chip->read_buf(mtd, oob, 13);
++
++		chip->ecc.calculate(mtd, p, &ecc_calc[i]);
++
++		data_pos += eccsize;
++		oob_pos += eccbytes;
++	}
++
++	for (i = 0; i < chip->ecc.total; i++)
++		ecc_code[i] = chip->oob_poi[eccpos[i]];
++
++	eccsteps = chip->ecc.steps;
++	p = buf;
++
++	for (i = 0 ; eccsteps; eccsteps--, i += eccbytes, p += eccsize) {
++		int stat;
++
++		stat = chip->ecc.correct(mtd, p, &ecc_code[i], &ecc_calc[i]);
++		if (stat < 0)
++			mtd->ecc_stats.failed++;
++		else
++			mtd->ecc_stats.corrected += stat;
++	}
++	return 0;
++}
++
+ static int omap_gpmc_eccmode(struct gpmc_nand_info *oinfo,
+ 		enum gpmc_ecc_mode mode)
+ {
+ 	struct mtd_info *minfo = &oinfo->minfo;
+ 	struct nand_chip *nand = &oinfo->nand;
+-	int offset;
++	int offset, step;
+ 	int i, j;
+ 
+ 	if (nand->options & NAND_BUSWIDTH_16)
+@@ -770,6 +896,7 @@ static int omap_gpmc_eccmode(struct gpmc_nand_info *oinfo,
+ 		offset = 1;
+ 
+ 	if (mode != OMAP_ECC_SOFT) {
++		nand->options |= NAND_NO_SUBPAGE_WRITE;
+ 		nand->ecc.layout = &omap_oobinfo;
+ 		nand->ecc.calculate = omap_calculate_ecc;
+ 		nand->ecc.hwctl = omap_enable_hwecc;
+@@ -800,24 +927,34 @@ static int omap_gpmc_eccmode(struct gpmc_nand_info *oinfo,
+ 					offset - omap_oobinfo.eccbytes;
+ 		break;
+ 	case OMAP_ECC_BCH4_CODE_HW:
+-		oinfo->nand.ecc.bytes    = 4 * 7;
+-		oinfo->nand.ecc.size     = 4 * 512;
+-		omap_oobinfo.oobfree->offset = offset;
++		oinfo->nand.ecc.bytes    = 8;
++		oinfo->nand.ecc.size     = 512;
++		oinfo->nand.ecc.read_page = omap_read_page_bch;
++		step =  minfo->writesize/oinfo->nand.ecc.size;
++		omap_oobinfo.eccbytes = oinfo->nand.ecc.bytes * step;
++		omap_oobinfo.oobfree->offset = 2;
+ 		omap_oobinfo.oobfree->length = minfo->oobsize -
+-					offset - omap_oobinfo.eccbytes;
++					2 - omap_oobinfo.eccbytes;
+ 		offset = minfo->oobsize - oinfo->nand.ecc.bytes;
+ 		for (i = 0; i < oinfo->nand.ecc.bytes; i++)
+ 			omap_oobinfo.eccpos[i] = i + offset;
++		if (oinfo->is_elm_used)
++			oinfo->elm_dev = elm_request(BCH4_ECC);
+ 		break;
+ 	case OMAP_ECC_BCH8_CODE_HW:
+-		oinfo->nand.ecc.bytes    = 4 * 13;
+-		oinfo->nand.ecc.size     = 4 * 512;
+-		omap_oobinfo.oobfree->offset = offset;
++		oinfo->nand.ecc.bytes    = 14;
++		oinfo->nand.ecc.size     = 512;
++		oinfo->nand.ecc.read_page = omap_read_page_bch;
++		step = minfo->writesize/oinfo->nand.ecc.size;
++		omap_oobinfo.eccbytes = oinfo->nand.ecc.bytes * step;
++		omap_oobinfo.oobfree->offset = omap_oobinfo.eccbytes + 2;
+ 		omap_oobinfo.oobfree->length = minfo->oobsize -
+-					offset - omap_oobinfo.eccbytes;
+-		offset = minfo->oobsize - oinfo->nand.ecc.bytes;
+-		for (i = 0; i < oinfo->nand.ecc.bytes; i++)
++					2 - omap_oobinfo.eccbytes;
++		offset = 2;
++		for (i = 0; i < omap_oobinfo.eccbytes; i++)
+ 			omap_oobinfo.eccpos[i] = i + offset;
++		if (oinfo->is_elm_used)
++			oinfo->elm_dev = elm_request(BCH8_ECC);
+ 		break;
+ 	case OMAP_ECC_BCH8_CODE_HW_ROMCODE:
+ 		oinfo->nand.ecc.bytes    = 4 * 13;
+@@ -944,6 +1081,7 @@ static int gpmc_nand_probe(struct device_d *pdev)
+ 	oinfo->gpmc_address = (void *)(cs_base + GPMC_CS_NAND_ADDRESS);
+ 	oinfo->gpmc_data = (void *)(cs_base + GPMC_CS_NAND_DATA);
+ 	oinfo->cs_base = (void *)pdata->nand_cfg->base;
++	oinfo->is_elm_used = pdata->is_elm_used;
+ 	dev_dbg(pdev, "GPMC base=0x%p cmd=0x%p address=0x%p data=0x%p cs_base=0x%p\n",
+ 		oinfo->gpmc_base, oinfo->gpmc_command, oinfo->gpmc_address,
+ 		oinfo->gpmc_data, cs_base);
+diff --git a/drivers/spi/Kconfig b/drivers/spi/Kconfig
+index f14e28f..c279c21 100644
+--- a/drivers/spi/Kconfig
++++ b/drivers/spi/Kconfig
+@@ -40,7 +40,7 @@ config DRIVER_SPI_MXS
+ 
+ config DRIVER_SPI_OMAP3
+ 	bool "OMAP3 McSPI Master driver"
+-	depends on ARCH_OMAP3
++	depends on ARCH_OMAP3 || ARCH_AM33XX
+ 
+ endif
+ 
+diff --git a/drivers/spi/omap3_spi.c b/drivers/spi/omap3_spi.c
+index e6581df..5c8cc88 100644
+--- a/drivers/spi/omap3_spi.c
++++ b/drivers/spi/omap3_spi.c
+@@ -325,17 +325,6 @@ static int omap3_spi_transfer(struct spi_device *spi, struct spi_message *mesg)
+ 
+ static int omap3_spi_setup(struct spi_device *spi)
+ {
+-	struct spi_master *master = spi->master;
+-
+-	if (((master->bus_num == 1) && (spi->chip_select > 3)) ||
+-			((master->bus_num == 2) && (spi->chip_select > 1)) ||
+-			((master->bus_num == 3) && (spi->chip_select > 1)) ||
+-			((master->bus_num == 4) && (spi->chip_select > 0))) {
+-		printf("SPI error: unsupported chip select %i \
+-			on bus %i\n", spi->chip_select, master->bus_num);
+-		return -EINVAL;
+-	}
+-
+ 	if (spi->max_speed_hz > OMAP3_MCSPI_MAX_FREQ) {
+ 		printf("SPI error: unsupported frequency %i Hz. \
+ 			Max frequency is 48 Mhz\n", spi->max_speed_hz);
+@@ -368,16 +357,24 @@ static int omap3_spi_probe(struct device_d *dev)
+ 	 * McSPI3 has 2 CS (bus 3, cs 0 - 1)
+ 	 * McSPI4 has 1 CS (bus 4, cs 0)
+ 	 *
++	 * AM335x McSPI has 2 busses with 2 chip selects:
++	 * McSPI0 has 2 CS (bus 0, cs 0 - 1)
++	 * McSPI1 has 2 CS (bus 1, cs 0 - 1)
++	 *
+ 	 * The board code has to make sure that it does not use
+ 	 * invalid buses or chip selects.
+ 	 */
+ 
+ 	master->bus_num = dev->id;
+-	master->num_chipselect = 4;
++
++	if (IS_ENABLED(CONFIG_ARCH_OMAP3))
++		master->num_chipselect = 4;
++	else
++		master->num_chipselect = 2;
+ 	master->setup = omap3_spi_setup;
+ 	master->transfer = omap3_spi_transfer;
+ 
+-	omap3_master->regs = dev_request_mem_region(dev, 0);;
++	omap3_master->regs = dev_request_mem_region(dev, 0);
+ 
+ 	spi_reset(master);
+ 
+diff --git a/include/linux/mtd/elm.h b/include/linux/mtd/elm.h
+new file mode 100644
+index 0000000..ff347db
+--- /dev/null
++++ b/include/linux/mtd/elm.h
+@@ -0,0 +1,100 @@
++/*
++ * BCH Error Location Module
++ *
++ * Copyright (C) 2012 Texas Instruments Incorporated - http://www.ti.com/
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License as published by
++ * the Free Software Foundation; either version 2 of the License, or
++ * (at your option) any later version.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
++ * GNU General Public License for more details.
++ *
++ */
++
++#ifndef __ELM_H
++#define __ELM_H
++
++enum bch_ecc {
++	BCH4_ECC = 0,
++	BCH8_ECC,
++	BCH16_ECC,
++};
++
++#define ELM_SYSCONFIG                0x010
++#define ELM_SYSSTATUS                0x014
++#define ELM_IRQSTATUS                0x018
++#define ELM_IRQENABLE                0x01c
++#define ELM_LOCATION_CONFIG          0x020
++#define ELM_PAGE_CTRL                0x080
++#define ELM_SYNDROME_FRAGMENT_0      0x400
++#define ELM_SYNDROME_FRAGMENT_1      0x404
++#define ELM_SYNDROME_FRAGMENT_2      0x408
++#define ELM_SYNDROME_FRAGMENT_3      0x40c
++#define ELM_SYNDROME_FRAGMENT_4      0x410
++#define ELM_SYNDROME_FRAGMENT_5      0x414
++#define ELM_SYNDROME_FRAGMENT_6      0x418
++#define ELM_LOCATION_STATUS          0x800
++#define ELM_ERROR_LOCATION_0         0x880
++#define ELM_ERROR_LOCATION_1         0x884
++#define ELM_ERROR_LOCATION_2         0x888
++#define ELM_ERROR_LOCATION_3         0x88c
++#define ELM_ERROR_LOCATION_4         0x890
++#define ELM_ERROR_LOCATION_5         0x894
++#define ELM_ERROR_LOCATION_6         0x898
++#define ELM_ERROR_LOCATION_7         0x89c
++#define ELM_ERROR_LOCATION_8         0x8a0
++#define ELM_ERROR_LOCATION_9         0x8a4
++#define ELM_ERROR_LOCATION_10        0x8a8
++#define ELM_ERROR_LOCATION_11        0x8ac
++#define ELM_ERROR_LOCATION_12        0x8b0
++#define ELM_ERROR_LOCATION_13        0x8b4
++#define ELM_ERROR_LOCATION_14        0x8b8
++#define ELM_ERROR_LOCATION_15        0x8bc
++
++/* ELM System Configuration Register */
++#define ELM_SYSCONFIG_SOFTRESET      (1 << 1)
++#define ELM_SYSCONFIG_SIDLE_MASK     (3 << 3)
++#define ELM_SYSCONFIG_SMART_IDLE     (2 << 3)
++
++/* ELM System Status Register */
++#define ELM_SYSSTATUS_RESETDONE      (1 << 0)
++
++/* ELM Location Configuration Register */
++#define ECC_SIZE_MASK                (0x7ff << 16)
++#define ECC_BCH_LEVEL_MASK           (0x3 << 0)
++#define ECC_BCH4_LEVEL               (0x0 << 0)
++#define ECC_BCH8_LEVEL               (0x1 << 0)
++#define ECC_BCH16_LEVEL              (0x2 << 0)
++
++/* ELM syndrome */
++#define ELM_SYNDROME_VALID           (1 << 16)
++
++/* ELM_LOCATION_STATUS Register */
++#define ECC_CORRECTABLE_MASK         (1 << 8)
++#define ECC_NB_ERRORS_MASK           (0x1f << 0)
++
++/*  ELM_ERROR_LOCATION_0-15 Registers */
++#define ECC_ERROR_LOCATION_MASK      (0x1fff << 0)
++/* ELM support 8 error syndrome process */
++#define ERROR_VECTOR_MAX                8
++#define OOB_SECTOR_SIZE                 16
++
++#define BCH_MAX_ECC_BYTES_PER_SECTOR    (OOB_SECTOR_SIZE * ERROR_VECTOR_MAX)
++
++#define BCH8_ECC_OOB_BYTES              13
++#define BCH4_ECC_OOB_BYTES		7
++/* RBL requires 14 byte even though BCH8 uses only 13 byte */
++#define BCH8_SIZE                       (BCH8_ECC_OOB_BYTES + 1)
++#define BCH4_SIZE                       7
++
++#define BCH8_SYNDROME_SIZE              4       /* 13 bytes of ecc */
++#define BCH4_SYNDROME_SIZE              2       /* 7 bytes of ecc */
++
++int elm_decode_bch_error(struct device_d *dev, char *ecc_calc,
++						unsigned int *err_loc);
++struct device_d *elm_request(enum bch_ecc bch_type);
++#endif /* __ELM_H */

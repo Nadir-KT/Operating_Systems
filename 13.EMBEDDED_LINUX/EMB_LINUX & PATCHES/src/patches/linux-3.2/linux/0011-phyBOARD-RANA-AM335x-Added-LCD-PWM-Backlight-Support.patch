@@ -1,0 +1,142 @@
+From e4f93a6b2d49db2de0b910ddbf93006128dd4676 Mon Sep 17 00:00:00 2001
+From: Ashutosh singh <ashutosh.s@phytec.in>
+Date: Fri, 20 Dec 2013 14:23:13 +0530
+Subject: [PATCH 11/24] phyBOARD-RANA-AM335x: Added LCD PWM Backlight Support
+
+Signed-off-by: Ashutosh singh <ashutosh.s@phytec.in>
+---
+ arch/arm/configs/rana_am335x_defconfig             |    7 +++
+ .../mach-omap2/include/mach/board-rana-am335x.h    |   59 ++++++++++++++++++++
+ 2 files changed, 66 insertions(+)
+
+diff --git a/arch/arm/configs/rana_am335x_defconfig b/arch/arm/configs/rana_am335x_defconfig
+index 3ae34a0..a0ff6f2 100644
+--- a/arch/arm/configs/rana_am335x_defconfig
++++ b/arch/arm/configs/rana_am335x_defconfig
+@@ -134,6 +134,9 @@ CONFIG_VT_HW_CONSOLE_BINDING=y
+ # CONFIG_HW_RANDOM is not set
+ CONFIG_I2C_CHARDEV=y
+ CONFIG_GPIO_SYSFS=y
++CONFIG_GENERIC_PWM=y
++CONFIG_DAVINCI_EHRPWM=y
++CONFIG_ECAP_PWM=y
+ # CONFIG_HWMON is not set
+ CONFIG_MFD_TPS65217=y
+ CONFIG_MFD_TPS65910=y
+@@ -151,6 +154,10 @@ CONFIG_FB_FOREIGN_ENDIAN=y
+ CONFIG_FB_MODE_HELPERS=y
+ CONFIG_FB_TILEBLITTING=y
+ CONFIG_FB_DA8XX=y
++CONFIG_BACKLIGHT_LCD_SUPPORT=y
++CONFIG_LCD_CLASS_DEVICE=y
++CONFIG_BACKLIGHT_CLASS_DEVICE=y
++CONFIG_BACKLIGHT_PWM=y
+ CONFIG_DISPLAY_SUPPORT=y
+ CONFIG_FRAMEBUFFER_CONSOLE=y
+ CONFIG_FRAMEBUFFER_CONSOLE_ROTATION=y
+diff --git a/arch/arm/mach-omap2/include/mach/board-rana-am335x.h b/arch/arm/mach-omap2/include/mach/board-rana-am335x.h
+index a3801c8..37e64fc 100644
+--- a/arch/arm/mach-omap2/include/mach/board-rana-am335x.h
++++ b/arch/arm/mach-omap2/include/mach/board-rana-am335x.h
+@@ -18,6 +18,9 @@
+ #ifndef _BOARD_RANA_AM335X_H
+ #define _BOARD_RANA_AM335X_H
+ 
++#include <linux/pwm/pwm.h>
++#include <linux/pwm_backlight.h>
++
+ #include <plat/lcdc.h>
+ 
+ /* LCD controller is similar to DA850 */
+@@ -109,6 +112,13 @@ static struct pinmux_config lcdc_pin_mux[] = {
+ 	{NULL, 0},
+ };
+ 
++/* Module pin mux for eCAP0 */
++static struct pinmux_config ecap0_pin_mux[] = {
++	{"ecap0_in_pwm0_out.ecap0_in_pwm0_out",	OMAP_MUX_MODE0 |
++						AM33XX_PIN_OUTPUT},
++	{NULL, 0},
++};
++
+ /* MMC0 Platform Data*/
+ static struct omap2_hsmmc_info am335x_mmc[] __initdata = {
+ 	{
+@@ -128,6 +138,12 @@ static struct omap2_hsmmc_info am335x_mmc[] __initdata = {
+ };
+ 
+ /* LCD Platform Data */
++#define AM335X_BACKLIGHT_MAX_BRIGHTNESS         100
++#define AM335X_BACKLIGHT_DEFAULT_BRIGHTNESS     100
++#define AM335X_PWM_PERIOD_NANO_SECONDS          100000
++
++#define PWM_DEVICE_ID   "ecap.0"
++
+ static const struct display_panel disp_panel = {
+ 	VGA,
+ 	32,
+@@ -185,6 +201,34 @@ static struct da8xx_lcdc_selection_platform_data lcdc_selection_pdata = {
+ 	.entries_cnt = ARRAY_SIZE(lcdc_pdata)
+ };
+ 
++/* lcd backlight platform data */
++static struct platform_pwm_backlight_data am335x_backlight_data = {
++	.pwm_id         = PWM_DEVICE_ID,
++	.ch             = -1,
++	.max_brightness = AM335X_BACKLIGHT_MAX_BRIGHTNESS,
++	.dft_brightness = AM335X_BACKLIGHT_DEFAULT_BRIGHTNESS,
++	.pwm_period_ns  = AM335X_PWM_PERIOD_NANO_SECONDS,
++};
++
++static int backlight_enable;
++
++static void enable_ecap0(void)
++{
++	backlight_enable = true;
++}
++
++static struct platform_device am335x_backlight = {
++	.name           = "pwm-backlight",
++	.id             = -1,
++	.dev            = {
++		.platform_data  = &am335x_backlight_data,
++	}
++};
++
++static struct pwmss_platform_data pwm_pdata = {
++	.version = PWM_VERSION_1
++};
++
+ /* MMC0 Initialization */
+ static void mmc0_init(void)
+ {
+@@ -224,11 +268,26 @@ static void lcd_init(void)
+ 	return;
+ }
+ 
++/* PWM ecap initialization */
++static int __init ecap0_init(void)
++{
++	int status = 0;
++
++	if (backlight_enable) {
++		setup_pin_mux(ecap0_pin_mux);
++		am33xx_register_ecap(0, &pwm_pdata);
++		platform_device_register(&am335x_backlight);
++	}
++	return status;
++}
++late_initcall(ecap0_init);
++
+ /* RANA-AM335x LCD initialization */
+ static void rana_am335x_lcd_init(void)
+ {
+ 	printk(KERN_INFO"Phytec AM335X : LCD Init\n");
+ 	lcd_init();
++	enable_ecap0();
+ 	return;
+ }
+ 
+-- 
+1.7.9.5
+

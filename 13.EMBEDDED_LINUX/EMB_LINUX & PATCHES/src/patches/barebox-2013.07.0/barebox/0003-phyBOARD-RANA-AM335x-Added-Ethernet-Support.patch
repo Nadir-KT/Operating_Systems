@@ -1,0 +1,106 @@
+From c484d81d0b87ac1a2941bb7212c906074ae63020 Mon Sep 17 00:00:00 2001
+From: Ashutosh singh <ashutosh.s@phytec.in>
+Date: Thu, 19 Dec 2013 17:07:23 +0530
+Subject: [PATCH 3/6] phyBOARD-RANA-AM335x: Added Ethernet Support.
+
+Added RMII1 Interface support for Ethernet.
+
+Signed-off-by: Ashutosh singh <ashutosh.s@phytec.in>
+---
+ arch/arm/boards/rana/board.c           |   24 ++++++++++++++++++++++++
+ arch/arm/configs/rana_am335x_defconfig |    8 ++++++++
+ 2 files changed, 32 insertions(+)
+
+diff --git a/arch/arm/boards/rana/board.c b/arch/arm/boards/rana/board.c
+index 1b031f9..ffc9c4e 100644
+--- a/arch/arm/boards/rana/board.c
++++ b/arch/arm/boards/rana/board.c
+@@ -33,6 +33,8 @@
+ #include <mach/gpmc.h>
+ #include <mach/gpmc_nand.h>
+ #include <mach/bbu.h>
++#include <linux/phy.h>
++#include <mach/cpsw.h>
+ 
+ #include "mux.h"
+ 
+@@ -89,6 +91,18 @@ static struct omap_barebox_part rana_am335x_barebox_part = {
+ 	.nand_size	= SZ_512K,
+ };
+ 
++static struct cpsw_slave_data cpsw_slaves[] = {
++	{
++		.phy_id	= 0,
++		.phy_if	= PHY_INTERFACE_MODE_RMII,
++	},
++};
++
++static struct cpsw_platform_data cpsw_data = {
++	.slave_data = cpsw_slaves,
++	.num_slaves = ARRAY_SIZE(cpsw_slaves),
++};
++
+ static void rana_am335x_nand_init(void)
+ {
+ 	rana_am335x_enable_nand_pin_mux();
+@@ -98,12 +112,22 @@ static void rana_am335x_nand_init(void)
+ 	omap_add_gpmc_nand_device(&nand_plat);
+ }
+ 
++/* Ethernet initialization */
++static void rana_am335x_eth_init(void)
++{
++	am33xx_register_ethaddr(0, 0);
++	writel(0x49, AM33XX_MAC_MII_SEL);
++	am33xx_enable_rmii1_pin_mux();
++	am33xx_add_cpsw(&cpsw_data);
++}
++
+ /* Devices initialization */
+ static int rana_am335x_devices_init(void)
+ {
+ 	rana_am335x_enable_mmc0_pin_mux();
+ 	am33xx_add_mmc0(NULL);
+ 	rana_am335x_nand_init();
++	rana_am335x_eth_init();
+ 	devfs_add_partition("nand0", 0x00000, SZ_128K,
+ 					DEVFS_PARTITION_FIXED, "xload_raw");
+ 	dev_add_bb_dev("xload_raw", "xload");
+diff --git a/arch/arm/configs/rana_am335x_defconfig b/arch/arm/configs/rana_am335x_defconfig
+index e3908e1..b69f8b6 100644
+--- a/arch/arm/configs/rana_am335x_defconfig
++++ b/arch/arm/configs/rana_am335x_defconfig
+@@ -34,6 +34,7 @@ CONFIG_CMD_READLINE=y
+ CONFIG_CMD_MENU=y
+ CONFIG_CMD_MENU_MANAGEMENT=y
+ CONFIG_CMD_TIME=y
++CONFIG_CMD_TFTP=y
+ CONFIG_CMD_ECHO_E=y
+ CONFIG_CMD_LOADB=y
+ CONFIG_CMD_CRC=y
+@@ -52,8 +53,13 @@ CONFIG_CMD_PARTITION=y
+ CONFIG_CMD_GPIO=y
+ CONFIG_CMD_UNCOMPRESS=y
+ CONFIG_CMD_SPI=y
++CONFIG_NET=y
++CONFIG_NET_DHCP=y
++CONFIG_NET_NFS=y
++CONFIG_NET_PING=y
+ CONFIG_DRIVER_SERIAL_NS16550=y
+ CONFIG_DRIVER_SERIAL_NS16550_OMAP_EXTENSIONS=y
++CONFIG_DRIVER_NET_CPSW=y
+ CONFIG_DRIVER_SPI_OMAP3=y
+ CONFIG_MTD=y
+ CONFIG_MTD_M25P80=y
+@@ -64,6 +70,8 @@ CONFIG_MCI=y
+ CONFIG_MCI_STARTUP=y
+ CONFIG_MCI_OMAP_HSMMC=y
+ CONFIG_GPIO_GENERIC_PLATFORM=y
++CONFIG_FS_TFTP=y
++CONFIG_FS_NFS=y
+ CONFIG_FS_FAT=y
+ CONFIG_FS_FAT_WRITE=y
+ CONFIG_FS_FAT_LFN=y
+-- 
+1.7.9.5
+

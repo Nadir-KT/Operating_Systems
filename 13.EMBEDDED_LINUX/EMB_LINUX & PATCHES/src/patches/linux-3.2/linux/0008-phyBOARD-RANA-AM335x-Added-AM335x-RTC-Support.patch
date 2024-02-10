@@ -1,0 +1,106 @@
+From 2d6f66edbaeb6c6515160a2111ec5aecf5cfbf5f Mon Sep 17 00:00:00 2001
+From: Ashutosh singh <ashutosh.s@phytec.in>
+Date: Fri, 20 Dec 2013 11:49:18 +0530
+Subject: [PATCH 08/24] phyBOARD-RANA-AM335x: Added AM335x-RTC Support.
+
+Added AM335x Internal RTC Support.
+
+Signed-off-by: Ashutosh singh <ashutosh.s@phytec.in>
+---
+ arch/arm/mach-omap2/board-rana.c |   59 ++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 59 insertions(+)
+
+diff --git a/arch/arm/mach-omap2/board-rana.c b/arch/arm/mach-omap2/board-rana.c
+index 7ef511d..97f7fc1 100644
+--- a/arch/arm/mach-omap2/board-rana.c
++++ b/arch/arm/mach-omap2/board-rana.c
+@@ -32,6 +32,7 @@
+ #include <linux/mfd/tps65910.h>
+ #include <linux/reboot.h>
+ #include <linux/opp.h>
++#include <linux/rtc/rtc-omap.h>
+ 
+ #include <mach/hardware.h>
+ 
+@@ -159,6 +160,12 @@ static struct omap_musb_board_data rana_am335x_musb_board_data = {
+ 	.instances	= 1,
+ };
+ 
++/* RTC platform data */
++static struct omap_rtc_pdata am335x_rtc_info = {
++	.pm_off         = false,
++	.wakeup_capable = 0,
++};
++
+ static struct regulator_init_data am335x_dummy = {
+ 	.constraints.always_on	= true,
+ };
+@@ -267,6 +274,57 @@ static void rana_am335x_rmii1_init(void)
+ 	return;
+ }
+ 
++/* AM335x internal RTC initialization */
++static void am335x_rtc_init(void)
++{
++	void __iomem *base;
++	struct clk *clk;
++	struct omap_hwmod *oh;
++	struct platform_device *pdev;
++	char *dev_name = "am33xx-rtc";
++
++	clk = clk_get(NULL, "rtc_fck");
++	if (IS_ERR(clk)) {
++		pr_err("rtc : Failed to get RTC clock\n");
++	return;
++	}
++
++	if (clk_enable(clk)) {
++		pr_err("rtc: Clock Enable Failed\n");
++	return;
++	}
++	base = ioremap(AM33XX_RTC_BASE, SZ_4K);
++
++	if (WARN_ON(!base))
++		return;
++	/* Unlock the rtc's registers */
++	writel(0x83e70b13, base + 0x6c);
++	writel(0x95a4f1e0, base + 0x70);
++
++	/*
++	* Enable the 32K OSc
++	* TODO: Need a better way to handle this
++	* Since we want the clock to be running before mmc init
++	* we need to do it before the rtc probe happens
++	*/
++
++	writel(0x48, base + 0x54);
++	iounmap(base);
++	clk_disable(clk);
++	clk_put(clk);
++	oh = omap_hwmod_lookup("rtc");
++	if (!oh) {
++		pr_err("could not look up %s\n", "rtc");
++	return;
++	}
++
++	pdev = omap_device_build(dev_name, -1, oh, &am335x_rtc_info,
++				sizeof(struct omap_rtc_pdata), NULL, 0, 0);
++	WARN(IS_ERR(pdev), "Can't build omap_device for %s:%s.\n",
++						dev_name, oh->name);
++	return;
++}
++
+ static void rana_am335x_mux_init(void)
+ {
+ 	mmc0_init();
+@@ -318,6 +376,7 @@ static void __init rana_am335x_init(void)
+ 	am335x_nand_init();
+ 	rana_am335x_usb_init();
+ 	rana_am335x_rmii1_init();
++	am335x_rtc_init();
+ }
+ 
+ static void __init am335x_map_io(void)
+-- 
+1.7.9.5
+

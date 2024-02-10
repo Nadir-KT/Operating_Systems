@@ -1,0 +1,81 @@
+From b999a47bb43eb706e82d6ac94a678c48fce3d838 Mon Sep 17 00:00:00 2001
+From: Ashutosh singh <ashutosh.s@phytec.in>
+Date: Fri, 20 Dec 2013 14:48:18 +0530
+Subject: [PATCH 18/24] phyBOARD-RANA-AM335x: Added UART4 Support
+
+Signed-off-by: Ashutosh singh <ashutosh.s@phytec.in>
+---
+ .../mach-omap2/include/mach/board-rana-am335x.h    |   18 +++++++++++++++++-
+ arch/arm/mach-omap2/mux33xx.c                      |    4 ++--
+ 2 files changed, 19 insertions(+), 3 deletions(-)
+
+diff --git a/arch/arm/mach-omap2/include/mach/board-rana-am335x.h b/arch/arm/mach-omap2/include/mach/board-rana-am335x.h
+index d4ffb5e..898ac9a 100644
+--- a/arch/arm/mach-omap2/include/mach/board-rana-am335x.h
++++ b/arch/arm/mach-omap2/include/mach/board-rana-am335x.h
+@@ -38,7 +38,7 @@
+ #define GPIO_TO_PIN(bank, gpio) (32 * (bank) + (gpio))
+ 
+ #define DEVICE_LEN 10
+-#define DEVICE 6
++#define DEVICE 7
+ 
+ static char rana_board_devices_str[DEVICE_LEN] __initdata = "none";
+ static int i;
+@@ -168,6 +168,13 @@ static struct pinmux_config uart3_pin_mux[] = {
+ 	{NULL, 0},
+ };
+ 
++/* pin-mux for UART4 support */
++static struct pinmux_config uart4_pin_mux[] = {
++	{"uart0_ctsn.uart4_rxd", OMAP_MUX_MODE1 | AM33XX_PIN_INPUT_PULLUP},
++	{"uart0_rtsn.uart4_txd", OMAP_MUX_MODE1 | AM33XX_PULL_ENBL},
++	{NULL, 0},
++};
++
+ /* MMC0 Platform Data*/
+ static struct omap2_hsmmc_info am335x_mmc[] __initdata = {
+ 	{
+@@ -412,6 +419,14 @@ static void rana_am335x_uart3_init(void)
+ 	return;
+ }
+ 
++/* UART4 initialization */
++static void rana_am335x_uart4_init(void)
++{
++	setup_pin_mux(uart4_pin_mux);
++	printk(KERN_INFO"Phytec AM335X : UART4 Init\n");
++	return;
++}
++
+ struct devices {
+ 	char *device_name;
+ 	void (*device_init) (void);
+@@ -424,6 +439,7 @@ struct devices rana_am335x_device[] = {
+ 	{"UART1", rana_am335x_uart1_init},
+ 	{"UART2", rana_am335x_uart2_init},
+ 	{"UART3", rana_am335x_uart3_init},
++	{"UART4", rana_am335x_uart4_init},
+ 	{"NULL", NULL },
+ };
+ 
+diff --git a/arch/arm/mach-omap2/mux33xx.c b/arch/arm/mach-omap2/mux33xx.c
+index e10e7b1..4b17fd0 100644
+--- a/arch/arm/mach-omap2/mux33xx.c
++++ b/arch/arm/mach-omap2/mux33xx.c
+@@ -310,10 +310,10 @@ static struct omap_mux am33xx_muxmodes[] = {
+ 		"ecap0_in_pwm0_out", "uart3_txd", "spi1_cs1", NULL,
+ 		"spi1_sclk", "mmc0_sdwp", NULL, "gpio0_7"),
+ 	_AM33XX_MUXENTRY(UART0_CTSN, 0,
+-		"uart0_ctsn", NULL, "d_can1_tx", "i2c1_sda",
++		"uart0_ctsn", "uart4_rxd", "d_can1_tx", "i2c1_sda",
+ 		"spi1_d0", NULL, NULL, "gpio1_8"),
+ 	_AM33XX_MUXENTRY(UART0_RTSN, 0,
+-		"uart0_rtsn", NULL, "d_can1_rx", "i2c1_scl",
++		"uart0_rtsn", "uart4_txd", "d_can1_rx", "i2c1_scl",
+ 		"spi1_d1", "spi1_cs0", NULL, "gpio1_9"),
+ 	_AM33XX_MUXENTRY(UART0_RXD, 0,
+ 		"uart0_rxd", "spi1_cs0", "d_can0_tx", "i2c2_sda",
+-- 
+1.7.9.5
+

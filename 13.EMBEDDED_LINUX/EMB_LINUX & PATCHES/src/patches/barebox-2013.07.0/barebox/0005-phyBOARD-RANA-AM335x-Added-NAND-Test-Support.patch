@@ -1,0 +1,27 @@
+From 543598b82c6ac6bc7a81d2cb62f794e2cb624681 Mon Sep 17 00:00:00 2001
+From: Ashutosh singh <ashutosh.s@phytec.in>
+Date: Wed, 4 Dec 2013 10:14:19 +0530
+Subject: [PATCH 5/6] phyBOARD-RANA-AM335x: Added NAND Test Support.
+
+Signed-off-by: Ashutosh singh <ashutosh.s@phytec.in>
+---
+ arch/arm/configs/rana_am335x_defconfig |    3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/arch/arm/configs/rana_am335x_defconfig b/arch/arm/configs/rana_am335x_defconfig
+index 32ac191..0d07d23 100644
+--- a/arch/arm/configs/rana_am335x_defconfig
++++ b/arch/arm/configs/rana_am335x_defconfig
+@@ -47,6 +47,9 @@ CONFIG_CMD_UIMAGE=y
+ CONFIG_CMD_BOOTZ=y
+ CONFIG_CMD_RESET=y
+ CONFIG_CMD_GO=y
++CONFIG_CMD_NANDTEST=y
++CONFIG_CMD_MTEST=y
++CONFIG_CMD_MTEST_ALTERNATIVE=y
+ CONFIG_CMD_BAREBOX_UPDATE=y
+ CONFIG_CMD_TIMEOUT=y
+ CONFIG_CMD_PARTITION=y
+-- 
+1.7.9.5
+

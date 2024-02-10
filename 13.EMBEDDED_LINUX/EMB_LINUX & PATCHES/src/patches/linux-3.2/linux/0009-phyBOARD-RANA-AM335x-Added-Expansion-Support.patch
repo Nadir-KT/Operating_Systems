@@ -1,0 +1,112 @@
+From c43f41877f3fd1a03036241691b4536eed835419 Mon Sep 17 00:00:00 2001
+From: Ashutosh singh <ashutosh.s@phytec.in>
+Date: Fri, 20 Dec 2013 12:39:38 +0530
+Subject: [PATCH 09/24] phyBOARD-RANA-AM335x: Added Expansion Support.
+
+Supports for Expansion device Muxing.
+
+Signed-off-by: Ashutosh singh <ashutosh.s@phytec.in>
+---
+ arch/arm/mach-omap2/board-rana.c                   |   10 ++++
+ .../mach-omap2/include/mach/board-rana-am335x.h    |   59 ++++++++++++++++++++
+ 2 files changed, 69 insertions(+)
+
+diff --git a/arch/arm/mach-omap2/board-rana.c b/arch/arm/mach-omap2/board-rana.c
+index 97f7fc1..8aeb8e4 100644
+--- a/arch/arm/mach-omap2/board-rana.c
++++ b/arch/arm/mach-omap2/board-rana.c
+@@ -74,6 +74,16 @@ static struct omap_board_mux board_mux[] __initdata = {
+ #define board_mux	NULL
+ #endif
+ 
++/* Selection of Devices from Bootloader */
++static int __init rana_am335x_board_setup(char *str)
++{
++	if (str)
++		strlcpy(rana_board_devices_str, str,
++				sizeof(rana_board_devices_str));
++	return 0;
++}
++__setup("Devices=", rana_am335x_board_setup);
++
+ /* Pin mux for nand flash module */
+ static struct pinmux_config nand_pin_mux[] = {
+ 	{"gpmc_ad0.gpmc_ad0",     OMAP_MUX_MODE0 | AM33XX_PIN_INPUT_PULLUP},
+diff --git a/arch/arm/mach-omap2/include/mach/board-rana-am335x.h b/arch/arm/mach-omap2/include/mach/board-rana-am335x.h
+index c508574..72ad082 100644
+--- a/arch/arm/mach-omap2/include/mach/board-rana-am335x.h
++++ b/arch/arm/mach-omap2/include/mach/board-rana-am335x.h
+@@ -21,6 +21,11 @@
+ /* convert GPIO signal to GPIO pin number */
+ #define GPIO_TO_PIN(bank, gpio) (32 * (bank) + (gpio))
+ 
++#define DEVICE_LEN 10
++#define DEVICE 0
++
++static char rana_board_devices_str[DEVICE_LEN] __initdata = "none";
++static int i;
+ /* module pin mux structure */
+ struct pinmux_config {
+ 	const char *string_name;	/* signal name format */
+@@ -76,4 +81,58 @@ static void mmc0_init(void)
+ 	return;
+ }
+ 
++struct devices {
++	char *device_name;
++	void (*device_init) (void);
++};
++
++struct devices rana_am335x_device[] = {
++	{"NULL", NULL },
++};
++
++/* 
++ * device_parser
++ * Compare and Initialize the specific Devices.
++ */
++void device_parser(char *device)
++{
++	for (i = 0; i < DEVICE; i++) {
++		if (device != NULL) {
++			if (strcmp(device,
++					rana_am335x_device[i].device_name) == 0)
++				rana_am335x_device[i].device_init();
++		}
++	}
++}
++
++struct structure {
++	char one[10];
++	};
++
++/* 
++ * bootarg_seperator
++ * Seperate and call the bootargs specified init funcion.
++ */
++void bootarg_seperator(char *string)
++{
++	struct structure device_structure;
++	char *token, *a, *c;
++	if (string != NULL) {
++		c = string;
++		while ((token = strsep(&string, ",")) != NULL) {
++			a = token;
++			memcpy(&device_structure, a, sizeof(device_structure));
++			device_parser(device_structure.one);
++		}
++	}
++}
++
++/* Expansion Initialisation */
++void expansion_init(void)
++{
++	printk(KERN_INFO"\nPhytec AM335x : Device Muxxing\n");
++	bootarg_seperator(rana_board_devices_str);
++	return;
++}
++
+ #endif
+-- 
+1.7.9.5
+
