@@ -35,6 +35,9 @@ Kernel Driver
 https://www.youtube.com/watch?v=lWzFFusYg6g&t=370s
 https://www.youtube.com/watch?v=4tgluSJDA_E
 
+Shell_scripts: bash(Unix shell/.sh), batch(Windows shell/.bat), Python(Python shell/.py)
+https://en.wikipedia.org/wiki/Shell_script
+
 An embedded hypervisor is a software or hardware layer in an embedded system that allows more than one operating system (OS) to run on a single hardware platform.
 https://www.qt.io/embedded-development-talk/how-embedded-hypervisors-work-and-improve-embedded-products-and-systems
 
