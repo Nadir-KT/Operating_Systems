@@ -15,6 +15,7 @@ https://all3dp.com/2/freertos-arduino-rtos/
 https://www.engineersgarage.com/arduino-freertos-task-scheduling/
 https://www.instructables.com/FreeRTOS-01-Setting-Up-FreeRTOS-on-Arduino/
 https://stackoverflow.com/questions/44434620/calculation-of-stack-size-in-freertos-or-ti-rtos
+https://docs.espressif.com/projects/esp-idf/en/v4.2/esp32s2/api-reference/system/freertos.html
 
 https://sourceforge.net/projects/arm-mbed-os.mirror/
 
