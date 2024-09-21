@@ -7,3 +7,6 @@ https://www.youtube.com/playlist?list=PLRG6WP3c31_U7TFGduEIJWVtkOw6AJjFf
 https://www.youtube.com/playlist?list=PLK0b4e05LnzZWg_7QrIQWyvSPX2WN2ncc
 https://www.youtube.com/watch?v=bJB9tv4ThV4
 https://www.youtube.com/watch?v=2Cmdu6mkxD0
+
+https://ubuntu.com/tutorials/getting-started-with-ros-2#1-overview
+https://docs.omniverse.nvidia.com/isaacsim/latest/ros2_tutorials/tutorial_ros2_tf.html

@@ -1,0 +1,175 @@
+https://www.cavliwireless.com/c-series/c10qm.html
+https://www.yoctoproject.org
+https://git.yoctoproject.org
+http://0x.tools/
+
+https://github.com/aws/aws-iot-fleetwise-edge/blob/main/docs/dev-guide/edge-agent-dev-guide.md
+https://wiki.seeedstudio.com/2-Channel-CAN-BUS-FD-Shield-for-Raspberry-Pi/
+
+Linux - Yocto Package(C10Q1 LTE Cat 1 - Yocto Linux (Kernel 4.14)), GNSS
+aws-iot-fleetwise-edge
+
+https://www.youtube.com/watch?v=GERlhgCcoBc
+
+Install adb 										: sudo apt-get install adb
+To see all devices attached 	 					: adb devices
+To move into device shell 		 					: adb shell
+To list all files in long format 					: ls -l
+when you want to run any file in  copy in /data		: cd /data
+Grant file executable command 						: chmod +x ./tntapp
+To see logs 										: ./tntapp
+adb push /sdcard/%path-on-phone% %path-on-PC%
+adb push F:\FLOSS\desktop\Linux\platform-tools-latest-windows\data. /data
+adb push '/Users/SML/Documents/filename.zip' /storage/sdcard0/path_to_store/
+adb pull /sdcard/%path-on-phone% %path-on-PC%
+adb pull /data F:\FLOSS\desktop\Linux\platform-tools-latest-windows\
+cd - will switch the user to the previous directory.
+
+
+docker run -d --hostname 9607 --name cavli_9607_sdk -it -p 2227:22 -p 8893:80 -v /home/pjain/Documents/hmcl/demo/:/share/ -w /home/cavli/ cavli_sdk:1.0 /bin/bash
+To communicate with device we need adb tool
+	Install adb 										: sudo apt-get install adb
+	To see all devices attached 	 					: adb devices
+	To move into device shell 		 					: adb shell
+	To list all files in long format 					: ls -l
+	when you want to run any file in  copy in /data		: cd /data
+	Grant file executable command 						: chmod +x ./tntapp
+	To see logs 										: ./tntapp
+Copy tntapp in device /data folder :
+	
+			pjain@tntubuntuadmin:~/Documents/hmcl/demo/tntapp$ adb push ./tntapp /data
+ADB Commands :
+	adb shell
+	adb devices
+	cd /data
+	./tntapp
+docker start cavli_9607_sdk
+docker attach cavli_9607_sdk
+sudo bash    = > vip
+source /share/c10qmsdk/environment-setup-armv7a-vfp-neon-oe-linux-gnueabi
+When you create an instance of Engine (e.g., Engine engine(cavliMutex)), you pass cavliMutex to the constructor, which initializes mMutex with it. This means that mMutex now refers to cavliMutex, and any operations you perform using mMutex inside Engine will affect cavliMutex.
+
+pwd - (print working directory)
+
+F:\FLOSS\desktop\Linux
+
+docker
+------
+sudo apt-get update
+sudo apt update
+sudo apt install apt-transport-https ca-certificates curl software-properties-common
+sudo apt-get install docker.io -y
+sudo apt-get install vim git build-essential diffstat texi2html texinfo subversion gawk chrpath wget
+sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker compose-plugin
+sudo apt-get install wmdocker
+sudo service docker start
+sudo service docker status
+$ docker run -d  --hostname 9607 --name cavli_9607_sdk -it -p 2227:22  -p 8893:80  -v F:\FLOSS\desktop\Linux\share/ cavli_sdk:1.0
+docker run -d  --hostname 9607 --name cavli_9607_sdk -it -p 2227:22  -p 8893:80  -v /f/Image/:/share/  -w /home/cavli/  cavli_sdk:1.0 /bin/bash
+
+https://docs.docker.com/desktop/wsl/
+https://learn.microsoft.com/en-gb/windows/wsl/install-manual#step-4---download-the-linux-kernel-update-package
+https://learn.microsoft.com/en-us/windows/wsl/install
+wsl --set-default-version <Version#>
+wsl.exe --set-default-version 2
+wsl --list --online
+wsl -l -o
+wsl --install
+wsl.exe --install -d <Distribution Name>
+wsl.exe --list --verbose
+wsl -l -v
+dism.exe /online /enable-feature /featurename:Microsoft-Windows-Subsystem-Linux /all /norestart
+dism.exe /online /enable-feature /featurename:VirtualMachinePlatform /all /norestart
+wsl.exe --update
+wsl --set-default <DistributionName>
+wsl -s <DistributionName>
+
+whereis docker
+sudo service docker start
+sudo service docker status
+docker load --input cavli_sdk.tar
+docker images
+docker run -d  --hostname 9607 --name cavli_9607_sdk -it -p 2227:22  -p 8893:80  -v /f/Image/:/share/  -w /home/cavli/  cavli_sdk:1.0 /bin/bash
+docker container ps -a
+docker start cavli_9607_sdk
+docker attach cavli_9607_sdk
+
+docker exec -it cavli_9607_sdk /bin/bash
+default vip password: vip
+for root: sudo bash
+sudo -S bash
+for superuser: sudo su
+for vip: exit
+
+source /share/c10qmsdk/environment-setup-armv7a-vfp-neon-oe-linux-gnueabi
+4.3 With Native Linux System 
+$ sudo apt-get install gawk wget git-core diffstat unzip texinfo gcc-multilib \ build-essential chrpath socat cpio python python3 python3-pip python3-pexpect
+
+root@9607:/home/cavli# ssh-keygen -t ecdsa -b 521
+Generating public/private ecdsa key pair.
+Enter file in which to save the key (/root/.ssh/id_ecdsa):
+Created directory '/root/.ssh'.
+Enter passphrase (empty for no passphrase):
+Enter same passphrase again:
+Your identification has been saved in /root/.ssh/id_ecdsa.
+Your public key has been saved in /root/.ssh/id_ecdsa.pub.
+The key fingerprint is:
+SHA256:TziJOy86tLmQ62POe1j+LFc4XwkhkT68ChkTLOQoo3A root@9607
+The key's randomart image is:
++---[ECDSA 521]---+
+|.o    .o         |
+|+ o   o .        |
+|=oE. o . .       |
+|+oo   +..o       |
+|.  +  .+S...     |
+|  o.o +..+o      |
+|  o* +o+ ..      |
+| .+oO.oo.        |
+| +*+oBo..        |
++----[SHA256]-----+
+root@9607:/home/cavli# cat ~/.ssh/id_*.pub
+ecdsa-sha2-nistp521 AAAAE2VjZHNhLXNoYTItbmlzdHA1MjEAAAAIbmlzdHA1MjEAAACFBAAttXYUhtBYk4L4ZTGt7I9Af5umcNSrP5ECQ0HL//UJ9s1sgHQ37LAao3wSTRhOTEzh2SDj0zNhl3mUOZ5f3tVvtQE0yTt5M8DZ7++Hb/TWZoGjz1mRsUdA8uefp0z/6ndhRosqUxeV2C+jjBiY0+3B9R3PUnHTDazpnm89YaBcwDNMNA== root@9607
+root@9607:/home/cavli#
+
+root@9607:/home/cavli# mkdir -p /home/cavli/C10QM-CS-SDK/apps_proc/poky/build
+copy downloads.zip to root
+root@DESKTOP-ENQH4N2:~# sudo docker cp downloads.zip CONTAINER_ID:/home/cavli/C10QM-CS-SDK/apps_proc/poky/build
+root@DESKTOP-ENQH4N2:~# sudo docker cp downloads.zip 082bdd6d2671:/home/cavli/C10QM-CS-SDK/apps_proc/poky/build
+
+sudo chown -R vip:root /home/cavli/C10QM-CS-SDK
+
+5 Environment setup
+
+https://developer.android.com/studio/run/win-usb
+https://developer.android.com/tools/releases/platform-tools
+ADB Commands :
+--------------
+Install adb							: sudo apt-get install adb
+To see all devices attached			: adb devices
+To move into device shell			: adb shell
+Reboot to booting state				: adb reboot bootloader  
+To check the fastbooting of devices : fastboot devices
+
+Shell Commands
+--------------
+sudo apt-get update
+sudo apt update
+To list all files in long format	: ls -l
+To list all files in long format	: ll
+Default vip password				: vip
+For root							: sudo bash
+For root							: sudo -S bash
+For superuser						: sudo su
+Exiting from root					: exit
+Print working directory				: pwd
+Delete a directory					: sudo rm -r directory_name
+Change directory					: cd directory_path
+Previous directory					: cd ..
+Last directory						: cd -
+Home directory						: cd
+Copy								: cp source_path  Dest_path
+Unzip								: unzip zip_name.zip 
+Environment	variables				: env
+uname -r
+uname -a
+uname --version

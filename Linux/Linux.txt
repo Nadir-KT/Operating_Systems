@@ -1,0 +1,15 @@
+https://in.indeed.com/career-advice/interviewing/embedded-linux-interview-questions
+https://www.linuxcareers.com/resources/blog/2023/01/embedded-linux-interview-success-15-must-know-questions-and-answers/
+https://medium.com/@embeddedhash.in/interview-questions-and-answers-for-embedded-linux-cd4f7db707ad
+https://www.geeksforgeeks.org/linux-interview-questions/
+https://www.reddit.com/r/embedded/comments/19d4mu5/job_interview_question_on_embedded_linux/?rdt=39353
+https://vishnumotghare.wordpress.com
+https://tutorialadda.com/interview-questions/embedded-linux/embedded-linux-interview-questions-part-2
+https://climbtheladder.com/embedded-linux-interview-questions/
+https://www.truelancer.com/embedded-linux-interview-questions-and-answers-freelancer-job
+https://www.scribd.com/document/235725239/Embedded-Systems-and-Linux-Interview-Questions-ARM-Interview-Questions
+
+https://www.kali.org/tools/dislocker/
+https://askubuntu.com/questions/617950/use-windows-bitlocker-encrypted-drive-on-ubuntu
+https://itsfoss.com/mount-encrypted-windows-partition-linux/
+https://www.baeldung.com/linux/bitlocker-encrypted-device

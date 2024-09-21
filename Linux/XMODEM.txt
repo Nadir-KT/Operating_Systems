@@ -1,0 +1,10 @@
+https://wiki.fluidnc.com/en/features/xmodem
+https://forums.raspberrypi.com/viewtopic.php?t=42936
+https://linux.die.net/man/1/sz
+https://manpages.debian.org/testing/lrzsz/sz.1.en.html
+https://www.ohse.de/uwe/software/lrzsz.html
+https://layers.openembedded.org/layerindex/recipe/47608/
+https://archlinux.org/packages/extra/x86_64/lrzsz/
+https://www.mattkeeter.com/blog/2022-05-31-xmodem/
+https://unix.stackexchange.com/questions/56614/send-file-by-xmodem-or-kermit-protocol-with-gnu-screen
+https://mike42.me/blog/2021-12-implementing-the-xmodem-protocol-for-file-transfer
